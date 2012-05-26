@@ -41,6 +41,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	GPSTrackingService trackingService;
 
 	TrackingUpdateReceiver updateReceiver;
+	
+	Button btnAction;
 
 	int currentActionBtnState = ACTION_BUTTON_START;
 
@@ -52,13 +54,13 @@ public class MainActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.main);
 
 		ListView lvMembersList = (ListView) findViewById(R.id.lvMembersList);
-		//ArrayAdapter<T> membersAdapter = new A
-		//lvMembersList.setAdapter(null);
+		// ArrayAdapter<T> membersAdapter = new A
+		// lvMembersList.setAdapter(null);
 
 		Button btnRouteMode = (Button) findViewById(R.id.btnRouteMode);
 		Button btnSettings = (Button) findViewById(R.id.btnSettings);
 		Button btnPayment = (Button) findViewById(R.id.btnPayment);
-		Button btnAction = (Button) findViewById(R.id.btnAction);
+		btnAction = (Button) findViewById(R.id.btnAction);
 
 		btnRouteMode.setOnClickListener(this);
 		btnSettings.setOnClickListener(this);
@@ -147,7 +149,18 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	@Override
-	protected void onPrepareDialog(int id, Dialog dialog) {
+	protected void onPrepareDialog(int id, final Dialog dialog) {
+
+		Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
+		btnDone.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// saving
+				dialog.dismiss();
+			}
+		});
+
 		super.onPrepareDialog(id, dialog);
 	}
 
@@ -172,15 +185,31 @@ public class MainActivity extends Activity implements OnClickListener {
 	private void handleActionButton() {
 		switch (this.currentActionBtnState) {
 		case ACTION_BUTTON_START:
-
+			PaxiUtility.newRoute();
+			bindStopAction();
 			break;
 		case ACTION_BUTTON_STOP:
-
+			bindClearAction();
 			break;
 		case ACTION_BUTTON_CLEAR:
-
+			bindStartAction();
 			break;
 		}
+	}
+
+	private void bindStartAction() {
+		btnAction.setText("Start");
+		this.currentActionBtnState = ACTION_BUTTON_START;
+	}
+
+	private void bindStopAction() {
+		btnAction.setText("Stop");
+		this.currentActionBtnState = ACTION_BUTTON_STOP;
+	}
+
+	private void bindClearAction() {
+		btnAction.setText("Clear");
+		this.currentActionBtnState = ACTION_BUTTON_CLEAR;
 	}
 
 	private ServiceConnection mConnection = new ServiceConnection() {
@@ -202,9 +231,13 @@ public class MainActivity extends Activity implements OnClickListener {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equals(REFRESH_DATA_INTENT)) {
-				Log.i(TAG, trackingService.getDistance() + "");
+				handleGpsStatusChange();
 			}
 		}
+	}
+	
+	private void handleGpsStatusChange() {
+		Log.i(TAG, trackingService.getDistance() + "");
 	}
 
 }

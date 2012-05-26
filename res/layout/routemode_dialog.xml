@@ -7,25 +7,33 @@
     android:orientation="vertical" >
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/btnCity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="City" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btnMixed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:text="Button" />
+        android:text="mix" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btnDone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:text="Button" />
+        android:layout_centerHorizontal="true"
+        android:text="don" />
+
+    <Button
+        android:id="@+id/btnHighway"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="hw" />
 
 </RelativeLayout>

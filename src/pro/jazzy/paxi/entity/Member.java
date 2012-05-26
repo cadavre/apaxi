@@ -27,6 +27,16 @@ public class Member extends OnRoadEventBasicImpl {
 	 * to identify
 	 */
 	private String name;
+	
+	private String photoUri;
+
+	public String getPhotoUri() {
+		return photoUri;
+	}
+
+	public void setPhotoUri(String photoUri) {
+		this.photoUri = photoUri;
+	}
 
 	/**
 	 * Default constructor. Member get's into car on currentDistance
@@ -122,7 +132,8 @@ public class Member extends OnRoadEventBasicImpl {
 		if (this.isOnboard()
 				&& lastKnownDistance < PaxiUtility.CurrentRoute
 						.getCurrentDistance()) {
-			toPay += calculate(PaxiUtility.CurrentRoute.getCurrentDistance(), currentType, membersOnboard);
+			toPay += calculate(PaxiUtility.CurrentRoute.getCurrentDistance(),
+					currentType, membersOnboard);
 		}
 		return toPay;
 	}
