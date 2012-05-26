@@ -8,8 +8,8 @@
         android:id="@+id/lvMembersList"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_above="@+id/rlBottomMenu" >
+        android:layout_above="@+id/rlBottomMenu"
+        android:layout_alignParentTop="true" >
     </ListView>
 
     <RelativeLayout
@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" >
 
+        <!--
         <Button
             android:id="@+id/btnAdd"
             android:layout_width="wrap_content"
@@ -37,7 +38,37 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/btnGpsOn"
             android:text="Stop" />
+        -->
 
+        <Button
+            android:id="@+id/btnRouteMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mode" />
+
+        <Button
+            android:id="@+id/btnSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/btnRouteMode"
+            android:text="Settings" />
+
+        <Button
+            android:id="@+id/btnPayment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/btnSettings"
+            android:text="Payment" />
+
+        <Button
+            android:id="@+id/btnAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/btnPayment"
+            android:text="Action" />
     </RelativeLayout>
 
 </RelativeLayout>
