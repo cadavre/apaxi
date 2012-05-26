@@ -87,7 +87,7 @@ public class Member extends OnRoadEventBasicImpl {
 		// now 'i' points to current event - user get in the car
 		// find the event of member leaving the car
 		int j = 0;
-		if (this.getSignOutOnDistance() == -1) {
+		if (this.isOnboard()) {
 			j = allEvents.size() - 1;
 		} else {
 			for (j = allEvents.size() - 1; j > i; j--) {
@@ -117,6 +117,12 @@ public class Member extends OnRoadEventBasicImpl {
 				toPay += ((Payment) onroadEvent).getAmount() / membersOnboard;
 			}
 			lastKnownDistance = allEvents.get(k).onWhatDistance();
+		}
+		// fakeEvent - some road after last event
+		if (this.isOnboard()
+				&& lastKnownDistance < PaxiUtility.CurrentRoute
+						.getCurrentDistance()) {
+			toPay += calculate(PaxiUtility.CurrentRoute.getCurrentDistance(), currentType, membersOnboard);
 		}
 		return toPay;
 	}
