@@ -25,7 +25,7 @@ public class PaxiUtility {
 	public static int pricePerFuel = 535;
 
 	/**
-	 * fuel per 1 distance * 100
+	 * fuel per 1000 distance * 100 (100 km)
 	 */
 	public static int[] fuelPerDistance = new int[] { 700, 800, 750 };
 
@@ -116,7 +116,7 @@ public class PaxiUtility {
 	/**
 	 * just add distance to current road
 	 * 
-	 * @param distance
+	 * @param distance (in meters)
 	 */
 	public static void addDistance(int distance) {
 		CurrentRoute.addDistance(distance);

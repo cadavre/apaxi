@@ -139,7 +139,7 @@ public class Member extends OnRoadEventBasicImpl {
 			double result = 0.0d + kilometers
 					* (PaxiUtility.pricePerFuel / 100)
 					* (PaxiUtility.fuelPerDistance[routeType] / 100) / persons
-					/ 100;
+					/ 100 / 1000;
 			return result;
 		} else {
 			return 0;

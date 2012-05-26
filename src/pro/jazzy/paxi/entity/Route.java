@@ -25,7 +25,7 @@ public class Route {
 	}
 
 	public int getCurrentDistance() {
-		return currentDistance;
+		return new Double(currentDistance).intValue();
 	}
 
 	public void setCurrentDistance(int currentDistance) {
