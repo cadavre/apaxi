@@ -6,7 +6,7 @@ import pro.jazzy.paxi.PaxiUtility;
 import pro.jazzy.paxi.entity.events.OnRoadEvent;
 
 public class Route {
-	private int currentDistance;
+	private int currentDistance = 0;
 	private ArrayList<OnRoadEvent> roadEvents;
 	private int currentRouteType;
 	

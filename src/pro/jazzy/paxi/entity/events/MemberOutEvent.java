@@ -21,7 +21,4 @@ public class MemberOutEvent extends OnRoadEventBasicImpl {
 	public void setMember(Member member) {
 		this.member = member;
 	}
-	
-	
-
 }

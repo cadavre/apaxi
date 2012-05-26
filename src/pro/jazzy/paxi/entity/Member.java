@@ -9,8 +9,8 @@ import pro.jazzy.paxi.entity.events.OnRoadEvent;
 import pro.jazzy.paxi.entity.events.OnRoadEventBasicImpl;
 
 /**
- * Person in the car.
- * Also as an event 'member get into a car'
+ * Person in the car. Also as an event 'member get into a car'
+ * 
  * @author Zachi
  */
 public class Member extends OnRoadEventBasicImpl {
@@ -18,7 +18,7 @@ public class Member extends OnRoadEventBasicImpl {
 	/**
 	 * Distance on which member get into car.
 	 */
-	private int signInOnDistance;
+	private int signInOnDistance = 0;
 	/**
 	 * Distance on which member get out of car.
 	 */
@@ -118,17 +118,43 @@ public class Member extends OnRoadEventBasicImpl {
 			}
 			lastKnownDistance = allEvents.get(k).onWhatDistance();
 		}
-		return 0;
+		return toPay;
 	}
 
+	/**
+	 * equals signInDistance
+	 */
 	public int onWhatDistance() {
 		return this.signInOnDistance;
 	}
 
-	public double calculate(int kilometers, int routeType, int persons) {
-		double result = 0.0d + kilometers * (PaxiUtility.pricePerFuel / 100)
-				* (PaxiUtility.fuelPerDistance[routeType] / 100) / persons
-				/ 100;
-		return result;
+	private double calculate(int kilometers, int routeType, int persons) {
+		if (persons != 0) {
+			double result = 0.0d + kilometers
+					* (PaxiUtility.pricePerFuel / 100)
+					* (PaxiUtility.fuelPerDistance[routeType] / 100) / persons
+					/ 100;
+			return result;
+		} else {
+			return 0;
+		}
+	}
+
+	/**
+	 * is he in car?
+	 * 
+	 * @return
+	 */
+	public boolean isOnboard() {
+		return signOutOnDistance == -1;
+	}
+
+	public int getDistance() {
+		if (isOnboard()) {
+			int t = PaxiUtility.getCurrentDistance();
+			return t - signInOnDistance;
+		} else {
+			return signOutOnDistance - signInOnDistance;
+		}
 	}
 }
