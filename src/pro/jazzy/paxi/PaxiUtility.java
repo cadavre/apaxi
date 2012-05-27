@@ -52,6 +52,9 @@ public class PaxiUtility {
 	 * @param memberName
 	 */
 	public static void memberIn(String memberName) {
+		if(CurrentRoute == null) {
+			CurrentRoute = new Route();
+		}
 		Member member = new Member(memberName);
 		member.setSignInOnDistance(getCurrentDistance());
 		members.put(memberName, member);
@@ -65,6 +68,9 @@ public class PaxiUtility {
 	 * @return how Much he has to pay
 	 */
 	public static double memberOut(String memberName) {
+		if(CurrentRoute == null) {
+			CurrentRoute = new Route();
+		}
 		Member m = members.get(memberName);
 		m.setSignOutOnDistance(CurrentRoute.getCurrentDistance());
 		CurrentRoute.getRoadEvents().add(new MemberOutEvent(m));
@@ -75,6 +81,10 @@ public class PaxiUtility {
 	 * @return memberNames
 	 */
 	public static String[] getMemberNames() {
+		if(members == null || members.size() == 0) {
+			String[] s = new String[0];
+			return s;
+		}
 		return (String[]) members.keySet().toArray();
 	}
 
@@ -84,6 +94,10 @@ public class PaxiUtility {
 	 * @return
 	 */
 	public static Member[] getMembers() {
+		if(members == null || members.size() == 0) {
+			Member[] m = new Member[0];
+			return m;
+		}
 		ArrayList<Member> memb = new ArrayList<Member>();
 		for (String key : members.keySet()) {
 			memb.add(members.get(key));
@@ -101,7 +115,13 @@ public class PaxiUtility {
 	 * @return
 	 */
 	public static Member getMemberForName(String memberName) {
-		return members.get(memberName);
+		if(members == null) {
+			return null;
+		}
+		if(members.containsKey(memberName)) {
+			return members.get(memberName);
+		}
+		return null;
 	}
 
 	/**
@@ -110,6 +130,9 @@ public class PaxiUtility {
 	 * @return
 	 */
 	public static int getCurrentDistance() {
+		if(CurrentRoute == null) {
+			return 0;
+		}
 		return CurrentRoute.getCurrentDistance();
 	}
 
@@ -119,6 +142,9 @@ public class PaxiUtility {
 	 * @param distance (in meters)
 	 */
 	public static void addDistance(int distance) {
+		if(CurrentRoute == null) {
+			CurrentRoute = new Route();
+		}
 		CurrentRoute.addDistance(distance);
 	}
 
@@ -127,6 +153,9 @@ public class PaxiUtility {
 	 * @param payment
 	 */
 	public static void addPayment(int payment) {
+		if(CurrentRoute == null) {
+			CurrentRoute = new Route();
+		}
 		Payment p = new Payment(payment);
 		CurrentRoute.getRoadEvents().add(p);
 	}
@@ -138,6 +167,9 @@ public class PaxiUtility {
 	 * @param newRouteType
 	 */
 	public static void changeRouteType(int newRouteType) {
+		if(CurrentRoute == null) {
+			CurrentRoute = new Route();
+		}
 		CurrentRoute.setCurrentRouteType(newRouteType);
 		RouteType rt = new RouteType();
 		rt.setDefinedRouteType(newRouteType);
@@ -157,6 +189,9 @@ public class PaxiUtility {
 	 * Everybody leaves!
 	 */
 	public static void stopRoute() {
+		if(CurrentRoute == null) {
+			CurrentRoute = new Route();
+		}
 		for (String s : members.keySet()) {
 			Member m = members.get(s);
 			if (m.isOnboard()) {
