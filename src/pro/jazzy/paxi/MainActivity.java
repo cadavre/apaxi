@@ -386,6 +386,9 @@ public class MainActivity extends Activity implements OnClickListener,
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
+		TextView tvName = (TextView) view.findViewById(R.id.tvName);
+		String toOut = tvName.getText().toString();
+
 		if ((position + 1) == parent.getChildCount()) {
 			Intent intent = new Intent(MainActivity.this,
 					ContactsActivity.class);
@@ -393,8 +396,17 @@ public class MainActivity extends Activity implements OnClickListener,
 			intent.putExtra("iAmOnList", iAmOnList);
 			// TODO check if I'm on the list
 			startActivityForResult(intent, PICK_CONTACT_REQUEST);
+			return;
 		}
-		Toast.makeText(getApplicationContext(), "" + position + " " + id,
+
+		float toPay = PaxiUtility.memberOut(toOut);
+		
+		view.setClickable(false);
+		view.setFocusableInTouchMode(false);
+		view.setFocusable(false);
+		view.setEnabled(false);
+
+		Toast.makeText(getApplicationContext(), "toPay=" + toPay,
 				Toast.LENGTH_SHORT).show();
 	}
 
