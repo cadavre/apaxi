@@ -52,7 +52,7 @@ public class PaxiUtility {
 	 * 
 	 * @param memberName
 	 */
-	public static void memberIn(String memberName) {
+	public static Member memberIn(String memberName) {
 		if(CurrentRoute == null) {
 			CurrentRoute = new Route();
 		}
@@ -60,6 +60,7 @@ public class PaxiUtility {
 		member.setSignInOnDistance(getCurrentDistance());
 		members.put(memberName, member);
 		CurrentRoute.getRoadEvents().add(member);
+		return member;
 	}
 
 	/**
