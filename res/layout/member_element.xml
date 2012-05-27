@@ -10,18 +10,26 @@
 
         <ImageView
             android:id="@+id/ivAvatar"
-            android:layout_gravity="center"
             android:layout_width="60dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
 
         <TextView
             android:id="@+id/tvName"
-            android:layout_gravity="center"
-            android:layout_width="260dp"
-            android:paddingLeft="10dp"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
-            android:text="tekst" />
+            android:layout_gravity="center"
+            android:paddingLeft="10dp"
+            android:text="Imjem Nazwizko" />
 
+        <TextView
+            android:id="@+id/tvCounter"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="right"
+            android:paddingRight="10dp"
+            android:text="168.12km" />
     </LinearLayout>
 
 </LinearLayout>

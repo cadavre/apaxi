@@ -6,34 +6,34 @@
     android:layout_gravity="center_horizontal|center_vertical"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/btnCity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="City" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/btnMixed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:text="mix" />
+        <Button
+            android:id="@+id/btnCity"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="City" />
 
-    <Button
-        android:id="@+id/btnDone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="don" />
+        <Button
+            android:id="@+id/btnMixed"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="mix" />
 
-    <Button
-        android:id="@+id/btnHighway"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:text="hw" />
+        <Button
+            android:id="@+id/btnHighway"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="hw" />
+
+        <Button
+            android:id="@+id/btnDoneRoute"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="don" />
+    </LinearLayout>
 
 </RelativeLayout>

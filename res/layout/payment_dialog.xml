@@ -6,31 +6,39 @@
     android:layout_gravity="center_horizontal|center_vertical"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/btnDone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
-        android:text="dan" />
+        android:layout_alignParentTop="true" >
 
-    <EditText
-        android:id="@+id/etPayment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:ems="10" >
+        <Button
+            android:id="@+id/btnDonePayment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="dan" />
 
-        <requestFocus />
-    </EditText>
+        <EditText
+            android:id="@+id/etPayment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:text="0" />
 
-    <TextView
-        android:id="@+id/tvCurrency"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/etPayment"
-        android:layout_toRightOf="@+id/etPayment"
-        android:text="zł" />
+        <TextView
+            android:id="@+id/tvCurrencyPayment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/etPayment"
+            android:layout_alignBottom="@+id/etPayment"
+            android:layout_toRightOf="@+id/etPayment"
+            android:text="zł" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
