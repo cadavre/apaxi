@@ -2,6 +2,7 @@ package pro.jazzy.paxi;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 import pro.jazzy.paxi.entity.Member;
 import pro.jazzy.paxi.entity.Payment;
@@ -85,7 +86,14 @@ public class PaxiUtility {
 			String[] s = new String[0];
 			return s;
 		}
-		return (String[]) members.keySet().toArray();
+		Iterator<String> it = members.keySet().iterator(); 
+		ArrayList<String> memberNamesList = new ArrayList<String>();
+		while(it.hasNext()) {
+			memberNamesList.add(it.next());
+		}
+		String[] memberNamesArray = new String[memberNamesList.size()];
+		memberNamesList.toArray(memberNamesArray);
+		return memberNamesArray;
 	}
 
 	/**
