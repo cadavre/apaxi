@@ -5,6 +5,7 @@ import java.util.Locale;
 
 import pro.jazzy.paxi.GPSTrackingService.LocalBinder;
 import pro.jazzy.paxi.entity.Member;
+import pro.jazzy.paxi.entity.Route;
 import pro.jazzy.paxi.entity.Serialization;
 import android.app.Activity;
 import android.app.Dialog;
@@ -126,6 +127,18 @@ public class MainActivity extends Activity implements OnClickListener,
 
 		this.preferences = getSharedPreferences(APP_PREFERENCES,
 				Activity.MODE_PRIVATE);
+		
+		SharedPreferences prefs = getSharedPreferences(Serialization.PREF_NAME, 0);
+        String route = prefs.getString("route", "");
+		String members = prefs.getString("members", "");
+        try {
+        	PaxiUtility.CurrentRoute = Serialization.stringToRoute(route);
+        	PaxiUtility.members = Serialization.stringToMembers(members);
+        } catch(Exception e) {
+        	//log or something
+        	PaxiUtility.newRoute();
+        }
+        
 	}
 
 	@Override
@@ -507,25 +520,11 @@ public class MainActivity extends Activity implements OnClickListener,
 		String route = Serialization.routeAsString();
 		String members = Serialization.membersAsString();
 		
-		super.onStop();
     	SharedPreferences sharedPrefs = getSharedPreferences(Serialization.PREF_NAME, 0);
     	SharedPreferences.Editor editor = sharedPrefs.edit();
     	editor.putString("route", route);
     	editor.putString("members", members);
     	editor.commit();
-	}
-	
-	@Override
-	public void onRestart() {
-		SharedPreferences prefs = getSharedPreferences(Serialization.PREF_NAME, 0);
-        String route = prefs.getString("route", "");
-		String members = prefs.getString("members", "");
-        try {
-        	PaxiUtility.CurrentRoute = Serialization.stringToRoute(route);
-        	PaxiUtility.members = Serialization.stringToMembers(members);
-        } catch(Exception e) {
-        	//log or something
-        }
-        super.onRestart();
+    	super.onStop();
 	}
 }
