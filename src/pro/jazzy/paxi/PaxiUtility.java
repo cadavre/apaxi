@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import pro.jazzy.paxi.entity.Member;
 import pro.jazzy.paxi.entity.Payment;
 import pro.jazzy.paxi.entity.Route;
@@ -20,6 +23,8 @@ public class PaxiUtility implements Serializable {
 	public static Route CurrentRoute = new Route(); //serializable!!
 	public static int DEFAULT_ROUTE_TYPE = 0;
 	public static Hashtable<String, Member> members = new Hashtable<String, Member>(); //serializable!!
+	
+	public static Context ctx;
 
 	/**
 	 * price per 1 fuel x 100
@@ -43,7 +48,30 @@ public class PaxiUtility implements Serializable {
 	 * New journey, New Quest ;) Wipe out last remembered road and everything
 	 * about it.
 	 */
-	public static void newRoute() {
+	public static void newRoute(Context context) {
+		ctx = context;
+		SharedPreferences pref = context.getSharedPreferences("paxi.data", 0);
+		
+		String type = pref.getString("mode", "mixed"); // city / highway
+		if(type == "mixed") {
+			DEFAULT_ROUTE_TYPE = ROUTE_TYPE_MIXED;
+		}
+		if(type == "city") {
+			DEFAULT_ROUTE_TYPE = ROUTE_TYPE_CITY;
+		}
+		if(type == "highway") {
+			DEFAULT_ROUTE_TYPE = ROUTE_TYPE_HIGHWAY;
+		}
+		
+		Float fuelCity = pref.getFloat("etFuelCity", 9.0f);
+		setBurnForRoutetype(ROUTE_TYPE_CITY, fuelCity);
+		Float fuelhi = pref.getFloat("etFuelHighway", 7.0f);
+		setBurnForRoutetype(ROUTE_TYPE_HIGHWAY, fuelhi);
+		setBurnForRoutetype(ROUTE_TYPE_MIXED, (fuelhi + fuelCity) /2);
+		
+		Float fuelpri = pref.getFloat("etFuelPrice", 5.9f);
+		pricePerFuel = fuelpri;
+		
 		CurrentRoute = new Route();
 		members = new Hashtable<String, Member>();
 	}
@@ -191,7 +219,7 @@ public class PaxiUtility implements Serializable {
 	 * @param routeType
 	 * @param burning
 	 */
-	public static void setBurnForRoutetype(int routeType, int burning) {
+	public static void setBurnForRoutetype(int routeType, float burning) {
 		fuelPerDistance[routeType] = burning;
 	}
 
