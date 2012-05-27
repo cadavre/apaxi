@@ -1,5 +1,6 @@
 package pro.jazzy.paxi;
 
+import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Locale;
 
@@ -70,6 +71,8 @@ public class MainActivity extends Activity implements OnClickListener,
 	boolean trackingBounded = false;
 
 	boolean iAmOnList = true;
+	
+	ArrayList<Long> summariedMembers;
 
 	ArrayAdapter<String> membersAdapter;
 
@@ -109,7 +112,9 @@ public class MainActivity extends Activity implements OnClickListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		PaxiUtility.newRoute();
+		summariedMembers = new ArrayList<Long>();
+		
+		PaxiUtility.newRoute(getApplicationContext());
 
 		createMembersListView();
 
@@ -398,14 +403,14 @@ public class MainActivity extends Activity implements OnClickListener,
 			startActivityForResult(intent, PICK_CONTACT_REQUEST);
 			return;
 		}
+		
+		if (summariedMembers.indexOf(id) != -1) {
+			Log.d(TAG, "already done!");
+			return;
+		}
 
 		float toPay = PaxiUtility.memberOut(toOut);
-		
-		view.setClickable(false);
-		view.setFocusableInTouchMode(false);
-		view.setFocusable(false);
-		view.setEnabled(false);
-
+		summariedMembers.add(id);
 		Toast.makeText(getApplicationContext(), "toPay=" + toPay,
 				Toast.LENGTH_SHORT).show();
 	}
@@ -493,7 +498,7 @@ public class MainActivity extends Activity implements OnClickListener,
 	}
 
 	private void clearAdapter() {
-		PaxiUtility.newRoute();
+		PaxiUtility.newRoute(getApplicationContext());
 		getMe();
 		createMembersAdapter();
 		lvMembersList.setAdapter(membersAdapter);
