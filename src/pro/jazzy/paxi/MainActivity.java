@@ -1,6 +1,7 @@
 package pro.jazzy.paxi;
 
 import pro.jazzy.paxi.GPSTrackingService.LocalBinder;
+import pro.jazzy.paxi.entity.Serialization;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -9,12 +10,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -239,5 +240,31 @@ public class MainActivity extends Activity implements OnClickListener {
 	private void handleGpsStatusChange() {
 		Log.i(TAG, trackingService.getDistance() + "");
 	}
-
+	
+	@Override
+	public void onStop() {
+		String route = Serialization.routeAsString();
+		String members = Serialization.membersAsString();
+		
+		super.onStop();
+    	SharedPreferences sharedPrefs = getSharedPreferences(Serialization.PREF_NAME, 0);
+    	SharedPreferences.Editor editor = sharedPrefs.edit();
+    	editor.putString("route", route);
+    	editor.putString("members", members);
+    	editor.commit();
+	}
+	
+	@Override
+	public void onRestart() {
+		SharedPreferences prefs = getSharedPreferences(Serialization.PREF_NAME, 0);
+        String route = prefs.getString("route", "");
+		String members = prefs.getString("members", "");
+        try {
+        	PaxiUtility.CurrentRoute = Serialization.stringToRoute(route);
+        	PaxiUtility.members = Serialization.stringToMembers(members);
+        } catch(Exception e) {
+        	//log or something
+        }
+        super.onRestart();
+	}
 }
