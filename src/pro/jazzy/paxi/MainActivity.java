@@ -518,31 +518,34 @@ public class MainActivity extends Activity implements OnClickListener,
 		lvMembersList.setAdapter(membersAdapter);
 		Log.i(TAG, "total dist GPS: " + trackingService.getDistance());
 	}
-	
+
 	@Override
 	public void onStop() {
+		Log.d(TAG, "onstop");
 		String route = Serialization.routeAsString();
 		String members = Serialization.membersAsString();
-		
+
+		SharedPreferences sharedPrefs = getSharedPreferences(
+				Serialization.PREF_NAME, 0);
+		SharedPreferences.Editor editor = sharedPrefs.edit();
+		editor.putString("route", route);
+		editor.putString("members", members);
+		editor.commit();
 		super.onStop();
-    	SharedPreferences sharedPrefs = getSharedPreferences(Serialization.PREF_NAME, 0);
-    	SharedPreferences.Editor editor = sharedPrefs.edit();
-    	editor.putString("route", route);
-    	editor.putString("members", members);
-    	editor.commit();
 	}
-	
+
 	@Override
 	public void onRestart() {
-		SharedPreferences prefs = getSharedPreferences(Serialization.PREF_NAME, 0);
-        String route = prefs.getString("route", "");
+		SharedPreferences prefs = getSharedPreferences(Serialization.PREF_NAME,
+				0);
+		String route = prefs.getString("route", "");
 		String members = prefs.getString("members", "");
-        try {
-        	PaxiUtility.CurrentRoute = Serialization.stringToRoute(route);
-        	PaxiUtility.members = Serialization.stringToMembers(members);
-        } catch(Exception e) {
-        	//log or something
-        }
-        super.onRestart();
+		try {
+			PaxiUtility.CurrentRoute = Serialization.stringToRoute(route);
+			PaxiUtility.members = Serialization.stringToMembers(members);
+		} catch (Exception e) {
+			// log or something
+		}
+		super.onRestart();
 	}
 }
