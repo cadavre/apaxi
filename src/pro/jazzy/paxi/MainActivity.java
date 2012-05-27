@@ -69,6 +69,8 @@ public class MainActivity extends Activity implements OnClickListener,
 
 	boolean trackingBounded = false;
 
+	boolean iAmOnList = true;
+
 	ArrayAdapter<String> membersAdapter;
 
 	ListView lvMembersList;
@@ -196,7 +198,7 @@ public class MainActivity extends Activity implements OnClickListener,
 
 	@Override
 	protected void onPrepareDialog(final int id, final Dialog dialog) {
-		
+
 		Currency currency = Currency.getInstance(Locale.getDefault());
 
 		final EditText etFuelCity = (EditText) dialog
@@ -266,8 +268,9 @@ public class MainActivity extends Activity implements OnClickListener,
 					"etFuelHighway", 7.0f)));
 			etFuelPrice.setText(String.valueOf(this.preferences.getFloat(
 					"etFuelPrice", 5.9f)));
-			
-			TextView tvCurrencyFuel = (TextView)dialog.findViewById(R.id.tvCurrencyFuel);
+
+			TextView tvCurrencyFuel = (TextView) dialog
+					.findViewById(R.id.tvCurrencyFuel);
 			tvCurrencyFuel.setText(currency.getSymbol());
 
 			Button btnKm = (Button) dialog.findViewById(R.id.btnKm);
@@ -281,10 +284,12 @@ public class MainActivity extends Activity implements OnClickListener,
 					preferencesEditor.putBoolean("lkm", true);
 					preferencesEditor.putBoolean("gl", false);
 					preferencesEditor.commit();
-					
-					TextView tvCityMetrics = (TextView) dialog.findViewById(R.id.tvCityMetrics);
+
+					TextView tvCityMetrics = (TextView) dialog
+							.findViewById(R.id.tvCityMetrics);
 					tvCityMetrics.setText("l/100km");
-					TextView tvHighwayMetrics = (TextView) dialog.findViewById(R.id.tvHighwayMetrics);
+					TextView tvHighwayMetrics = (TextView) dialog
+							.findViewById(R.id.tvHighwayMetrics);
 					tvHighwayMetrics.setText("l/100km");
 				}
 			});
@@ -297,10 +302,12 @@ public class MainActivity extends Activity implements OnClickListener,
 					preferencesEditor.putBoolean("lkm", false);
 					preferencesEditor.putBoolean("gl", true);
 					preferencesEditor.commit();
-					
-					TextView tvCityMetrics = (TextView) dialog.findViewById(R.id.tvCityMetrics);
+
+					TextView tvCityMetrics = (TextView) dialog
+							.findViewById(R.id.tvCityMetrics);
 					tvCityMetrics.setText("gal/100m");
-					TextView tvHighwayMetrics = (TextView) dialog.findViewById(R.id.tvHighwayMetrics);
+					TextView tvHighwayMetrics = (TextView) dialog
+							.findViewById(R.id.tvHighwayMetrics);
 					tvHighwayMetrics.setText("gal/100m");
 				}
 			});
@@ -334,7 +341,8 @@ public class MainActivity extends Activity implements OnClickListener,
 
 			break;
 		case DIALOG_PAYMENT:
-			TextView tvCurrencyPayment = (TextView)dialog.findViewById(R.id.tvCurrencyPayment);
+			TextView tvCurrencyPayment = (TextView) dialog
+					.findViewById(R.id.tvCurrencyPayment);
 			tvCurrencyPayment.setText(currency.getSymbol());
 
 			Button btnDonePayment = (Button) dialog
@@ -382,6 +390,7 @@ public class MainActivity extends Activity implements OnClickListener,
 			Intent intent = new Intent(MainActivity.this,
 					ContactsActivity.class);
 			intent.putExtra("membersCount", parent.getChildCount() - 1);
+			intent.putExtra("iAmOnList", iAmOnList);
 			// TODO check if I'm on the list
 			startActivityForResult(intent, PICK_CONTACT_REQUEST);
 		}
@@ -392,8 +401,16 @@ public class MainActivity extends Activity implements OnClickListener,
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		Toast.makeText(getApplicationContext(), "long " + position + " " + id,
+		TextView tvName = (TextView) view.findViewById(R.id.tvName);
+		String toRemove = tvName.getText().toString();
+		PaxiUtility.removeMember(toRemove);
+		createMembersAdapter();
+		lvMembersList.setAdapter(membersAdapter);
+		Toast.makeText(getApplicationContext(), toRemove + " removed!",
 				Toast.LENGTH_SHORT).show();
+		if (position == (parent.getAdapter().getCount() - 2)) {
+			iAmOnList = false;
+		}
 		return false;
 	}
 

@@ -33,10 +33,11 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
 		setContentView(R.layout.contacts);
 
 		this.membersCount = getIntent().getExtras().getInt("membersCount", 0);
+		boolean iAmOnList = getIntent().getExtras().getBoolean("iAmOnList", false);
 
 		lvContactsList = (ListView) findViewById(R.id.lvContactsList);
 
-		Cursor cursor = getContacts(true);
+		Cursor cursor = getContacts(iAmOnList);
 		String[] fields = new String[] { ContactsContract.Data.DISPLAY_NAME,
 				ContactsContract.Data.PHOTO_THUMBNAIL_URI };
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,

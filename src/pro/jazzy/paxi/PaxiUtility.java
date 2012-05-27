@@ -78,6 +78,10 @@ public class PaxiUtility {
 		CurrentRoute.getRoadEvents().add(new MemberOutEvent(m));
 		return m.howMuchToPay();
 	}
+	
+	public static void removeMember(String memberName) {
+		members.remove(memberName);
+	}
 
 	/**
 	 * @return memberNames
