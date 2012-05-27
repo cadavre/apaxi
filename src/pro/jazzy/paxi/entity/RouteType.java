@@ -1,5 +1,7 @@
 package pro.jazzy.paxi.entity;
 
+import java.io.Serializable;
+
 import pro.jazzy.paxi.PaxiUtility;
 import pro.jazzy.paxi.entity.events.OnRoadEventBasicImpl;
 
@@ -7,7 +9,7 @@ import pro.jazzy.paxi.entity.events.OnRoadEventBasicImpl;
  * Route type shows how much you pay for a distance
  * @author Zachi
  */
-public class RouteType extends OnRoadEventBasicImpl {
+public class RouteType extends OnRoadEventBasicImpl implements Serializable {
 	private int from;
 	private int to = -1;
 	private int definedRouteType;

@@ -1,8 +1,10 @@
 package pro.jazzy.paxi.entity.events;
 
+import java.io.Serializable;
+
 import pro.jazzy.paxi.entity.Member;
 
-public class MemberOutEvent extends OnRoadEventBasicImpl {
+public class MemberOutEvent extends OnRoadEventBasicImpl implements Serializable {
 
 	private Member member;
 	

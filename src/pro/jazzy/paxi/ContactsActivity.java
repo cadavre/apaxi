@@ -32,9 +32,11 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contacts);
 
+		this.membersCount = getIntent().getExtras().getInt("membersCount", 0);
+
 		lvContactsList = (ListView) findViewById(R.id.lvContactsList);
 
-		Cursor cursor = getContacts();
+		Cursor cursor = getContacts(true);
 		String[] fields = new String[] { ContactsContract.Data.DISPLAY_NAME,
 				ContactsContract.Data.PHOTO_THUMBNAIL_URI };
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
@@ -42,12 +44,9 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
 						R.id.tvName, R.id.ivAvatar });
 		lvContactsList.setAdapter(adapter);
 		lvContactsList.setOnItemClickListener(this);
-
-		membersCount = getIntent().getExtras().getInt("membersCount", 0);
-
 	}
 
-	private Cursor getContacts() {
+	private Cursor getContacts(boolean withMe) {
 		Uri uri = ContactsContract.Contacts.CONTENT_URI;
 		String[] projection = new String[] { ContactsContract.Contacts._ID,
 				ContactsContract.Contacts.DISPLAY_NAME,
@@ -65,22 +64,27 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
 				ContactsContract.Contacts.PHOTO_THUMBNAIL_URI };
 		MatrixCursor retCursor = new MatrixCursor(columnNames);
 
-		uri = ContactsContract.Profile.CONTENT_URI;
-		projection = new String[] { ContactsContract.Profile._ID,
-				ContactsContract.Profile.DISPLAY_NAME,
-				ContactsContract.Profile.PHOTO_THUMBNAIL_URI };
-		selection = ContactsContract.Profile.IS_USER_PROFILE;
-		Cursor profileCursor = managedQuery(uri, projection, selection,
-				selectionArgs, null);
-
-		profileCursor.moveToFirst();
 		String[] row = new String[3];
-		row[0] = "Driver";
-		row[1] = profileCursor.getString(1);
-		row[2] = profileCursor.getString(2);
-		retCursor.addRow(row);
+
+		if (withMe) {
+			uri = ContactsContract.Profile.CONTENT_URI;
+			projection = new String[] { ContactsContract.Profile._ID,
+					ContactsContract.Profile.DISPLAY_NAME,
+					ContactsContract.Profile.PHOTO_THUMBNAIL_URI };
+			selection = ContactsContract.Profile.IS_USER_PROFILE;
+			Cursor profileCursor = managedQuery(uri, projection, selection,
+					selectionArgs, null);
+
+			profileCursor.moveToFirst();
+			row[0] = profileCursor.getString(0);
+			row[1] = profileCursor.getString(1);
+			row[2] = profileCursor.getString(2);
+			retCursor.addRow(row);
+		}
+
+		int next = (membersCount + 1);
 		row[0] = String.format("%d", 999999 - membersCount);
-		row[1] = "Passenger #" + (membersCount + 1);
+		row[1] = "Passenger #" + next;
 		row[2] = "";
 		retCursor.addRow(row);
 
@@ -101,9 +105,17 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
 			long id) {
 		TextView tvName = (TextView) view.findViewById(R.id.tvName);
 		Intent intent = new Intent();
-		intent.putExtra("Name", tvName.getText().toString());
+		Cursor contactsCursor = getContacts(true);
+		contactsCursor.moveToFirst();
+		while (contactsCursor.isAfterLast() == false) {
+			if (Long.parseLong(contactsCursor.getString(0)) == id) {
+				intent.putExtra("name", contactsCursor.getString(1));
+				intent.putExtra("photo", contactsCursor.getString(2));
+				break;
+			}
+			contactsCursor.moveToNext();
+		}
 		setResult(RESULT_OK, intent);
 		finish();
 	}
-
 }

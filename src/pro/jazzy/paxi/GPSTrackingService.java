@@ -36,6 +36,8 @@ public class GPSTrackingService extends Service {
 	private ArrayList<Location> lastLocations;
 
 	private int distance = 0;
+	
+	private int distanceDelta = 0;
 
 	private boolean tracking = false;
 
@@ -104,6 +106,7 @@ public class GPSTrackingService extends Service {
 		lastLocations.add(location);
 		if ((lastLocations.size() > LAST_LOCATIONS) && (distance > accuracy)) {
 			lastLocations = new ArrayList<Location>(lastLocations.subList(1, 6));
+			this.distanceDelta = distance;
 			this.distance += distance;
 			sendBroadcast(new Intent(REFRESH_DATA_INTENT));
 		}
@@ -111,6 +114,10 @@ public class GPSTrackingService extends Service {
 
 	public int getDistance() {
 		return this.distance;
+	}
+	
+	public int getDistanceDelta() {
+		return this.distanceDelta;
 	}
 	
 	public boolean isTracking() {

@@ -1,5 +1,6 @@
 package pro.jazzy.paxi.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -13,7 +14,7 @@ import pro.jazzy.paxi.entity.events.OnRoadEventBasicImpl;
  * 
  * @author Zachi
  */
-public class Member extends OnRoadEventBasicImpl {
+public class Member extends OnRoadEventBasicImpl implements Serializable {
 
 	/**
 	 * Distance on which member get into car.
@@ -73,13 +74,13 @@ public class Member extends OnRoadEventBasicImpl {
 	}
 
 	// TODO How Much TO Pay - fckin great Zachi algorithm ;]
-	public int howMuchToPay() {
+	public float howMuchToPay() {
 		// 1. sort events array
 		Collections.sort(PaxiUtility.CurrentRoute.getRoadEvents());
 		// 2. while not thisEvent - count members
 		ArrayList<OnRoadEvent> allEvents = PaxiUtility.CurrentRoute
 				.getRoadEvents();
-		int toPay = 0;
+		float toPay = 0;
 		int i = 0; // firstEvent
 		int membersOnboard = 0;
 		int currentType = PaxiUtility.CurrentRoute.getCurrentRouteType();
@@ -145,11 +146,11 @@ public class Member extends OnRoadEventBasicImpl {
 		return this.signInOnDistance;
 	}
 
-	private double calculate(int kilometers, int routeType, int persons) {
+	private float calculate(int kilometers, int routeType, int persons) {
 		if (persons != 0) {
-			double result = 0.0d + kilometers
-					* (PaxiUtility.pricePerFuel / 100)
-					* (PaxiUtility.fuelPerDistance[routeType] / 100) / persons
+			float result = 0.0f + kilometers
+					* (PaxiUtility.pricePerFuel)
+					* (PaxiUtility.fuelPerDistance[routeType]) / persons
 					/ 100 / 1000;
 			return result;
 		} else {

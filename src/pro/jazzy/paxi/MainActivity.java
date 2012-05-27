@@ -1,6 +1,10 @@
 package pro.jazzy.paxi;
 
+import java.util.Currency;
+import java.util.Locale;
+
 import pro.jazzy.paxi.GPSTrackingService.LocalBinder;
+import pro.jazzy.paxi.entity.Member;
 import pro.jazzy.paxi.entity.Serialization;
 import android.app.Activity;
 import android.app.Dialog;
@@ -11,15 +15,28 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends Activity implements OnClickListener {
+public class MainActivity extends Activity implements OnClickListener,
+		OnItemClickListener, OnItemLongClickListener {
 
 	private static final String TAG = "Paxi";
 
@@ -37,26 +54,63 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	static final int DIALOG_PAYMENT = 2;
 
+	static final String APP_PREFERENCES = "paxi.data";
+
+	SharedPreferences preferences = null;
+
 	private static final String REFRESH_DATA_INTENT = "jazzy_gps_refresh";
 
 	GPSTrackingService trackingService;
 
 	TrackingUpdateReceiver updateReceiver;
-	
+
 	Button btnAction;
 
 	int currentActionBtnState = ACTION_BUTTON_START;
 
 	boolean trackingBounded = false;
 
+	ArrayAdapter<String> membersAdapter;
+
+	ListView lvMembersList;
+
+	private void createMembersListView() {
+		lvMembersList = (ListView) findViewById(R.id.lvMembersList);
+
+		LayoutInflater inflater = (LayoutInflater) this
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View rowView = inflater.inflate(R.layout.member_element, null, false);
+		TextView tvNameTemp = (TextView) rowView.findViewById(R.id.tvName);
+		tvNameTemp.setText("Add");
+		TextView tvCounterTemp = (TextView) rowView
+				.findViewById(R.id.tvCounter);
+		tvCounterTemp.setText("");
+		ImageView ivAvatarTemp = (ImageView) rowView
+				.findViewById(R.id.ivAvatar);
+		ivAvatarTemp.setImageResource(android.R.drawable.btn_plus);
+
+		lvMembersList.addFooterView(rowView);
+
+		lvMembersList.setOnItemClickListener(this);
+		lvMembersList.setOnItemLongClickListener(this);
+
+		createMembersAdapter();
+		lvMembersList.setAdapter(membersAdapter);
+	}
+
+	private void createMembersAdapter() {
+		membersAdapter = new MembersAdapter(this, PaxiUtility.getMemberNames(),
+				PaxiUtility.getMembers());
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		ListView lvMembersList = (ListView) findViewById(R.id.lvMembersList);
-		// ArrayAdapter<T> membersAdapter = new A
-		// lvMembersList.setAdapter(null);
+		PaxiUtility.newRoute();
+
+		createMembersListView();
 
 		Button btnRouteMode = (Button) findViewById(R.id.btnRouteMode);
 		Button btnSettings = (Button) findViewById(R.id.btnSettings);
@@ -68,31 +122,10 @@ public class MainActivity extends Activity implements OnClickListener {
 		btnPayment.setOnClickListener(this);
 		btnAction.setOnClickListener(this);
 
-		/*
-		 * Button btnAdd = (Button) findViewById(R.id.btnAdd); Button btnGpsOn =
-		 * (Button) findViewById(R.id.btnGpsOn); Button btnGpsOff = (Button)
-		 * findViewById(R.id.btnGpsOff);
-		 * 
-		 * btnAdd.setOnClickListener(new OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) { Intent intent = new
-		 * Intent(MainActivity.this, ContactsActivity.class);
-		 * intent.putExtra("membersCount", 4); startActivityForResult(intent,
-		 * PICK_CONTACT_REQUEST); } }); btnGpsOn.setOnClickListener(new
-		 * OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) { String msg; if
-		 * (!trackingService.isTracking()) { trackingService.start(); msg =
-		 * "Tracking is on..."; } else { msg = "Tracking already started!"; }
-		 * Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT)
-		 * .show(); } }); btnGpsOff.setOnClickListener(new OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) { String msg =
-		 * "Tracking is off..."; if (trackingService.isTracking()) {
-		 * trackingService.stop(); } Toast.makeText(getApplicationContext(),
-		 * msg, Toast.LENGTH_SHORT) .show(); } });
-		 */
+		this.getMe();
 
+		this.preferences = getSharedPreferences(APP_PREFERENCES,
+				Activity.MODE_PRIVATE);
 	}
 
 	@Override
@@ -110,6 +143,15 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 		IntentFilter intentFilter = new IntentFilter(REFRESH_DATA_INTENT);
 		registerReceiver(updateReceiver, intentFilter);
+		if (trackingBounded) {
+			PaxiUtility.CurrentRoute.setCurrentDistance(trackingService
+					.getDistance());
+			createMembersAdapter();
+			lvMembersList.setAdapter(membersAdapter);
+			Log.i(TAG,
+					"loaded distance from memory "
+							+ trackingService.getDistance());
+		}
 	}
 
 	@Override
@@ -123,7 +165,11 @@ public class MainActivity extends Activity implements OnClickListener {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == PICK_CONTACT_REQUEST) {
 			if (resultCode == RESULT_OK) {
-				Log.d(TAG, data.toString());
+				Member lastMember = PaxiUtility.memberIn(data.getExtras()
+						.getString("name"));
+				lastMember.setPhotoUri(data.getExtras().getString("photo"));
+				createMembersAdapter();
+				lvMembersList.setAdapter(membersAdapter);
 			}
 		}
 	}
@@ -150,17 +196,164 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	@Override
-	protected void onPrepareDialog(int id, final Dialog dialog) {
+	protected void onPrepareDialog(final int id, final Dialog dialog) {
+		
+		Currency currency = Currency.getInstance(Locale.getDefault());
 
-		Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
-		btnDone.setOnClickListener(new OnClickListener() {
+		final EditText etFuelCity = (EditText) dialog
+				.findViewById(R.id.etFuelCity);
+		final EditText etFuelHighway = (EditText) dialog
+				.findViewById(R.id.etFuelHighway);
+		final EditText etFuelPrice = (EditText) dialog
+				.findViewById(R.id.etFuelPrice);
 
-			@Override
-			public void onClick(View v) {
-				// saving
-				dialog.dismiss();
-			}
-		});
+		switch (id) {
+		case DIALOG_ROUTE_MODE:
+
+			Button btnCity = (Button) dialog.findViewById(R.id.btnCity);
+			btnCity.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					SharedPreferences.Editor preferencesEditor = MainActivity.this.preferences
+							.edit();
+					preferencesEditor.putString("mode", "city");
+					preferencesEditor.commit();
+					PaxiUtility.changeRouteType(PaxiUtility.ROUTE_TYPE_CITY);
+					dialog.dismiss();
+				}
+			});
+
+			Button btnMixed = (Button) dialog.findViewById(R.id.btnMixed);
+			btnMixed.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					SharedPreferences.Editor preferencesEditor = MainActivity.this.preferences
+							.edit();
+					preferencesEditor.putString("mode", "mixed");
+					preferencesEditor.commit();
+					PaxiUtility.changeRouteType(PaxiUtility.ROUTE_TYPE_MIXED);
+					dialog.dismiss();
+				}
+			});
+
+			Button btnHighway = (Button) dialog.findViewById(R.id.btnHighway);
+			btnHighway.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					SharedPreferences.Editor preferencesEditor = MainActivity.this.preferences
+							.edit();
+					preferencesEditor.putString("mode", "highway");
+					preferencesEditor.commit();
+					PaxiUtility.changeRouteType(PaxiUtility.ROUTE_TYPE_HIGHWAY);
+					dialog.dismiss();
+				}
+			});
+
+			Button btnDoneRoute = (Button) dialog
+					.findViewById(R.id.btnDoneRoute);
+			btnDoneRoute.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+				}
+			});
+
+			break;
+		case DIALOG_SETTINGS:
+
+			etFuelCity.setText(String.valueOf(this.preferences.getFloat(
+					"etFuelCity", 9.0f)));
+			etFuelHighway.setText(String.valueOf(this.preferences.getFloat(
+					"etFuelHighway", 7.0f)));
+			etFuelPrice.setText(String.valueOf(this.preferences.getFloat(
+					"etFuelPrice", 5.9f)));
+			
+			TextView tvCurrencyFuel = (TextView)dialog.findViewById(R.id.tvCurrencyFuel);
+			tvCurrencyFuel.setText(currency.getSymbol());
+
+			Button btnKm = (Button) dialog.findViewById(R.id.btnKm);
+			Button btnMiles = (Button) dialog.findViewById(R.id.btnMiles);
+
+			btnKm.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					SharedPreferences.Editor preferencesEditor = MainActivity.this.preferences
+							.edit();
+					preferencesEditor.putBoolean("lkm", true);
+					preferencesEditor.putBoolean("gl", false);
+					preferencesEditor.commit();
+					
+					TextView tvCityMetrics = (TextView) dialog.findViewById(R.id.tvCityMetrics);
+					tvCityMetrics.setText("l/100km");
+					TextView tvHighwayMetrics = (TextView) dialog.findViewById(R.id.tvHighwayMetrics);
+					tvHighwayMetrics.setText("l/100km");
+				}
+			});
+
+			btnMiles.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					SharedPreferences.Editor preferencesEditor = MainActivity.this.preferences
+							.edit();
+					preferencesEditor.putBoolean("lkm", false);
+					preferencesEditor.putBoolean("gl", true);
+					preferencesEditor.commit();
+					
+					TextView tvCityMetrics = (TextView) dialog.findViewById(R.id.tvCityMetrics);
+					tvCityMetrics.setText("gal/100m");
+					TextView tvHighwayMetrics = (TextView) dialog.findViewById(R.id.tvHighwayMetrics);
+					tvHighwayMetrics.setText("gal/100m");
+				}
+			});
+
+			Button btnDoneSettings = (Button) dialog
+					.findViewById(R.id.btnDoneSettings);
+			btnDoneSettings.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					SharedPreferences.Editor preferencesEditor = MainActivity.this.preferences
+							.edit();
+					preferencesEditor.putFloat(
+							"etFuelCity",
+							Float.valueOf(
+									etFuelCity.getText().toString().trim())
+									.floatValue());
+					preferencesEditor.putFloat(
+							"etFuelHighway",
+							Float.valueOf(
+									etFuelHighway.getText().toString().trim())
+									.floatValue());
+					preferencesEditor.putFloat(
+							"etFuelPrice",
+							Float.valueOf(
+									etFuelPrice.getText().toString().trim())
+									.floatValue());
+					preferencesEditor.commit();
+					dialog.dismiss();
+				}
+			});
+
+			break;
+		case DIALOG_PAYMENT:
+			TextView tvCurrencyPayment = (TextView)dialog.findViewById(R.id.tvCurrencyPayment);
+			tvCurrencyPayment.setText(currency.getSymbol());
+
+			Button btnDonePayment = (Button) dialog
+					.findViewById(R.id.btnDonePayment);
+			btnDonePayment.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					EditText etPayment = (EditText) dialog
+							.findViewById(R.id.etPayment);
+					int payment = (int) (Float.valueOf(
+							etPayment.getText().toString().trim()).floatValue() * 100);
+					PaxiUtility.addPayment(payment);
+					dialog.dismiss();
+				}
+			});
+			break;
+		}
 
 		super.onPrepareDialog(id, dialog);
 	}
@@ -183,16 +376,53 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		if ((position + 1) == parent.getChildCount()) {
+			Intent intent = new Intent(MainActivity.this,
+					ContactsActivity.class);
+			intent.putExtra("membersCount", parent.getChildCount() - 1);
+			// TODO check if I'm on the list
+			startActivityForResult(intent, PICK_CONTACT_REQUEST);
+		}
+		Toast.makeText(getApplicationContext(), "" + position + " " + id,
+				Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view,
+			int position, long id) {
+		Toast.makeText(getApplicationContext(), "long " + position + " " + id,
+				Toast.LENGTH_SHORT).show();
+		return false;
+	}
+
 	private void handleActionButton() {
+		String msg;
 		switch (this.currentActionBtnState) {
 		case ACTION_BUTTON_START:
-			PaxiUtility.newRoute();
+			if (!trackingService.isTracking()) {
+				trackingService.start();
+				msg = "Tracking is on...";
+			} else {
+				msg = "Tracking already started!";
+			}
+			Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT)
+					.show();
 			bindStopAction();
 			break;
 		case ACTION_BUTTON_STOP:
+			msg = "Tracking is off...";
+			if (trackingService.isTracking()) {
+				trackingService.stop();
+			}
+			Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT)
+					.show();
 			bindClearAction();
 			break;
 		case ACTION_BUTTON_CLEAR:
+			clearAdapter();
 			bindStartAction();
 			break;
 		}
@@ -211,6 +441,34 @@ public class MainActivity extends Activity implements OnClickListener {
 	private void bindClearAction() {
 		btnAction.setText("Clear");
 		this.currentActionBtnState = ACTION_BUTTON_CLEAR;
+	}
+
+	private void getMe() {
+		String[] row = new String[3];
+		Uri uri = ContactsContract.Profile.CONTENT_URI;
+		String[] projection = new String[] { ContactsContract.Profile._ID,
+				ContactsContract.Profile.DISPLAY_NAME,
+				ContactsContract.Profile.PHOTO_THUMBNAIL_URI };
+		String selection = ContactsContract.Profile.IS_USER_PROFILE;
+		Cursor profileCursor = managedQuery(uri, projection, selection, null,
+				null);
+
+		profileCursor.moveToFirst();
+		row[0] = profileCursor.getString(0); // id
+		row[1] = profileCursor.getString(1); // name
+		row[2] = profileCursor.getString(2); // photo uri
+		Member lastMember = PaxiUtility.memberIn(profileCursor.getString(1));
+		lastMember.setPhotoUri(profileCursor.getString(2));
+
+		createMembersAdapter();
+		lvMembersList.setAdapter(membersAdapter);
+	}
+
+	private void clearAdapter() {
+		PaxiUtility.newRoute();
+		getMe();
+		createMembersAdapter();
+		lvMembersList.setAdapter(membersAdapter);
 	}
 
 	private ServiceConnection mConnection = new ServiceConnection() {
@@ -236,9 +494,12 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 		}
 	}
-	
+
 	private void handleGpsStatusChange() {
-		Log.i(TAG, trackingService.getDistance() + "");
+		PaxiUtility.addDistance(trackingService.getDistanceDelta());
+		createMembersAdapter();
+		lvMembersList.setAdapter(membersAdapter);
+		Log.i(TAG, "total dist GPS: " + trackingService.getDistance());
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package pro.jazzy.paxi;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -15,20 +16,20 @@ import pro.jazzy.paxi.entity.events.MemberOutEvent;
  * 
  * @author Zachi
  */
-public class PaxiUtility {
-	public static Route CurrentRoute = new Route();
+public class PaxiUtility implements Serializable {
+	public static Route CurrentRoute = new Route(); //serializable!!
 	public static int DEFAULT_ROUTE_TYPE = 0;
-	public static Hashtable<String, Member> members = new Hashtable<String, Member>();
+	public static Hashtable<String, Member> members = new Hashtable<String, Member>(); //serializable!!
 
 	/**
 	 * price per 1 fuel x 100
 	 */
-	public static int pricePerFuel = 535;
+	public static float pricePerFuel = 0.0f;
 
 	/**
 	 * fuel per 1000 distance * 100 (100 km)
 	 */
-	public static int[] fuelPerDistance = new int[] { 700, 800, 750 };
+	public static float[] fuelPerDistance = new float[] { 7.0f, 8.0f, 9.0f };
 
 	public final static int ROUTE_TYPE_CITY = 0;
 	public final static int ROUTE_TYPE_HIGHWAY = 1;
@@ -69,7 +70,7 @@ public class PaxiUtility {
 	 * @param memberName
 	 * @return how Much he has to pay
 	 */
-	public static double memberOut(String memberName) {
+	public static float memberOut(String memberName) {
 		if(CurrentRoute == null) {
 			CurrentRoute = new Route();
 		}
@@ -161,7 +162,7 @@ public class PaxiUtility {
 	 * add Payment on road
 	 * @param payment
 	 */
-	public static void addPayment(int payment) {
+	public static void addPayment(float payment) {
 		if(CurrentRoute == null) {
 			CurrentRoute = new Route();
 		}
@@ -208,4 +209,6 @@ public class PaxiUtility {
 			}
 		}
 	}
+	
+	
 }

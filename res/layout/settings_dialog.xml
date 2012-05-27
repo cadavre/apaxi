@@ -6,26 +6,85 @@
     android:layout_gravity="center_horizontal|center_vertical"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/btnKm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="l/km" />
-
-    <Button
-        android:id="@+id/btnMiles"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:text="g/m" />
-
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btnDone"
-        android:layout_below="@+id/btnKm"
+        android:layout_alignParentTop="true"
         android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:background="#000"
+            android:textColor="#fff"
+            android:text="Settings" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/btnKm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="l/km" />
+
+            <Button
+                android:id="@+id/btnMiles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="g/m" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/ImageView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/alert_dark_frame" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/ImageView02" >
+
+                <TextView
+                    android:id="@+id/tvMixedMetrics"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Fuel price" />
+                
+                <EditText
+                    android:id="@+id/etFuelPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" >
+
+                    <requestFocus />
+                </EditText>
+
+                <TextView
+                    android:id="@+id/tvCurrencyFuel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="zł" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:background="#000"
+            android:textColor="#fff"
+            android:text="Fuel consumption" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -61,48 +120,6 @@
 
                     <TextView
                         android:id="@+id/tvCityMetrics"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="l/100km" />
-                </LinearLayout>
-            </LinearLayout>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <ImageView
-                android:id="@+id/ImageView02"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/alert_dark_frame" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/ImageView02"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="fuel consumption in mixed" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-
-                    <EditText
-                        android:id="@+id/etFuelMixed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <TextView
-                        android:id="@+id/tvMixedMetrics"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -152,11 +169,10 @@
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
-
     </LinearLayout>
 
     <Button
-        android:id="@id/btnDone"
+        android:id="@+id/btnDoneSettings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
