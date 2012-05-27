@@ -1,11 +1,12 @@
 package pro.jazzy.paxi.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import pro.jazzy.paxi.PaxiUtility;
 import pro.jazzy.paxi.entity.events.OnRoadEvent;
 
-public class Route {
+public class Route implements Serializable {
 	private int currentDistance = 0;
 	private ArrayList<OnRoadEvent> roadEvents;
 	private int currentRouteType;
