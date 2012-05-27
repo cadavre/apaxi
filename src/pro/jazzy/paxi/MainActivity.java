@@ -5,7 +5,6 @@ import java.util.Locale;
 
 import pro.jazzy.paxi.GPSTrackingService.LocalBinder;
 import pro.jazzy.paxi.entity.Member;
-import pro.jazzy.paxi.entity.Serialization;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -519,33 +518,4 @@ public class MainActivity extends Activity implements OnClickListener,
 		Log.i(TAG, "total dist GPS: " + trackingService.getDistance());
 	}
 
-	@Override
-	public void onStop() {
-		Log.d(TAG, "onstop");
-		String route = Serialization.routeAsString();
-		String members = Serialization.membersAsString();
-
-		SharedPreferences sharedPrefs = getSharedPreferences(
-				Serialization.PREF_NAME, 0);
-		SharedPreferences.Editor editor = sharedPrefs.edit();
-		editor.putString("route", route);
-		editor.putString("members", members);
-		editor.commit();
-		super.onStop();
-	}
-
-	@Override
-	public void onRestart() {
-		SharedPreferences prefs = getSharedPreferences(Serialization.PREF_NAME,
-				0);
-		String route = prefs.getString("route", "");
-		String members = prefs.getString("members", "");
-		try {
-			PaxiUtility.CurrentRoute = Serialization.stringToRoute(route);
-			PaxiUtility.members = Serialization.stringToMembers(members);
-		} catch (Exception e) {
-			// log or something
-		}
-		super.onRestart();
-	}
 }
