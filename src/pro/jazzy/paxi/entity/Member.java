@@ -1,6 +1,5 @@
 package pro.jazzy.paxi.entity;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -14,30 +13,21 @@ import pro.jazzy.paxi.entity.events.OnRoadEventBasicImpl;
  * 
  * @author Zachi
  */
-public class Member extends OnRoadEventBasicImpl implements Serializable {
+public class Member extends OnRoadEventBasicImpl {
 
 	/**
-	 * Distance on which member get into car.
+	 * Distance on member in
 	 */
 	private int signInOnDistance = 0;
+
 	/**
-	 * Distance on which member get out of car.
+	 * Distance on member off
 	 */
 	private int signOutOnDistance = -1;
-	/**
-	 * to identify
-	 */
+
 	private String name;
-	
+
 	private String photoUri;
-
-	public String getPhotoUri() {
-		return photoUri;
-	}
-
-	public void setPhotoUri(String photoUri) {
-		this.photoUri = photoUri;
-	}
 
 	/**
 	 * Default constructor. Member get's into car on currentDistance
@@ -46,7 +36,7 @@ public class Member extends OnRoadEventBasicImpl implements Serializable {
 	 */
 	public Member(String name) {
 		this.name = name;
-		this.signInOnDistance = PaxiUtility.CurrentRoute.getCurrentDistance();
+		this.signInOnDistance = PaxiUtility.currentRoute.getCurrentDistance();
 	}
 
 	public int getSignInOnDistance() {
@@ -65,6 +55,14 @@ public class Member extends OnRoadEventBasicImpl implements Serializable {
 		this.signOutOnDistance = signOutOnDistance;
 	}
 
+	public String getPhotoUri() {
+		return photoUri;
+	}
+
+	public void setPhotoUri(String photoUri) {
+		this.photoUri = photoUri;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -73,17 +71,16 @@ public class Member extends OnRoadEventBasicImpl implements Serializable {
 		this.name = name;
 	}
 
-	// TODO How Much TO Pay - fckin great Zachi algorithm ;]
 	public float howMuchToPay() {
 		// 1. sort events array
-		Collections.sort(PaxiUtility.CurrentRoute.getRoadEvents());
+		Collections.sort(PaxiUtility.currentRoute.getRoadEvents());
 		// 2. while not thisEvent - count members
-		ArrayList<OnRoadEvent> allEvents = PaxiUtility.CurrentRoute
+		ArrayList<OnRoadEvent> allEvents = PaxiUtility.currentRoute
 				.getRoadEvents();
 		float toPay = 0;
 		int i = 0; // firstEvent
 		int membersOnboard = 0;
-		int currentType = PaxiUtility.CurrentRoute.getCurrentRouteType();
+		int currentType = PaxiUtility.currentRoute.getCurrentRouteType();
 		while (i < allEvents.size() && allEvents.get(i) != this) {
 			OnRoadEvent onroadEvent = allEvents.get(i);
 			if (onroadEvent instanceof Member) {
@@ -131,38 +128,28 @@ public class Member extends OnRoadEventBasicImpl implements Serializable {
 		}
 		// fakeEvent - some road after last event
 		if (this.isOnboard()
-				&& lastKnownDistance < PaxiUtility.CurrentRoute
+				&& lastKnownDistance < PaxiUtility.currentRoute
 						.getCurrentDistance()) {
-			toPay += calculate(PaxiUtility.CurrentRoute.getCurrentDistance(),
+			toPay += calculate(PaxiUtility.currentRoute.getCurrentDistance(),
 					currentType, membersOnboard);
 		}
 		return toPay;
 	}
 
-	/**
-	 * equals signInDistance
-	 */
 	public int onWhatDistance() {
 		return this.signInOnDistance;
 	}
 
-	private float calculate(int kilometers, int routeType, int persons) {
+	private float calculate(int meters, int routeType, int persons) {
 		if (persons != 0) {
-			float result = 0.0f + kilometers
-					* (PaxiUtility.pricePerFuel)
-					* (PaxiUtility.fuelPerDistance[routeType]) / persons
-					/ 100 / 1000;
+			float result = 0.0f + (meters / 1000) * (PaxiUtility.pricePerFuel)
+					* ((PaxiUtility.fuelPer100units[routeType]) / 100) / persons;
 			return result;
 		} else {
 			return 0;
 		}
 	}
 
-	/**
-	 * is he in car?
-	 * 
-	 * @return
-	 */
 	public boolean isOnboard() {
 		return signOutOnDistance == -1;
 	}

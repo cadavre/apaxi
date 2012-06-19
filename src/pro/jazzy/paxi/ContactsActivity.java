@@ -7,7 +7,6 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -33,7 +32,8 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
 		setContentView(R.layout.contacts);
 
 		this.membersCount = getIntent().getExtras().getInt("membersCount", 0);
-		boolean iAmOnList = getIntent().getExtras().getBoolean("iAmOnList", false);
+		boolean iAmOnList = getIntent().getExtras().getBoolean("iAmOnList",
+				false);
 
 		lvContactsList = (ListView) findViewById(R.id.lvContactsList);
 

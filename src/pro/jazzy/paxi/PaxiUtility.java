@@ -1,6 +1,5 @@
 package pro.jazzy.paxi;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -12,89 +11,88 @@ import pro.jazzy.paxi.entity.RouteType;
 import pro.jazzy.paxi.entity.events.MemberOutEvent;
 
 /**
- * PaxiLogic class :)
+ * PaxiUtility Class
  * 
  * @author Zachi
+ * @author Seweryn Zeman <seweryn.zeman@jazzy.pro>
  */
-public class PaxiUtility implements Serializable {
-	public static Route CurrentRoute = new Route(); //serializable!!
+public class PaxiUtility {
+	public static Route currentRoute = new Route();
 	public static int DEFAULT_ROUTE_TYPE = 0;
-	public static Hashtable<String, Member> members = new Hashtable<String, Member>(); //serializable!!
+	public static Hashtable<String, Member> members = new Hashtable<String, Member>();
 
 	/**
-	 * price per 1 fuel x 100
+	 * Price per 1 unit of fuel
 	 */
 	public static float pricePerFuel = 0.0f;
 
 	/**
-	 * fuel per 1000 distance * 100 (100 km)
+	 * Fuel burning
 	 */
-	public static float[] fuelPerDistance = new float[] { 7.0f, 8.0f, 9.0f };
+	public static float[] fuelPer100units = new float[] { 7.0f, 8.0f, 9.0f };
 
 	public final static int ROUTE_TYPE_CITY = 0;
 	public final static int ROUTE_TYPE_HIGHWAY = 1;
-
-	/**
-	 * Avg. fuel burning
-	 */
 	public final static int ROUTE_TYPE_MIXED = 2;
 
 	/**
-	 * New journey, New Quest ;) Wipe out last remembered road and everything
-	 * about it.
+	 * New journey, New Quest! Wipe out last remembered road and everything
+	 * connected to it.
 	 */
 	public static void newRoute() {
-		CurrentRoute = new Route();
+		currentRoute = new Route();
 		members = new Hashtable<String, Member>();
 	}
 
 	/**
-	 * new member gets into car
+	 * New member get in
 	 * 
 	 * @param memberName
 	 */
 	public static Member memberIn(String memberName) {
-		if(CurrentRoute == null) {
-			CurrentRoute = new Route();
+		if (currentRoute == null) {
+			currentRoute = new Route();
 		}
 		Member member = new Member(memberName);
 		member.setSignInOnDistance(getCurrentDistance());
 		members.put(memberName, member);
-		CurrentRoute.getRoadEvents().add(member);
+		currentRoute.getRoadEvents().add(member);
 		return member;
 	}
 
 	/**
-	 * Member get out of this car
+	 * Member get out
 	 * 
 	 * @param memberName
 	 * @return how Much he has to pay
 	 */
 	public static float memberOut(String memberName) {
-		if(CurrentRoute == null) {
-			CurrentRoute = new Route();
+		if (currentRoute == null) {
+			currentRoute = new Route();
 		}
 		Member m = members.get(memberName);
-		m.setSignOutOnDistance(CurrentRoute.getCurrentDistance());
-		CurrentRoute.getRoadEvents().add(new MemberOutEvent(m));
+		m.setSignOutOnDistance(currentRoute.getCurrentDistance());
+		currentRoute.getRoadEvents().add(new MemberOutEvent(m));
 		return m.howMuchToPay();
 	}
-	
+
 	public static void removeMember(String memberName) {
 		members.remove(memberName);
 	}
 
 	/**
+	 * Get all members as names array
+	 * 
 	 * @return memberNames
 	 */
 	public static String[] getMemberNames() {
-		if(members == null || members.size() == 0) {
+		if (members == null || members.size() == 0) {
 			String[] s = new String[0];
 			return s;
 		}
-		Iterator<String> it = members.keySet().iterator(); 
+		Iterator<String> it = members.keySet().iterator();
 		ArrayList<String> memberNamesList = new ArrayList<String>();
-		while(it.hasNext()) {
+		while (it.hasNext()) {
 			memberNamesList.add(it.next());
 		}
 		String[] memberNamesArray = new String[memberNamesList.size()];
@@ -103,12 +101,12 @@ public class PaxiUtility implements Serializable {
 	}
 
 	/**
-	 * get all members as array
+	 * Get all members as array
 	 * 
 	 * @return
 	 */
 	public static Member[] getMembers() {
-		if(members == null || members.size() == 0) {
+		if (members == null || members.size() == 0) {
 			Member[] m = new Member[0];
 			return m;
 		}
@@ -117,94 +115,97 @@ public class PaxiUtility implements Serializable {
 			memb.add(members.get(key));
 		}
 		Member[] memberArray = new Member[members.size()];
-		
+
 		memb.toArray(memberArray);
 		return memberArray;
 	}
 
 	/**
-	 * self-explanatory
+	 * Self-explanatory
 	 * 
 	 * @param memberName
 	 * @return
 	 */
-	public static Member getMemberForName(String memberName) {
-		if(members == null) {
+	public static Member getMemberByName(String memberName) {
+		if (members == null) {
 			return null;
 		}
-		if(members.containsKey(memberName)) {
+		if (members.containsKey(memberName)) {
 			return members.get(memberName);
 		}
 		return null;
 	}
 
 	/**
-	 * self-explanatory
+	 * Self-explanatory
 	 * 
 	 * @return
 	 */
 	public static int getCurrentDistance() {
-		if(CurrentRoute == null) {
+		if (currentRoute == null) {
 			return 0;
 		}
-		return CurrentRoute.getCurrentDistance();
+		return currentRoute.getCurrentDistance();
 	}
 
 	/**
-	 * just add distance to current road
+	 * Just add distance to current road
 	 * 
-	 * @param distance (in meters)
+	 * @param distance
+	 *            (in meters)
 	 */
 	public static void addDistance(int distance) {
-		if(CurrentRoute == null) {
-			CurrentRoute = new Route();
+		if (currentRoute == null) {
+			currentRoute = new Route();
 		}
-		CurrentRoute.addDistance(distance);
+		currentRoute.addDistance(distance);
 	}
 
 	/**
-	 * add Payment on road
+	 * Add Payment on road
+	 * 
 	 * @param payment
 	 */
 	public static void addPayment(float payment) {
-		if(CurrentRoute == null) {
-			CurrentRoute = new Route();
+		if (currentRoute == null) {
+			currentRoute = new Route();
 		}
 		Payment p = new Payment(payment);
-		CurrentRoute.getRoadEvents().add(p);
+		currentRoute.getRoadEvents().add(p);
 	}
 
 	/**
-	 * change route type : PaxiUtility.ROUTE_TYPE_CITY
+	 * Change route type : PaxiUtility.ROUTE_TYPE_CITY
 	 * PaxiUtility.ROUTE_TYPE_HIGHWAY PaxiUtility.ROUTE_TYPE_MIXED
 	 * 
 	 * @param newRouteType
 	 */
 	public static void changeRouteType(int newRouteType) {
-		if(CurrentRoute == null) {
-			CurrentRoute = new Route();
+		if (currentRoute == null) {
+			currentRoute = new Route();
 		}
-		CurrentRoute.setCurrentRouteType(newRouteType);
+		currentRoute.setCurrentRouteType(newRouteType);
 		RouteType rt = new RouteType();
 		rt.setDefinedRouteType(newRouteType);
-		CurrentRoute.getRoadEvents().add(rt);
+		currentRoute.getRoadEvents().add(rt);
 	}
 
 	/**
-	 * Fuel burning * 100 per 100 km
+	 * Fuel burning per 100 km
+	 * 
 	 * @param routeType
 	 * @param burning
 	 */
-	public static void setBurnForRoutetype(int routeType, int burning) {
-		fuelPerDistance[routeType] = burning;
+	public static void setBurnByRoutetype(int routeType, int burning) {
+		fuelPer100units[routeType] = burning;
 	}
 
 	/**
 	 * Everybody leaves!
 	 */
 	public static void stopRoute() {
-		if(CurrentRoute == null) {
-			CurrentRoute = new Route();
+		if (currentRoute == null) {
+			currentRoute = new Route();
 		}
 		for (String s : members.keySet()) {
 			Member m = members.get(s);
@@ -213,6 +214,5 @@ public class PaxiUtility implements Serializable {
 			}
 		}
 	}
-	
-	
+
 }

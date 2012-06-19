@@ -15,7 +15,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-public class GPSTrackingService extends Service {
+public class PaxiService extends Service {
 
 	private static final String TAG = "Paxi GPS";
 
@@ -53,8 +53,8 @@ public class GPSTrackingService extends Service {
 	}
 
 	public class LocalBinder extends Binder {
-		GPSTrackingService getService() {
-			return GPSTrackingService.this;
+		PaxiService getService() {
+			return PaxiService.this;
 		}
 	}
 

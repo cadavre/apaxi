@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Locale;
 
-import pro.jazzy.paxi.GPSTrackingService.LocalBinder;
+import pro.jazzy.paxi.PaxiService.LocalBinder;
 import pro.jazzy.paxi.entity.Member;
 import android.app.Activity;
 import android.app.Dialog;
@@ -35,47 +35,64 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * Main activity of application
+ * 
+ * @author Seweryn Zeman <seweryn.zeman@jazzy.pro>
+ */
 public class MainActivity extends Activity implements OnClickListener,
 		OnItemClickListener, OnItemLongClickListener {
 
+	// debug tag
 	private static final String TAG = "Paxi";
 
+	// intent identifier for service communication
+	private static final String REFRESH_DATA_INTENT = "jazzy_gps_refresh";
+
+	// contacts activity for results
 	static final int PICK_CONTACT_REQUEST = 0;
 
+	// toggle button states
 	static final int ACTION_BUTTON_START = 0;
 
 	static final int ACTION_BUTTON_STOP = 1;
 
 	static final int ACTION_BUTTON_CLEAR = 2;
 
+	// dialog ids
 	static final int DIALOG_ROUTE_MODE = 0;
 
 	static final int DIALOG_SETTINGS = 1;
 
 	static final int DIALOG_PAYMENT = 2;
 
+	// preferences filename
 	static final String APP_PREFERENCES = "paxi.data";
 
 	SharedPreferences preferences = null;
 
-	private static final String REFRESH_DATA_INTENT = "jazzy_gps_refresh";
-
-	GPSTrackingService trackingService;
+	PaxiService paxiService;
 
 	TrackingUpdateReceiver updateReceiver;
 
 	Button btnAction;
 
+	// current state of toggle button
 	int currentActionBtnState = ACTION_BUTTON_START;
 
+	// is tracking (service) bounded
 	boolean trackingBounded = false;
 
+	// am I on list
 	boolean iAmOnList = true;
-	
+
+	// members already off
 	ArrayList<Long> summariedMembers;
 
+	// members adapter
 	ArrayAdapter<String> membersAdapter;
 
+	// ListView of members
 	ListView lvMembersList;
 
 	private void createMembersListView() {
@@ -113,8 +130,8 @@ public class MainActivity extends Activity implements OnClickListener,
 		setContentView(R.layout.main);
 
 		summariedMembers = new ArrayList<Long>();
-		
-		PaxiUtility.newRoute(getApplicationContext());
+
+		PaxiUtility.newRoute();
 
 		createMembersListView();
 
@@ -137,7 +154,7 @@ public class MainActivity extends Activity implements OnClickListener,
 	@Override
 	protected void onStart() {
 		super.onStart();
-		Intent intent = new Intent(MainActivity.this, GPSTrackingService.class);
+		Intent intent = new Intent(MainActivity.this, PaxiService.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	}
 
@@ -150,13 +167,12 @@ public class MainActivity extends Activity implements OnClickListener,
 		IntentFilter intentFilter = new IntentFilter(REFRESH_DATA_INTENT);
 		registerReceiver(updateReceiver, intentFilter);
 		if (trackingBounded) {
-			PaxiUtility.CurrentRoute.setCurrentDistance(trackingService
+			PaxiUtility.currentRoute.setCurrentDistance(paxiService
 					.getDistance());
 			createMembersAdapter();
 			lvMembersList.setAdapter(membersAdapter);
 			Log.i(TAG,
-					"loaded distance from memory "
-							+ trackingService.getDistance());
+					"loaded distance from memory " + paxiService.getDistance());
 		}
 	}
 
@@ -403,7 +419,7 @@ public class MainActivity extends Activity implements OnClickListener,
 			startActivityForResult(intent, PICK_CONTACT_REQUEST);
 			return;
 		}
-		
+
 		if (summariedMembers.indexOf(id) != -1) {
 			Log.d(TAG, "already done!");
 			return;
@@ -435,8 +451,8 @@ public class MainActivity extends Activity implements OnClickListener,
 		String msg;
 		switch (this.currentActionBtnState) {
 		case ACTION_BUTTON_START:
-			if (!trackingService.isTracking()) {
-				trackingService.start();
+			if (!paxiService.isTracking()) {
+				paxiService.start();
 				msg = "Tracking is on...";
 			} else {
 				msg = "Tracking already started!";
@@ -447,8 +463,8 @@ public class MainActivity extends Activity implements OnClickListener,
 			break;
 		case ACTION_BUTTON_STOP:
 			msg = "Tracking is off...";
-			if (trackingService.isTracking()) {
-				trackingService.stop();
+			if (paxiService.isTracking()) {
+				paxiService.stop();
 			}
 			Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT)
 					.show();
@@ -498,7 +514,7 @@ public class MainActivity extends Activity implements OnClickListener,
 	}
 
 	private void clearAdapter() {
-		PaxiUtility.newRoute(getApplicationContext());
+		PaxiUtility.newRoute();
 		getMe();
 		createMembersAdapter();
 		lvMembersList.setAdapter(membersAdapter);
@@ -509,7 +525,7 @@ public class MainActivity extends Activity implements OnClickListener,
 		@Override
 		public void onServiceConnected(ComponentName className, IBinder service) {
 			LocalBinder binder = (LocalBinder) service;
-			trackingService = binder.getService();
+			paxiService = binder.getService();
 			trackingBounded = true;
 		}
 
@@ -529,10 +545,10 @@ public class MainActivity extends Activity implements OnClickListener,
 	}
 
 	private void handleGpsStatusChange() {
-		PaxiUtility.addDistance(trackingService.getDistanceDelta());
+		PaxiUtility.addDistance(paxiService.getDistanceDelta());
 		createMembersAdapter();
 		lvMembersList.setAdapter(membersAdapter);
-		Log.i(TAG, "total dist GPS: " + trackingService.getDistance());
+		Log.i(TAG, "total dist GPS: " + paxiService.getDistance());
 	}
 
 }

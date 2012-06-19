@@ -1,7 +1,5 @@
 package pro.jazzy.paxi.entity;
 
-import java.io.Serializable;
-
 import pro.jazzy.paxi.PaxiUtility;
 import pro.jazzy.paxi.entity.events.OnRoadEventBasicImpl;
 
@@ -9,22 +7,17 @@ import pro.jazzy.paxi.entity.events.OnRoadEventBasicImpl;
  * Additional payment taken on the road
  * 
  * @author Zachi
+ * @author Seweryn Zeman <seweryn.zeman@jazzy.pro>
  */
-public class Payment extends OnRoadEventBasicImpl implements Serializable {
+public class Payment extends OnRoadEventBasicImpl {
 
-	/**
-	 * On what distance this payment was taken
-	 */
 	private int distance;
 
-	/**
-	 * how much was it?
-	 */
 	private float amount;
 
 	public Payment(float amount) {
 		this.amount = amount;
-		this.distance = PaxiUtility.CurrentRoute.getCurrentDistance();
+		this.distance = PaxiUtility.currentRoute.getCurrentDistance();
 	}
 
 	public int onWhatDistance() {

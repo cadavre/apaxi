@@ -1,9 +1,11 @@
 package pro.jazzy.paxi.entity.events;
 
-import java.io.Serializable;
 
-
-public abstract class OnRoadEventBasicImpl implements OnRoadEvent, Serializable {
+/**
+ * 
+ * @author Zachi
+ */
+public abstract class OnRoadEventBasicImpl implements OnRoadEvent {
 	public int compareTo(OnRoadEvent arg0) {
 		return this.onWhatDistance() - arg0.onWhatDistance();
 	}

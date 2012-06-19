@@ -1,21 +1,20 @@
 package pro.jazzy.paxi.entity;
 
-import java.io.Serializable;
-
 import pro.jazzy.paxi.PaxiUtility;
 import pro.jazzy.paxi.entity.events.OnRoadEventBasicImpl;
 
 /**
  * Route type shows how much you pay for a distance
+ * 
  * @author Zachi
  */
-public class RouteType extends OnRoadEventBasicImpl implements Serializable {
+public class RouteType extends OnRoadEventBasicImpl {
 	private int from;
 	private int to = -1;
 	private int definedRouteType;
 
 	public RouteType() {
-		this.from = PaxiUtility.CurrentRoute.getCurrentDistance();
+		this.from = PaxiUtility.currentRoute.getCurrentDistance();
 		this.definedRouteType = PaxiUtility.DEFAULT_ROUTE_TYPE;
 	}
 
@@ -23,7 +22,7 @@ public class RouteType extends OnRoadEventBasicImpl implements Serializable {
 		if (to != -1) {
 			return this.to - this.from;
 		} else {
-			return PaxiUtility.CurrentRoute.getCurrentDistance() - this.from;
+			return PaxiUtility.currentRoute.getCurrentDistance() - this.from;
 		}
 	}
 

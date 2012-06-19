@@ -1,7 +1,5 @@
 package pro.jazzy.paxi;
 
-import java.util.ArrayList;
-
 import pro.jazzy.paxi.entity.Member;
 import android.content.Context;
 import android.net.Uri;
@@ -11,9 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class MembersAdapter extends ArrayAdapter {
+public class MembersAdapter extends ArrayAdapter<String> {
 
-	Member[] membersList;
+	private Member[] membersList;
 
 	public MembersAdapter(Context context, String[] simpleValues,
 			Member[] membersList) {

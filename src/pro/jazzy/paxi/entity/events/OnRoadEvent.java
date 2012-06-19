@@ -1,11 +1,13 @@
 package pro.jazzy.paxi.entity.events;
 
-import java.io.Serializable;
+/**
+ * 
+ * @author Zachi
+ */
+public interface OnRoadEvent extends Comparable<OnRoadEvent> {
 
-public interface OnRoadEvent extends Comparable<OnRoadEvent>, Serializable {
-	
 	/**
-	 * On what distance the event was
+	 * On what distance the event happened
 	 */
 	public int onWhatDistance();
 }
