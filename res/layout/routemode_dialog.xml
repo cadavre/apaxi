@@ -15,25 +15,27 @@
             android:id="@+id/btnCity"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="City" />
+            android:text="Mixed" />
 
         <Button
             android:id="@+id/btnMixed"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="mix" />
+            android:text="City" />
 
         <Button
             android:id="@+id/btnHighway"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="hw" />
-
-        <Button
-            android:id="@+id/btnDoneRoute"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="don" />
+            android:text="Highway" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnDoneRoute"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="Done" />
 
 </RelativeLayout>

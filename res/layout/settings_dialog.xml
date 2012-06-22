@@ -13,6 +13,8 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical" >
 
+        <!-- Settings header -->
+
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -21,40 +23,46 @@
             android:text="Settings"
             android:textColor="#fff" />
 
+        <!-- l/km g/m chooser -->
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
 
             <Button
                 android:id="@+id/btnKm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="l/km" />
 
             <Button
                 android:id="@+id/btnMiles"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="g/m" />
         </LinearLayout>
 
+        <!-- Fuel price -->
+
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
 
             <ImageView
-                android:id="@+id/ImageView02"
+                android:id="@+id/ivFuelPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/alert_dark_frame" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/ImageView02" >
+                android:layout_toRightOf="@id/ivFuelPrice" >
 
                 <TextView
-                    android:id="@+id/tvMixedMetrics"
+                    android:id="@+id/tvFuelMetrics"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -79,6 +87,8 @@
             </LinearLayout>
         </RelativeLayout>
 
+        <!-- Fuel consumption header -->
+
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -87,8 +97,10 @@
             android:text="Fuel consumption"
             android:textColor="#fff" />
 
+        <!-- Average fuel -->
+
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
 
             <ImageView
@@ -98,7 +110,7 @@
                 android:src="@android:drawable/alert_dark_frame" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/ivMixed"
@@ -110,7 +122,7 @@
                     android:text="average fuel consumption" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content" >
 
                     <EditText
@@ -130,8 +142,10 @@
             </LinearLayout>
         </RelativeLayout>
 
+        <!-- City fuel -->
+
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
 
             <ImageView
@@ -141,7 +155,7 @@
                 android:src="@android:drawable/alert_dark_frame" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/ivCity"
@@ -153,7 +167,7 @@
                     android:text="fuel consumption in city" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content" >
 
                     <EditText
@@ -174,8 +188,10 @@
             </LinearLayout>
         </RelativeLayout>
 
+        <!-- Highway fuel -->
+
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
 
             <ImageView
@@ -185,7 +201,7 @@
                 android:src="@android:drawable/alert_dark_frame" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/ivHighway"
@@ -197,7 +213,7 @@
                     android:text="fuel consumption on hw" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content" >
 
                     <EditText
@@ -221,10 +237,10 @@
 
     <Button
         android:id="@+id/btnDoneSettings"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:text="done" />
+        android:text="Done" />
 
 </RelativeLayout>

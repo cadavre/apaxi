@@ -10,23 +10,16 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" >
-
-        <Button
-            android:id="@+id/btnDonePayment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:text="dan" />
+        android:layout_alignParentTop="true"
+        android:gravity="center_horizontal" >
 
         <EditText
             android:id="@+id/etPayment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:ems="10"
+            android:layout_marginTop="8dp"
+            android:ems="6"
             android:inputType="numberDecimal"
             android:text="0" />
 
@@ -34,11 +27,26 @@
             android:id="@+id/tvCurrencyPayment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/etPayment"
-            android:layout_alignBottom="@+id/etPayment"
-            android:layout_toRightOf="@+id/etPayment"
+            android:layout_alignBaseline="@id/etPayment"
+            android:layout_toRightOf="@id/etPayment"
             android:text="zł" />
 
+        <Button
+            android:id="@+id/btnAddPayment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="30dp"
+            android:layout_toRightOf="@id/tvCurrencyPayment"
+            android:text="Add payment" />
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/btnDonePayment"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="Done" />
 
 </RelativeLayout>
