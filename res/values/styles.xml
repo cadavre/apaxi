@@ -5,6 +5,11 @@
         <item name="android:windowEnterAnimation">@anim/dialog_enter</item>
         <item name="android:windowExitAnimation">@anim/dialog_exit</item>
     </style>
+    
+    <style name="ButtonsDialogAnimations">
+        <item name="android:windowEnterAnimation">@anim/buttons_enter</item>
+        <item name="android:windowExitAnimation">@anim/buttons_exit</item>
+    </style>
 
     <style name="DialogFullscreen" parent="android:Theme.Holo.Light.Dialog">
         <item name="android:windowFrame">@null</item>
@@ -15,6 +20,11 @@
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowIsTranslucent">true</item>
+    </style>
+    
+    <style name="DialogButtons" parent="@style/DialogFullscreen">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/ButtonsDialogAnimations</item>
     </style>
 
 </resources>

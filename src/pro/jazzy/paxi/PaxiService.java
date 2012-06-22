@@ -1,3 +1,4 @@
+
 package pro.jazzy.paxi;
 
 import java.util.ArrayList;
@@ -17,130 +18,144 @@ import android.util.Log;
 
 public class PaxiService extends Service {
 
-	private static final String TAG = "Paxi GPS";
+    private static final String TAG = "Paxi GPS";
 
-	private static final String REFRESH_DATA_INTENT = "jazzy_gps_refresh";
+    private static final String REFRESH_DATA_INTENT = "jazzy_gps_refresh";
 
-	private static final int NOTIFY_ID = 1;
+    private static final int NOTIFY_ID = 1;
 
-	private static final int LAST_LOCATIONS = 5;
+    private static final int LAST_LOCATIONS = 5;
 
-	private final IBinder mBinder = new LocalBinder();
+    private final IBinder mBinder = new LocalBinder();
 
-	NotificationManager notificationManager;
+    NotificationManager notificationManager;
 
-	LocationManager locationManager;
+    LocationManager locationManager;
 
-	LocationListener locationListener;
+    LocationListener locationListener;
 
-	private ArrayList<Location> lastLocations;
+    private ArrayList<Location> lastLocations;
 
-	private int distance = 0;
-	
-	private int distanceDelta = 0;
+    private int distance = 0;
 
-	private boolean tracking = false;
+    private int distanceDelta = 0;
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		lastLocations = new ArrayList<Location>();
-		lastLocations.ensureCapacity(LAST_LOCATIONS + 1);
-		String ns = getApplicationContext().NOTIFICATION_SERVICE;
-		String ls = getApplicationContext().LOCATION_SERVICE;
-		notificationManager = (NotificationManager) getSystemService(ns);
-		locationManager = (LocationManager) getSystemService(ls);
-	}
+    private boolean tracking = false;
 
-	public class LocalBinder extends Binder {
-		PaxiService getService() {
-			return PaxiService.this;
-		}
-	}
+    @Override
+    public void onCreate() {
 
-	@Override
-	public IBinder onBind(Intent intent) {
-		lastLocations.clear();
-		return mBinder;
-	}
+        super.onCreate();
+        lastLocations = new ArrayList<Location>();
+        lastLocations.ensureCapacity(LAST_LOCATIONS + 1);
+        String ns = getApplicationContext().NOTIFICATION_SERVICE;
+        String ls = getApplicationContext().LOCATION_SERVICE;
+        notificationManager = (NotificationManager) getSystemService(ns);
+        locationManager = (LocationManager) getSystemService(ls);
+    }
 
-	public void start() {
-		locationListener = new LocationListener() {
-			public void onLocationChanged(Location location) {
-				handleLocationChange(location);
-			}
+    public class LocalBinder extends Binder {
 
-			public void onStatusChanged(String provider, int status,
-					Bundle extras) {
-				Log.d(TAG, "onStatusChanged, " + status + " of " + provider);
-			}
+        PaxiService getService() {
 
-			public void onProviderEnabled(String provider) {
-			}
+            return PaxiService.this;
+        }
+    }
 
-			public void onProviderDisabled(String provider) {
-			}
-		};
+    @Override
+    public IBinder onBind(Intent intent) {
 
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
-				0, locationListener);
+        lastLocations.clear();
+        return mBinder;
+    }
 
-		notifyShowTracking();
-		this.tracking = true;
-	}
+    public void start() {
 
-	public void stop() {
-		locationManager.removeUpdates(locationListener);
-		notifyHideTracking();
-		this.tracking = false;
-	}
+        locationListener = new LocationListener() {
 
-	private void handleLocationChange(Location location) {
-		int distance = 0;
-		int accuracy = (int) location.getAccuracy();
-		if (lastLocations.size() != 0) {
-			distance = (int) location.distanceTo(lastLocations
-					.get(lastLocations.size() - 1));
-		}
+            public void onLocationChanged(Location location) {
 
-		lastLocations.add(location);
-		if ((lastLocations.size() > LAST_LOCATIONS) && (distance > accuracy)) {
-			lastLocations = new ArrayList<Location>(lastLocations.subList(1, 6));
-			this.distanceDelta = distance;
-			this.distance += distance;
-			sendBroadcast(new Intent(REFRESH_DATA_INTENT));
-		}
-	}
+                handleLocationChange(location);
+            }
 
-	public int getDistance() {
-		return this.distance;
-	}
-	
-	public int getDistanceDelta() {
-		return this.distanceDelta;
-	}
-	
-	public boolean isTracking() {
-		return this.tracking;
-	}
+            public void onStatusChanged(String provider, int status, Bundle extras) {
 
-	private void notifyShowTracking() {
-		int icon = android.R.drawable.ic_menu_compass;
-		CharSequence tickerText = "Paxi GPS recording ON!";
-		long when = System.currentTimeMillis();
-		Notification notification = new Notification(icon, tickerText, when);
-		CharSequence contentTitle = "Paxi";
-		CharSequence contentText = "GPS Recording ON";
-		Intent notificationIntent = new Intent(this, MainActivity.class);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-				notificationIntent, 0);
-		notification.setLatestEventInfo(getApplicationContext(), contentTitle,
-				contentText, contentIntent);
-		notification.flags = Notification.FLAG_NO_CLEAR;
-		notificationManager.notify(NOTIFY_ID, notification);
-	}
+                Log.d(TAG, "onStatusChanged, " + status + " of " + provider);
+            }
 
-	private void notifyHideTracking() {
-		notificationManager.cancel(NOTIFY_ID);
-	}
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+        locationManager
+                .requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
+        notifyShowTracking();
+        this.tracking = true;
+    }
+
+    public void stop() {
+
+        locationManager.removeUpdates(locationListener);
+        notifyHideTracking();
+        this.tracking = false;
+    }
+
+    private void handleLocationChange(Location location) {
+
+        int distance = 0;
+        int accuracy = (int) location.getAccuracy();
+        if (lastLocations.size() != 0) {
+            distance = (int) location.distanceTo(lastLocations.get(lastLocations.size() - 1));
+        }
+
+        lastLocations.add(location);
+        if ((lastLocations.size() > LAST_LOCATIONS) && (distance > accuracy)) {
+            lastLocations = new ArrayList<Location>(lastLocations.subList(1, 6));
+            this.distanceDelta = distance;
+            this.distance += distance;
+            sendBroadcast(new Intent(REFRESH_DATA_INTENT));
+        }
+    }
+
+    public int getDistance() {
+
+        return this.distance;
+    }
+
+    public int getDistanceDelta() {
+
+        return this.distanceDelta;
+    }
+
+    public boolean isTracking() {
+
+        return this.tracking;
+    }
+
+    private void notifyShowTracking() {
+
+        int icon = android.R.drawable.ic_menu_compass;
+        CharSequence tickerText = "Paxi GPS recording ON!";
+        long when = System.currentTimeMillis();
+        Notification notification = new Notification(icon, tickerText, when);
+        CharSequence contentTitle = "Paxi";
+        CharSequence contentText = "GPS Recording ON";
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        notification.setLatestEventInfo(getApplicationContext(), contentTitle, contentText,
+                contentIntent);
+        notification.flags = Notification.FLAG_NO_CLEAR;
+        notificationManager.notify(NOTIFY_ID, notification);
+    }
+
+    private void notifyHideTracking() {
+
+        notificationManager.cancel(NOTIFY_ID);
+    }
 }

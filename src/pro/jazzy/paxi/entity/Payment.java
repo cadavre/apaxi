@@ -1,3 +1,4 @@
+
 package pro.jazzy.paxi.entity;
 
 import pro.jazzy.paxi.PaxiUtility;
@@ -11,24 +12,28 @@ import pro.jazzy.paxi.entity.events.OnRoadEventBasicImpl;
  */
 public class Payment extends OnRoadEventBasicImpl {
 
-	private int distance;
+    private int distance;
 
-	private float amount;
+    private float amount;
 
-	public Payment(float amount) {
-		this.amount = amount;
-		this.distance = PaxiUtility.currentRoute.getCurrentDistance();
-	}
+    public Payment(float amount) {
 
-	public int onWhatDistance() {
-		return this.distance;
-	}
+        this.amount = amount;
+        this.distance = PaxiUtility.currentRoute.getCurrentDistance();
+    }
 
-	public float getAmount() {
-		return this.amount;
-	}
+    public int onWhatDistance() {
 
-	public void setAmount(float amount) {
-		this.amount = amount;
-	}
+        return this.distance;
+    }
+
+    public float getAmount() {
+
+        return this.amount;
+    }
+
+    public void setAmount(float amount) {
+
+        this.amount = amount;
+    }
 }

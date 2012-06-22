@@ -1,28 +1,32 @@
+
 package pro.jazzy.paxi.entity.events;
 
 import pro.jazzy.paxi.entity.Member;
 
 /**
- * 
  * @author Zachi
  */
 public class MemberOutEvent extends OnRoadEventBasicImpl {
 
-	private Member member;
+    private Member member;
 
-	public MemberOutEvent(Member member) {
-		this.member = member;
-	}
+    public MemberOutEvent(Member member) {
 
-	public int onWhatDistance() {
-		return member.getSignOutOnDistance();
-	}
+        this.member = member;
+    }
 
-	public Member getMember() {
-		return member;
-	}
+    public int onWhatDistance() {
 
-	public void setMember(Member member) {
-		this.member = member;
-	}
+        return member.getSignOutOnDistance();
+    }
+
+    public Member getMember() {
+
+        return member;
+    }
+
+    public void setMember(Member member) {
+
+        this.member = member;
+    }
 }

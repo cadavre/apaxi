@@ -16,10 +16,10 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:background="#000"
-            android:textColor="#fff"
-            android:text="Settings" />
+            android:gravity="center_horizontal"
+            android:text="Settings"
+            android:textColor="#fff" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -59,12 +59,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Fuel price" />
-                
+
                 <EditText
                     android:id="@+id/etFuelPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" >
+                    android:layout_weight="1"
+                    android:inputType="numberDecimal" >
 
                     <requestFocus />
                 </EditText>
@@ -81,10 +82,53 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:background="#000"
-            android:textColor="#fff"
-            android:text="Fuel consumption" />
+            android:gravity="center_horizontal"
+            android:text="Fuel consumption"
+            android:textColor="#fff" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/ivMixed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/alert_dark_frame" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/ivMixed"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="average fuel consumption" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <EditText
+                        android:id="@+id/etFuelMixed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberDecimal" />
+
+                    <TextView
+                        android:id="@+id/tvMixedMetrics"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="l/100km" />
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -100,7 +144,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/ivCity"
+                android:layout_toRightOf="@id/ivCity"
                 android:orientation="vertical" >
 
                 <TextView
@@ -116,7 +160,9 @@
                         android:id="@+id/etFuelCity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:hint="@string/optional"
+                        android:inputType="numberDecimal" />
 
                     <TextView
                         android:id="@+id/tvCityMetrics"
@@ -133,7 +179,7 @@
             android:layout_height="wrap_content" >
 
             <ImageView
-                android:id="@+id/ImageView03"
+                android:id="@+id/ivHighway"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/alert_dark_frame" />
@@ -142,7 +188,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/ImageView03"
+                android:layout_toRightOf="@id/ivHighway"
                 android:orientation="vertical" >
 
                 <TextView
@@ -158,7 +204,9 @@
                         android:id="@+id/etFuelHighway"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:hint="@string/optional"
+                        android:inputType="numberDecimal" />
 
                     <TextView
                         android:id="@+id/tvHighwayMetrics"
