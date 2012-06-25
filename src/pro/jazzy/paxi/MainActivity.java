@@ -8,7 +8,6 @@ import java.util.Locale;
 import pro.jazzy.paxi.PaxiService.LocalBinder;
 import pro.jazzy.paxi.entity.Member;
 import android.app.Activity;
-import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -67,6 +66,11 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
     static final int DIALOG_PAYMENT = 2;
 
+    // metrics idenfitiers
+    static final int KILOMETERS = 1;
+
+    static final int MILES = 2;
+
     // preferences filename
     static final String APP_PREFERENCES = "paxi.data";
 
@@ -102,13 +106,13 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
     private void createMembersAdapter() {
 
         membersAdapter = new MembersAdapter(this, PaxiUtility.getMemberNames(),
-                PaxiUtility.getMembers());
+                PaxiUtility.getMembers(), this.preferences.getInt("metrics", KILOMETERS));
     }
 
     /**
      * Refresh member in car list by recreating MembersAdapter and including it into members LV
      */
-    private void refreshMembersList() {
+    protected void refreshMembersList() {
 
         createMembersAdapter();
         lvMembersList.setAdapter(membersAdapter);
@@ -150,6 +154,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
         summariedMembers = new ArrayList<Long>();
         PaxiUtility.newRoute();
 
+        this.preferences = getSharedPreferences(APP_PREFERENCES, Activity.MODE_PRIVATE);
+
         createMembersListView();
         // by default add phone onwer to members LV
         getMe();
@@ -163,16 +169,17 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
         btnSettings.setOnClickListener(this);
         btnPayment.setOnClickListener(this);
         btnAction.setOnClickListener(this);
-
-        this.preferences = getSharedPreferences(APP_PREFERENCES, Activity.MODE_PRIVATE);
     }
 
     @Override
     protected void onStart() {
 
         super.onStart();
-        Intent intent = new Intent(MainActivity.this, PaxiService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        if (!trackingBounded) {
+            Intent intent = new Intent(MainActivity.this, PaxiService.class);
+            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+            Log.i(TAG, "bindService(mConnection) BIND_AUTO_CREATE");
+        }
     }
 
     @Override
@@ -180,10 +187,12 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
         super.onResume();
         if (updateReceiver == null) {
+            Log.i(TAG, "updateReceiver was null so creating new");
             updateReceiver = new TrackingUpdateReceiver();
         }
         IntentFilter intentFilter = new IntentFilter(REFRESH_DATA_INTENT);
         registerReceiver(updateReceiver, intentFilter);
+        Log.i(TAG, "registered receiver (updateReceiver)");
         if (trackingBounded) {
             PaxiUtility.currentRoute.setCurrentDistance(paxiService.getDistance());
             refreshMembersList();
@@ -210,6 +219,12 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                 refreshMembersList();
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        moveTaskToBack(false);
     }
 
     @Override
@@ -296,15 +311,15 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                 break;
             case DIALOG_SETTINGS:
 
-                final EditText etFuelCity = (EditText) dialog.findViewById(R.id.etFuelCity);
-                final EditText etFuelMixed = (EditText) dialog.findViewById(R.id.etFuelMixed);
-                final EditText etFuelHighway = (EditText) dialog.findViewById(R.id.etFuelHighway);
                 final EditText etFuelPrice = (EditText) dialog.findViewById(R.id.etFuelPrice);
+                final EditText etFuelMixed = (EditText) dialog.findViewById(R.id.etFuelMixed);
+                final EditText etFuelCity = (EditText) dialog.findViewById(R.id.etFuelCity);
+                final EditText etFuelHighway = (EditText) dialog.findViewById(R.id.etFuelHighway);
 
+                etFuelPrice.setText(String.valueOf(this.preferences.getFloat("fuelPrice", 2.0f)));
                 etFuelMixed.setText(String.valueOf(this.preferences.getFloat("fuelMixed", 7.0f)));
                 etFuelCity.setText(String.valueOf(this.preferences.getFloat("fuelCity", 0)));
-                etFuelHighway.setText(String.valueOf(this.preferences.getFloat("fuelHighwawy", 0)));
-                etFuelPrice.setText(String.valueOf(this.preferences.getFloat("fuelPrice", 2.0f)));
+                etFuelHighway.setText(String.valueOf(this.preferences.getFloat("fuelHighway", 0)));
 
                 TextView tvCurrencyFuel = (TextView) dialog.findViewById(R.id.tvCurrencyFuel);
                 tvCurrencyFuel.setText(currency.getSymbol());
@@ -320,8 +335,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         // set preferences values
                         SharedPreferences.Editor preferencesEditor = MainActivity.this.preferences
                                 .edit();
-                        preferencesEditor.putBoolean("lkm", true);
-                        preferencesEditor.putBoolean("gm", false);
+                        preferencesEditor.putInt("metrics", KILOMETERS);
                         preferencesEditor.commit();
 
                         // set units to current view
@@ -333,6 +347,9 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         TextView tvHighwayMetrics = (TextView) dialog
                                 .findViewById(R.id.tvHighwayMetrics);
                         tvHighwayMetrics.setText(R.string.lkm);
+
+                        // refresh members list
+                        refreshMembersList();
                     }
                 });
 
@@ -344,8 +361,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         // set preferences values
                         SharedPreferences.Editor preferencesEditor = MainActivity.this.preferences
                                 .edit();
-                        preferencesEditor.putBoolean("lkm", false);
-                        preferencesEditor.putBoolean("gm", true);
+                        preferencesEditor.putInt("metrics", MILES);
                         preferencesEditor.commit();
 
                         // set units to current view
@@ -357,6 +373,9 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         TextView tvHighwayMetrics = (TextView) dialog
                                 .findViewById(R.id.tvHighwayMetrics);
                         tvHighwayMetrics.setText(R.string.gm);
+
+                        // refresh members list
+                        refreshMembersList();
                     }
                 });
 
@@ -377,11 +396,14 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                                 .putFloat("fuelMixed",
                                         Float.valueOf(etFuelMixed.getText().toString().trim())
                                                 .floatValue());
-                        preferencesEditor.putFloat("fuelCity",
-                                Float.valueOf(etFuelCity.getText().toString().trim()).floatValue());
-                        preferencesEditor.putFloat("fuelHighway",
-                                Float.valueOf(etFuelHighway.getText().toString().trim())
-                                        .floatValue());
+                        preferencesEditor
+                                .putFloat("fuelCity",
+                                        Float.valueOf(etFuelCity.getText().toString().trim())
+                                                .floatValue());
+                        preferencesEditor
+                                .putFloat("fuelHighway",
+                                        Float.valueOf(etFuelHighway.getText().toString().trim())
+                                                .floatValue());
 
                         preferencesEditor.commit();
                         dialog.dismiss();
@@ -393,8 +415,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                 TextView tvCurrencyPayment = (TextView) dialog.findViewById(R.id.tvCurrencyPayment);
                 tvCurrencyPayment.setText(currency.getSymbol());
 
-                Button btnDonePayment = (Button) dialog.findViewById(R.id.btnDonePayment);
-                btnDonePayment.setOnClickListener(new OnClickListener() {
+                Button btnAddPayment = (Button) dialog.findViewById(R.id.btnAddPayment);
+                btnAddPayment.setOnClickListener(new OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
@@ -403,6 +425,16 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         float payment = (Float.valueOf(etPayment.getText().toString().trim())
                                 .floatValue());
                         PaxiUtility.addPayment(payment);
+                        // TODO add payment to payment list
+                    }
+                });
+
+                Button btnDonePayment = (Button) dialog.findViewById(R.id.btnDonePayment);
+                btnDonePayment.setOnClickListener(new OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+
                         dialog.dismiss();
                     }
                 });
@@ -434,6 +466,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+        // TODO when everybody is out - stop tracking and finish route, prepare for clear
+        
         TextView tvName = (TextView) view.findViewById(R.id.tvName);
         String toOut = tvName.getText().toString(); // TODO by ID?
 
@@ -450,7 +484,6 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
         ButtonsDialog buttonsDialog = new ButtonsDialog(this, R.style.DialogButtons,
                 R.layout.double_buttons, viewLocation);
         buttonsDialog.show();
-        // TODO finish
 
         if (summariedMembers.indexOf(id) != -1) {
             Log.d(TAG, "already done!");
@@ -477,7 +510,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                 R.layout.double_buttons, viewLocation);
         buttonsDialog.show();
         // TODO finish
-        if (true) return false;
+        if (true)
+            return false;
 
         if (position == (parent.getAdapter().getCount() - 2)) {
             iAmOnList = false;
@@ -516,6 +550,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                 if (paxiService.isTracking()) {
                     paxiService.stop();
                 }
+                // TODO summarize all members
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                 bindClearAction();
                 break;
@@ -585,8 +620,9 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
      */
     private void clearRoute() {
 
-        PaxiUtility.newRoute(); // TODO check if is setting all over agagin
-        // TODO clear service storage
+        summariedMembers.clear();
+        paxiService.clear();
+        PaxiUtility.newRoute(); // TODO check if is setting all over again
         getMe();
     }
 
@@ -598,12 +634,14 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
             LocalBinder binder = (LocalBinder) service;
             paxiService = binder.getService();
             trackingBounded = true;
+            Log.i(TAG, "trackingBounded=true");
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
 
             trackingBounded = false;
+            Log.i(TAG, "trackingBounded=false");
         }
     };
 

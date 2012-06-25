@@ -70,7 +70,7 @@ public class PaxiService extends Service {
     }
 
     public void start() {
-
+        
         locationListener = new LocationListener() {
 
             public void onLocationChanged(Location location) {
@@ -83,11 +83,13 @@ public class PaxiService extends Service {
                 Log.d(TAG, "onStatusChanged, " + status + " of " + provider);
             }
 
-            public void onProviderEnabled(String provider) {
+            @Override
+            public void onProviderDisabled(String provider) {
 
             }
 
-            public void onProviderDisabled(String provider) {
+            @Override
+            public void onProviderEnabled(String provider) {
 
             }
         };
@@ -112,6 +114,8 @@ public class PaxiService extends Service {
         int accuracy = (int) location.getAccuracy();
         if (lastLocations.size() != 0) {
             distance = (int) location.distanceTo(lastLocations.get(lastLocations.size() - 1));
+            Log.v(TAG, "fancy alt=" + location.getAltitude());
+            Log.v(TAG, "fancy spd=" + location.getSpeed());
         }
 
         lastLocations.add(location);
@@ -138,19 +142,27 @@ public class PaxiService extends Service {
         return this.tracking;
     }
 
+    public void clear() {
+
+        stop();
+        this.lastLocations.clear();
+        this.distance = 0;
+        this.distanceDelta = 0;
+    }
+
     private void notifyShowTracking() {
 
-        int icon = android.R.drawable.ic_menu_compass;
-        CharSequence tickerText = "Paxi GPS recording ON!";
+        int icon = android.R.drawable.ic_menu_compass; // statusbar icon
+        CharSequence tickerText = "Paxi GPS recording ON!"; // on tracking started information on statusbar
         long when = System.currentTimeMillis();
         Notification notification = new Notification(icon, tickerText, when);
-        CharSequence contentTitle = "Paxi";
-        CharSequence contentText = "GPS Recording ON";
+        CharSequence contentTitle = "Paxi"; // title of notification
+        CharSequence contentText = "GPS Recording ON"; // text of notification
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         notification.setLatestEventInfo(getApplicationContext(), contentTitle, contentText,
                 contentIntent);
-        notification.flags = Notification.FLAG_NO_CLEAR;
+        notification.flags = Notification.FLAG_NO_CLEAR; // cannot be cleared
         notificationManager.notify(NOTIFY_ID, notification);
     }
 

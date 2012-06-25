@@ -34,14 +34,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="l/km" />
+                android:text="metric" />
 
             <Button
                 android:id="@+id/btnMiles"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="g/m" />
+                android:text="imperial" />
         </LinearLayout>
 
         <!-- Fuel price -->
@@ -119,7 +119,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="average fuel consumption" />
+                    android:text="average" />
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -164,7 +164,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="fuel consumption in city" />
+                    android:text="in city" />
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -210,7 +210,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="fuel consumption on hw" />
+                    android:text="on highway" />
 
                 <LinearLayout
                     android:layout_width="fill_parent"

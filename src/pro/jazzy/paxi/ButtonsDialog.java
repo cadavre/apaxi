@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
@@ -30,11 +31,18 @@ public class ButtonsDialog extends Dialog {
         setContentView(layout);
         getWindow().setGravity(Gravity.TOP);
         LinearLayout llButtonsContainer = (LinearLayout) findViewById(R.id.llButtonsContainer);
-        
-        LinearLayout.LayoutParams llCurrentParams = (LayoutParams) llButtonsContainer.getLayoutParams();
+
+        // set proper distance between buttons and top
+        LinearLayout.LayoutParams llCurrentParams = (LayoutParams) llButtonsContainer
+                .getLayoutParams();
         LinearLayout.LayoutParams llNewParams = new LinearLayout.LayoutParams(llCurrentParams);
         llNewParams.setMargins(0, top, 0, 0);
-        
+
+        // set dim background value
+        WindowManager.LayoutParams dimAttrs = getWindow().getAttributes();
+        dimAttrs.dimAmount = 0.5f;
+        getWindow().setAttributes(dimAttrs);
+
         llButtonsContainer.setLayoutParams(llNewParams);
     }
 

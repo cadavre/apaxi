@@ -12,13 +12,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MembersAdapter extends ArrayAdapter<String> {
+    
+    private static final String TAG = "Paxi";
 
     private Member[] membersList;
 
-    public MembersAdapter(Context context, String[] simpleValues, Member[] membersList) {
+    private int metrics;
+
+    // metrics idenfitiers
+    static final int KILOMETERS = 1;
+
+    static final int MILES = 2;
+
+    public MembersAdapter(Context context, String[] simpleValues, Member[] membersList, int metrics) {
 
         super(context, R.layout.member_element, R.id.tvName, simpleValues);
         this.membersList = membersList;
+        this.metrics = metrics;
     }
 
     @Override
@@ -33,9 +43,24 @@ public class MembersAdapter extends ArrayAdapter<String> {
         if (membersList[position].getPhotoUri() != null) {
             ivAvatar.setImageURI(Uri.parse(membersList[position].getPhotoUri()));
         } else {
-            // set default hopek
+            // TODO set default hopek
         }
-        tvCounter.setText((int) Math.floor(membersList[position].getDistance() / 1000) + "km"); // TODO jednostka
+
+        double divider;
+        String unit = "m";
+        switch (this.metrics) {
+            case MILES:
+                divider = 1609.344;
+                unit = "m";
+                break;
+            case KILOMETERS:
+            default:
+                divider = 1000.0;
+                unit = "km";
+                break;
+        }
+        tvCounter.setText((int) Math.floor(membersList[position].getDistance() / divider) + " "
+                + unit);
 
         return returnView;
     }
