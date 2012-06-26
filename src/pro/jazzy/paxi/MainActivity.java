@@ -7,6 +7,10 @@ import java.util.Locale;
 
 import pro.jazzy.paxi.PaxiService.LocalBinder;
 import pro.jazzy.paxi.entity.Member;
+import pro.jazzy.paxi.entity.MemberOut;
+import pro.jazzy.paxi.entity.ModeChange;
+import pro.jazzy.paxi.entity.Payment;
+import pro.jazzy.paxi.entity.Route;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -67,9 +71,9 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
     static final int DIALOG_PAYMENT = 2;
 
     // metrics idenfitiers
-    static final int KILOMETERS = 1;
+    static final int KILOMETERS = 0;
 
-    static final int MILES = 2;
+    static final int MILES = 1;
 
     // preferences filename
     static final String APP_PREFERENCES = "paxi.data";
@@ -100,13 +104,15 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
     // ListView of members
     ListView lvMembersList;
 
+    Route myRoute;
+
     /**
      * Create MemeberAdapter instance
      */
     private void createMembersAdapter() {
 
-        membersAdapter = new MembersAdapter(this, PaxiUtility.getMemberNames(),
-                PaxiUtility.getMembers(), this.preferences.getInt("metrics", KILOMETERS));
+        membersAdapter = new MembersAdapter(this, myRoute.getMemberNames(), myRoute.getMembers(),
+                this.preferences.getInt("metrics", KILOMETERS));
     }
 
     /**
@@ -151,10 +157,10 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        summariedMembers = new ArrayList<Long>();
-        PaxiUtility.newRoute();
-
         this.preferences = getSharedPreferences(APP_PREFERENCES, Activity.MODE_PRIVATE);
+
+        summariedMembers = new ArrayList<Long>();
+        myRoute = new Route(this.preferences);
 
         createMembersListView();
         // by default add phone onwer to members LV
@@ -194,7 +200,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
         registerReceiver(updateReceiver, intentFilter);
         Log.i(TAG, "registered receiver (updateReceiver)");
         if (trackingBounded) {
-            PaxiUtility.currentRoute.setCurrentDistance(paxiService.getDistance());
+            myRoute.setDistance(paxiService.getDistance());
             refreshMembersList();
             Log.i(TAG, "loaded distance from memory " + paxiService.getDistance());
         }
@@ -213,9 +219,10 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
         if (requestCode == PICK_CONTACT_REQUEST) {
             if (resultCode == RESULT_OK) {
-                Member addMember = PaxiUtility.memberIn(data.getExtras().getString("name"));
-                addMember.setPhotoUri(data.getExtras().getString("photo"));
-                addMember.setId(Long.parseLong(data.getExtras().getString("id")));
+                Member addMember = new Member(data.getExtras().getString("name"));
+                addMember.setAvatarUri(data.getExtras().getString("photo"));
+                // addMember.setId(Long.parseLong(data.getExtras().getString("id")));
+                myRoute.memberIn(addMember);
                 refreshMembersList();
             }
         }
@@ -276,7 +283,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                     public void onClick(View v) {
 
                         preferencesEditor.putString("mode", "city");
-                        PaxiUtility.changeRouteType(PaxiUtility.ROUTE_TYPE_CITY);
+                        ModeChange cityMode = new ModeChange(Route.CITY_MODE);
+                        myRoute.changeMode(cityMode);
                         preferencesEditor.commit();
                         dialog.dismiss();
                     }
@@ -289,7 +297,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                     public void onClick(View v) {
 
                         preferencesEditor.putString("mode", "mixed");
-                        PaxiUtility.changeRouteType(PaxiUtility.ROUTE_TYPE_MIXED);
+                        ModeChange mixedMode = new ModeChange(Route.MIXED_MODE);
+                        myRoute.changeMode(mixedMode);
                         preferencesEditor.commit();
                         dialog.dismiss();
                     }
@@ -302,7 +311,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                     public void onClick(View v) {
 
                         preferencesEditor.putString("mode", "highway");
-                        PaxiUtility.changeRouteType(PaxiUtility.ROUTE_TYPE_HIGHWAY);
+                        ModeChange highwayMode = new ModeChange(Route.HIGHWAY_MODE);
+                        myRoute.changeMode(highwayMode);
                         preferencesEditor.commit();
                         dialog.dismiss();
                     }
@@ -396,14 +406,11 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                                 .putFloat("fuelMixed",
                                         Float.valueOf(etFuelMixed.getText().toString().trim())
                                                 .floatValue());
-                        preferencesEditor
-                                .putFloat("fuelCity",
-                                        Float.valueOf(etFuelCity.getText().toString().trim())
-                                                .floatValue());
-                        preferencesEditor
-                                .putFloat("fuelHighway",
-                                        Float.valueOf(etFuelHighway.getText().toString().trim())
-                                                .floatValue());
+                        preferencesEditor.putFloat("fuelCity",
+                                Float.valueOf(etFuelCity.getText().toString().trim()).floatValue());
+                        preferencesEditor.putFloat("fuelHighway",
+                                Float.valueOf(etFuelHighway.getText().toString().trim())
+                                        .floatValue());
 
                         preferencesEditor.commit();
                         dialog.dismiss();
@@ -422,10 +429,10 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                     public void onClick(View v) {
 
                         EditText etPayment = (EditText) dialog.findViewById(R.id.etPayment);
-                        float payment = (Float.valueOf(etPayment.getText().toString().trim())
-                                .floatValue());
-                        PaxiUtility.addPayment(payment);
-                        // TODO add payment to payment list
+                        Payment payment = new Payment(Float.valueOf(
+                                etPayment.getText().toString().trim()).floatValue());
+                        myRoute.addPayment(payment);
+                        // TODO create list and add payment to it
                     }
                 });
 
@@ -467,7 +474,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         // TODO when everybody is out - stop tracking and finish route, prepare for clear
-        
+
         TextView tvName = (TextView) view.findViewById(R.id.tvName);
         String toOut = tvName.getText().toString(); // TODO by ID?
 
@@ -490,7 +497,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
             return;
         }
 
-        float toPay = PaxiUtility.memberOut(toOut); // TODO CALC!!!
+        MemberOut memberToOut = new MemberOut(toOut);
+        float toPay = myRoute.memberOut(memberToOut);
         summariedMembers.add(id);
 
         // TODO update TVs!
@@ -520,7 +528,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
         TextView tvName = (TextView) view.findViewById(R.id.tvName);
         String toRemove = tvName.getText().toString(); // TODO by ID?
 
-        PaxiUtility.removeMember(toRemove);
+        // PaxiUtility.removeMember(toRemove); TODO
         refreshMembersList();
 
         Toast.makeText(getApplicationContext(), toRemove + " removed!", Toast.LENGTH_SHORT).show();
@@ -604,13 +612,14 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
         row[0] = profileCursor.getString(0); // id
         row[1] = profileCursor.getString(1); // name
         row[2] = profileCursor.getString(2); // photo uri
-        Member addMember = PaxiUtility.memberIn(profileCursor.getString(1));
+        Member addMember = new Member(profileCursor.getString(1));
         if (profileCursor.getString(2) != null) {
-            addMember.setPhotoUri(profileCursor.getString(2));
+            addMember.setAvatarUri(profileCursor.getString(2));
         } else {
             // TODO hipek
         }
-        addMember.setId(Long.parseLong(profileCursor.getString(0)));
+        // addMember.setId(Long.parseLong(profileCursor.getString(0)));
+        myRoute.memberIn(addMember);
 
         refreshMembersList();
     }
@@ -622,7 +631,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
         summariedMembers.clear();
         paxiService.clear();
-        PaxiUtility.newRoute(); // TODO check if is setting all over again
+        myRoute = new Route(this.preferences);
         getMe();
     }
 
@@ -661,7 +670,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
      */
     private void handleGpsStatusChange() {
 
-        PaxiUtility.addDistance(paxiService.getDistanceDelta());
+        myRoute.addDistance(paxiService.getDistanceDelta());
         refreshMembersList();
         Log.i(TAG, "total dist GPS: " + paxiService.getDistance());
     }

@@ -1,10 +1,12 @@
 
 package pro.jazzy.paxi;
 
+import java.util.ArrayList;
+
 import pro.jazzy.paxi.entity.Member;
+import pro.jazzy.paxi.entity.Route;
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -12,23 +14,32 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MembersAdapter extends ArrayAdapter<String> {
-    
+
     private static final String TAG = "Paxi";
 
-    private Member[] membersList;
+    private ArrayList<Member> membersList;
 
-    private int metrics;
+    private float divider;
 
-    // metrics idenfitiers
-    static final int KILOMETERS = 1;
+    private String unit;
 
-    static final int MILES = 2;
-
-    public MembersAdapter(Context context, String[] simpleValues, Member[] membersList, int metrics) {
+    public MembersAdapter(Context context, String[] simpleValues, ArrayList<Member> membersList,
+            int metrics) {
 
         super(context, R.layout.member_element, R.id.tvName, simpleValues);
         this.membersList = membersList;
-        this.metrics = metrics;
+
+        switch (metrics) {
+            case Route.MILES:
+                divider = Route.MILES_DIVIDER;
+                unit = "m";
+                break;
+            case Route.KILOMETERS:
+            default:
+                divider = Route.KILOMETERS_DIVIDER;
+                unit = "km";
+                break;
+        }
     }
 
     @Override
@@ -40,26 +51,13 @@ public class MembersAdapter extends ArrayAdapter<String> {
         // TextView tvName = (TextView) returnView.findViewById(R.id.tvName);
         TextView tvCounter = (TextView) returnView.findViewById(R.id.tvCounter);
 
-        if (membersList[position].getPhotoUri() != null) {
-            ivAvatar.setImageURI(Uri.parse(membersList[position].getPhotoUri()));
+        if (membersList.get(position).getAvatarUri() != null) {
+            ivAvatar.setImageURI(Uri.parse(membersList.get(position).getAvatarUri()));
         } else {
             // TODO set default hopek
         }
 
-        double divider;
-        String unit = "m";
-        switch (this.metrics) {
-            case MILES:
-                divider = 1609.344;
-                unit = "m";
-                break;
-            case KILOMETERS:
-            default:
-                divider = 1000.0;
-                unit = "km";
-                break;
-        }
-        tvCounter.setText((int) Math.floor(membersList[position].getDistance() / divider) + " "
+        tvCounter.setText((int) Math.floor(membersList.get(position).getDistance() / divider) + " "
                 + unit);
 
         return returnView;

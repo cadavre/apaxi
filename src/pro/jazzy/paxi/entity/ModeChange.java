@@ -1,15 +1,15 @@
 
 package pro.jazzy.paxi.entity;
 
-public class Payment implements RoadEvent {
+public class ModeChange implements RoadEvent {
 
     int distance;
 
-    float amount;
+    int mode;
 
-    public Payment(float amount) {
+    public ModeChange(int mode) {
 
-        this.amount = amount;
+        this.mode = mode;
     }
 
     @Override
@@ -24,9 +24,9 @@ public class Payment implements RoadEvent {
         this.distance = distance;
     }
 
-    public float getAmount() {
+    public int getMode() {
 
-        return amount;
+        return mode;
     }
 
 }
