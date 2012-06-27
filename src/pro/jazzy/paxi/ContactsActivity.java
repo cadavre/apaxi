@@ -89,9 +89,9 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
 
         // create "Passenger #%d" at second place
         int next = (membersCount + 1);
-        row[0] = String.format("%d", 999999 - membersCount);
+        row[0] = String.format("%d", -999 - membersCount);
         row[1] = "Passenger #" + next;
-        row[2] = "";
+        row[2] = null;
         retCursor.addRow(row);
 
         // load contacts

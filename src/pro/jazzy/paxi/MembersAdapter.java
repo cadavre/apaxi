@@ -1,7 +1,10 @@
-
 package pro.jazzy.paxi;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Currency;
+import java.util.HashMap;
+import java.util.Locale;
 
 import pro.jazzy.paxi.entity.Member;
 import pro.jazzy.paxi.entity.Route;
@@ -15,52 +18,81 @@ import android.widget.TextView;
 
 public class MembersAdapter extends ArrayAdapter<String> {
 
-    private static final String TAG = "Paxi";
+	private static final String TAG = "Paxi";
 
-    private ArrayList<Member> membersList;
+	private ArrayList<Member> membersList;
 
-    private float divider;
+	Route routeInstance;
 
-    private String unit;
+	HashMap<Long, Float> summarizedIds;
 
-    public MembersAdapter(Context context, String[] simpleValues, ArrayList<Member> membersList,
-            int metrics) {
+	private float divider;
 
-        super(context, R.layout.member_element, R.id.tvName, simpleValues);
-        this.membersList = membersList;
+	private String unit;
 
-        switch (metrics) {
-            case Route.MILES:
-                divider = Route.MILES_DIVIDER;
-                unit = "m";
-                break;
-            case Route.KILOMETERS:
-            default:
-                divider = Route.KILOMETERS_DIVIDER;
-                unit = "km";
-                break;
-        }
-    }
+	public MembersAdapter(Context context, String[] simpleValues,
+			ArrayList<Member> membersList, Route route,
+			HashMap<Long, Float> summarized, int metrics) {
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+		super(context, R.layout.member_element, R.id.tvName, simpleValues);
+		this.membersList = membersList;
+		this.routeInstance = route;
+		this.summarizedIds = summarized;
 
-        View returnView = super.getView(position, convertView, parent);
+		switch (metrics) {
+		case Route.MILES:
+			divider = Route.MILES_DIVIDER;
+			unit = "m";
+			break;
+		case Route.KILOMETERS:
+		default:
+			divider = Route.KILOMETERS_DIVIDER;
+			unit = "km";
+			break;
+		}
+	}
 
-        ImageView ivAvatar = (ImageView) returnView.findViewById(R.id.ivAvatar);
-        // TextView tvName = (TextView) returnView.findViewById(R.id.tvName);
-        TextView tvCounter = (TextView) returnView.findViewById(R.id.tvCounter);
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
 
-        if (membersList.get(position).getAvatarUri() != null) {
-            ivAvatar.setImageURI(Uri.parse(membersList.get(position).getAvatarUri()));
-        } else {
-            // TODO set default hopek
-        }
+		View returnView = super.getView(position, convertView, parent);
 
-        tvCounter.setText((int) Math.floor(membersList.get(position).getDistance() / divider) + " "
-                + unit);
+		ImageView ivAvatar = (ImageView) returnView.findViewById(R.id.ivAvatar);
+		// TextView tvName = (TextView) returnView.findViewById(R.id.tvName);
+		TextView tvCounter = (TextView) returnView.findViewById(R.id.tvCounter);
 
-        return returnView;
-    }
+		if (membersList.get(position).getAvatarUri() != null) {
+			ivAvatar.setImageURI(Uri.parse(membersList.get(position)
+					.getAvatarUri()));
+		} else {
+			// TODO set default hopek
+		}
 
+		if (!summarizedIds.containsKey(membersList.get(position).getId())) {
+			tvCounter
+					.setText((int) Math.floor((routeInstance.getDistance() - membersList
+							.get(position).getDistance()) / divider)
+							+ " " + unit);
+		} else {
+			String currency = Currency.getInstance(Locale.getDefault())
+					.getSymbol();
+			DecimalFormat dfTwoDigits = new DecimalFormat("#.##");
+			String value = dfTwoDigits.format(summarizedIds
+					.get(getItemId(position)));
+			tvCounter.setText(value + " " + currency);
+		}
+
+		return returnView;
+	}
+
+	@Override
+	public boolean hasStableIds() {
+		return true;
+	}
+
+	@Override
+	public long getItemId(int position) {
+
+		return this.membersList.get(position).getId();
+	}
 }

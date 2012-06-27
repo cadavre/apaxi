@@ -1,56 +1,92 @@
-
 package pro.jazzy.paxi.entity;
 
 public class Member implements RoadEvent {
 
-    int distance;
+	/**
+	 * Members in da car - this member included
+	 */
+	static int membersIn = 0;
 
-    String member;
+	int distance;
 
-    String avatarUri;
+	long id;
 
-    /**
-     * Members in da car - this member included
-     */
-    static int membersIn = 0;
+	String member;
 
-    public Member(String member) {
+	String avatarUri;
 
-        this.member = member;
-        membersIn++;
-    }
+	boolean isOnboard = true;
 
-    @Override
-    public int getDistance() {
+	public Member(String member, long id) {
 
-        return distance;
-    }
+		this.member = member;
+		this.id = id;
+		membersIn++;
+	}
 
-    @Override
-    public void setDistance(int distance) {
+	public long getId() {
+		return this.id;
+	}
 
-        this.distance = distance;
-    }
+	@Override
+	public int getDistance() {
 
-    public String getAvatarUri() {
+		return distance;
+	}
 
-        return avatarUri;
-    }
+	@Override
+	public void setDistance(int distance) {
 
-    public void setAvatarUri(String uri) {
+		this.distance = distance;
+	}
 
-        this.avatarUri = uri;
-    }
+	public String getAvatarUri() {
 
-    public String getMember() {
+		return avatarUri;
+	}
 
-        return member;
-    }
+	public void setAvatarUri(String uri) {
 
-    @Override
-    public String toString() {
+		this.avatarUri = uri;
+	}
 
-        return this.member;
-    }
+	public String getMemberName() {
+
+		return member;
+	}
+
+	@Override
+	public String toString() {
+
+		return this.member;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((member == null) ? 0 : member.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Member other = (Member) obj;
+		if (id != other.id)
+			return false;
+		if (member == null) {
+			if (other.member != null)
+				return false;
+		} else if (!member.equals(other.member))
+			return false;
+		return true;
+	}
 
 }

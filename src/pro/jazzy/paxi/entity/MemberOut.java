@@ -1,38 +1,37 @@
-
 package pro.jazzy.paxi.entity;
 
 public class MemberOut implements RoadEvent {
 
-    int distance;
+	/**
+	 * Members kicked off a car - this member included
+	 */
+	static int membersOut = 0;
 
-    String member;
+	int distance;
 
-    /**
-     * Members kicked off a car - this member included
-     */
-    static int membersOut = 0;
+	Member member;
 
-    public MemberOut(String member) {
+	public MemberOut(Member member) {
 
-        this.member = member;
-        membersOut++;
-    }
+		this.member = member;
+		membersOut += 2; // one for -1 and one for new Member created when MemberOut
+	}
 
-    @Override
-    public int getDistance() {
+	@Override
+	public int getDistance() {
 
-        return distance;
-    }
+		return distance;
+	}
 
-    @Override
-    public void setDistance(int distance) {
+	@Override
+	public void setDistance(int distance) {
 
-        this.distance = distance;
-    }
+		this.distance = distance;
+	}
 
-    public String getMember() {
+	public Member getMember() {
 
-        return member;
-    }
+		return member;
+	}
 
 }

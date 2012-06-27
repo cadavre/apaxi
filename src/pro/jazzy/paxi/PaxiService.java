@@ -114,8 +114,6 @@ public class PaxiService extends Service {
         int accuracy = (int) location.getAccuracy();
         if (lastLocations.size() != 0) {
             distance = (int) location.distanceTo(lastLocations.get(lastLocations.size() - 1));
-            Log.v(TAG, "fancy alt=" + location.getAltitude());
-            Log.v(TAG, "fancy spd=" + location.getSpeed());
         }
 
         lastLocations.add(location);
@@ -157,7 +155,7 @@ public class PaxiService extends Service {
         long when = System.currentTimeMillis();
         Notification notification = new Notification(icon, tickerText, when);
         CharSequence contentTitle = "Paxi"; // title of notification
-        CharSequence contentText = "GPS Recording ON"; // text of notification
+        CharSequence contentText = "GPS tracking"; // text of notification
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         notification.setLatestEventInfo(getApplicationContext(), contentTitle, contentText,
