@@ -72,11 +72,6 @@ public class MainActivity extends Activity implements OnClickListener,
 
 	static final int DIALOG_PAYMENT = 2;
 
-	// metrics idenfitiers
-	static final int KILOMETERS = 0;
-
-	static final int MILES = 1;
-
 	// preferences filename
 	static final String APP_PREFERENCES = "paxi.data";
 
@@ -123,7 +118,7 @@ public class MainActivity extends Activity implements OnClickListener,
 
 		membersAdapter = new MembersAdapter(this, myRoute.getMemberNames(),
 				myRoute.getMembers(), myRoute, summarizedMembers,
-				this.preferences.getInt("metrics", KILOMETERS));
+				this.preferences.getInt("metrics", Route.KILOMETERS));
 	}
 
 	/**
@@ -132,7 +127,7 @@ public class MainActivity extends Activity implements OnClickListener,
 	private void createPaymentsAdapter() {
 
 		paymentsAdapter = new PaymentsAdapter(this, myRoute.getPayments(),
-				myRoute, this.preferences.getInt("metrics", KILOMETERS));
+				myRoute, this.preferences.getInt("metrics", Route.KILOMETERS));
 	}
 
 	/**
@@ -439,7 +434,7 @@ public class MainActivity extends Activity implements OnClickListener,
 					// set preferences values
 					SharedPreferences.Editor preferencesEditor = MainActivity.this.preferences
 							.edit();
-					preferencesEditor.putInt("metrics", KILOMETERS);
+					preferencesEditor.putInt("metrics", Route.KILOMETERS);
 					preferencesEditor.commit();
 
 					// set units to current view
@@ -466,7 +461,7 @@ public class MainActivity extends Activity implements OnClickListener,
 					// set preferences values
 					SharedPreferences.Editor preferencesEditor = MainActivity.this.preferences
 							.edit();
-					preferencesEditor.putInt("metrics", MILES);
+					preferencesEditor.putInt("metrics", Route.MILES);
 					preferencesEditor.commit();
 
 					// set units to current view
