@@ -70,7 +70,7 @@ public class PaxiService extends Service {
     }
 
     public void start() {
-        
+
         locationListener = new LocationListener() {
 
             public void onLocationChanged(Location location) {

@@ -1,3 +1,4 @@
+
 package pro.jazzy.paxi;
 
 import java.text.DecimalFormat;
@@ -16,63 +17,66 @@ import android.widget.TextView;
 
 public class PaymentsAdapter extends ArrayAdapter<Payment> {
 
-	private static final String TAG = "Paxi";
+    private static final String TAG = "Paxi";
 
-	private ArrayList<Payment> paymentsList;
+    private ArrayList<Payment> paymentsList;
 
-	Route routeInstance;
+    Route routeInstance;
 
-	private float divider;
+    private float divider;
 
-	private String unit;
+    private String unit;
 
-	public PaymentsAdapter(Context context, ArrayList<Payment> paymentsList,
-			Route route, int metrics) {
+    public PaymentsAdapter(Context context, ArrayList<Payment> paymentsList, Route route,
+            int metrics) {
 
-		super(context, R.layout.payment_element, R.id.tvDistance, paymentsList);
-		this.paymentsList = paymentsList;
-		this.routeInstance = route;
+        super(context, R.layout.payment_element, R.id.tvDistance, paymentsList);
+        this.paymentsList = paymentsList;
+        this.routeInstance = route;
 
-		switch (metrics) {
-		case Route.MILES:
-			divider = Route.MILES_DIVIDER;
-			unit = "m";
-			break;
-		case Route.KILOMETERS:
-		default:
-			divider = Route.KILOMETERS_DIVIDER;
-			unit = "km";
-			break;
-		}
-	}
+        switch (metrics) {
+            case Route.MILES:
+                divider = Route.MILES_DIVIDER;
+                unit = "m";
+                break;
+            case Route.KILOMETERS:
+            default:
+                divider = Route.KILOMETERS_DIVIDER;
+                unit = "km";
+                break;
+        }
+    }
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-Log.d("test","getView");
-		View returnView = super.getView(position, convertView, parent);
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
 
-		TextView tvAmount = (TextView) returnView.findViewById(R.id.tvAmount);
-		TextView tvDistance = (TextView) returnView
-				.findViewById(R.id.tvDistance);
+        View returnView = super.getView(position, convertView, parent);
 
-		String currency = Currency.getInstance(Locale.getDefault()).getSymbol();
-		DecimalFormat dfTwoDigits = new DecimalFormat("#.##");
-		String value = dfTwoDigits.format(paymentsList.get(position)
-				.getAmount());
-		tvAmount.setText(value + " " + currency);
+        TextView tvAmount = (TextView) returnView.findViewById(R.id.tvAmount);
+        TextView tvDistance = (TextView) returnView.findViewById(R.id.tvDistance);
 
-		tvDistance.setText("at " + (int) Math.floor((routeInstance.getDistance() - paymentsList
-				.get(position).getDistance()) / divider)
-				+ " " + unit);
+        String currency = Currency.getInstance(Locale.getDefault()).getSymbol();
+        DecimalFormat dfTwoDigits = new DecimalFormat("#.##");
+        String value = dfTwoDigits.format(paymentsList.get(position).getAmount());
+        tvAmount.setText(value + " " + currency);
 
-		return returnView;
-	}
+        tvDistance.setText("at "
+                + (int) Math.floor((routeInstance.getDistance() - paymentsList.get(position)
+                        .getDistance()) / divider) + " " + unit);
 
-	/*
-	 * @Override public boolean hasStableIds() { return true; }
-	 * 
-	 * @Override public long getItemId(int position) {
-	 * 
-	 * return this.membersList.get(position).getId(); }
-	 */
+        return returnView;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+
+        return true;
+    }
+
+    @Override
+    public long getItemId(int position) {
+
+        return this.paymentsList.get(position).getId();
+    }
+
 }

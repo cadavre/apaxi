@@ -1,3 +1,4 @@
+
 package pro.jazzy.paxi;
 
 import android.app.Dialog;
@@ -12,65 +13,68 @@ import android.widget.LinearLayout.LayoutParams;
 
 public class ButtonsDialog extends Dialog {
 
-	private static final String TAG = "Paxi Dialog";
+    private static final String TAG = "Paxi Dialog";
 
-	private int layout;
+    private int layout;
 
-	private int top;
+    private int top;
 
-	OnAcceptListener onAcceptListener = null;
+    OnAcceptListener onAcceptListener = null;
 
-	public interface OnAcceptListener {
-		public abstract void onAccept(Dialog dialog);
-	}
+    public interface OnAcceptListener {
 
-	public ButtonsDialog(Context context, int top) {
+        public abstract void onAccept(Dialog dialog);
+    }
 
-		super(context, R.style.DialogButtons);
-		this.layout = R.layout.double_buttons;
-		this.top = top;
-	}
+    public ButtonsDialog(Context context, int top) {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+        super(context, R.style.DialogButtons);
+        this.layout = R.layout.double_buttons;
+        this.top = top;
+    }
 
-		super.onCreate(savedInstanceState);
-		setContentView(layout);
-		getWindow().setGravity(Gravity.TOP);
-		LinearLayout llButtonsContainer = (LinearLayout) findViewById(R.id.llButtonsContainer);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
 
-		// set proper distance between buttons and top
-		LinearLayout.LayoutParams llCurrentParams = (LayoutParams) llButtonsContainer
-				.getLayoutParams();
-		LinearLayout.LayoutParams llNewParams = new LinearLayout.LayoutParams(
-				llCurrentParams);
-		llNewParams.setMargins(0, top, 0, 0);
+        super.onCreate(savedInstanceState);
+        setContentView(layout);
+        getWindow().setGravity(Gravity.TOP);
+        LinearLayout llButtonsContainer = (LinearLayout) findViewById(R.id.llButtonsContainer);
 
-		// set dim background value
-		WindowManager.LayoutParams dimAttrs = getWindow().getAttributes();
-		dimAttrs.dimAmount = 0.5f;
-		getWindow().setAttributes(dimAttrs);
+        // set proper distance between buttons and top
+        LinearLayout.LayoutParams llCurrentParams = (LayoutParams) llButtonsContainer
+                .getLayoutParams();
+        LinearLayout.LayoutParams llNewParams = new LinearLayout.LayoutParams(llCurrentParams);
+        llNewParams.setMargins(0, top, 0, 0);
 
-		llButtonsContainer.setLayoutParams(llNewParams);
+        // set dim background value
+        WindowManager.LayoutParams dimAttrs = getWindow().getAttributes();
+        dimAttrs.dimAmount = 0.5f;
+        getWindow().setAttributes(dimAttrs);
 
-		Button btnRight = (Button) findViewById(R.id.btnRight);
-		btnRight.setOnClickListener(new View.OnClickListener() {
+        llButtonsContainer.setLayoutParams(llNewParams);
 
-			@Override
-			public void onClick(View v) {
-				OnUserAccepted();
-			}
-		});
-	}
+        Button btnRight = (Button) findViewById(R.id.btnRight);
+        btnRight.setOnClickListener(new View.OnClickListener() {
 
-	private void OnUserAccepted() {
-		if (onAcceptListener != null) {
-			onAcceptListener.onAccept(this);
-		}
-	}
+            @Override
+            public void onClick(View v) {
 
-	public void setOnAcceptListener(OnAcceptListener listener) {
-		this.onAcceptListener = listener;
-	}
+                OnUserAccepted();
+            }
+        });
+    }
+
+    private void OnUserAccepted() {
+
+        if (onAcceptListener != null) {
+            onAcceptListener.onAccept(this);
+        }
+    }
+
+    public void setOnAcceptListener(OnAcceptListener listener) {
+
+        this.onAcceptListener = listener;
+    }
 
 }

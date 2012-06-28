@@ -1,92 +1,103 @@
+
 package pro.jazzy.paxi.entity;
 
 public class Member implements RoadEvent {
 
-	/**
-	 * Members in da car - this member included
-	 */
-	static int membersIn = 0;
+    /**
+     * Members in da car - this member included
+     */
+    static int membersIn = 0;
 
-	int distance;
+    int distance;
 
-	long id;
+    long id;
 
-	String member;
+    String member;
 
-	String avatarUri;
+    String avatarUri;
 
-	boolean isOnboard = true;
+    boolean isOnboard = true;
 
-	public Member(String member, long id) {
+    private static Member emptyInstance = new Member("", 0);
 
-		this.member = member;
-		this.id = id;
-		membersIn++;
-	}
+    public Member(String member, long id) {
 
-	public long getId() {
-		return this.id;
-	}
+        this.member = member;
+        this.id = id;
+        membersIn++;
+    }
 
-	@Override
-	public int getDistance() {
+    public long getId() {
 
-		return distance;
-	}
+        return this.id;
+    }
 
-	@Override
-	public void setDistance(int distance) {
+    private void setId(long id) {
 
-		this.distance = distance;
-	}
+        this.id = id;
+    }
 
-	public String getAvatarUri() {
+    @Override
+    public int getDistance() {
 
-		return avatarUri;
-	}
+        return distance;
+    }
 
-	public void setAvatarUri(String uri) {
+    @Override
+    public void setDistance(int distance) {
 
-		this.avatarUri = uri;
-	}
+        this.distance = distance;
+    }
 
-	public String getMemberName() {
+    public String getAvatarUri() {
 
-		return member;
-	}
+        return avatarUri;
+    }
 
-	@Override
-	public String toString() {
+    public void setAvatarUri(String uri) {
 
-		return this.member;
-	}
+        this.avatarUri = uri;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + ((member == null) ? 0 : member.hashCode());
-		return result;
-	}
+    public String getMemberName() {
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Member other = (Member) obj;
-		if (id != other.id)
-			return false;
-		if (member == null) {
-			if (other.member != null)
-				return false;
-		} else if (!member.equals(other.member))
-			return false;
-		return true;
-	}
+        return member;
+    }
+
+    @Override
+    public String toString() {
+
+        return this.member;
+    }
+
+    static public Member getInstance(long id) {
+
+        emptyInstance.setId(id);
+        return emptyInstance;
+    }
+
+    @Override
+    public int hashCode() {
+
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) (id ^ (id >>> 32));
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Member other = (Member) obj;
+        if (id != other.id)
+            return false;
+        return true;
+    }
 
 }

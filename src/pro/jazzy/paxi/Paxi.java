@@ -5,6 +5,4 @@ import android.app.Application;
 
 public class Paxi extends Application {
 
-    
-    
 }

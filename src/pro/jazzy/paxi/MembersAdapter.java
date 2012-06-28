@@ -1,3 +1,4 @@
+
 package pro.jazzy.paxi;
 
 import java.text.DecimalFormat;
@@ -18,81 +19,78 @@ import android.widget.TextView;
 
 public class MembersAdapter extends ArrayAdapter<String> {
 
-	private static final String TAG = "Paxi";
+    private static final String TAG = "Paxi";
 
-	private ArrayList<Member> membersList;
+    private ArrayList<Member> membersList;
 
-	Route routeInstance;
+    Route routeInstance;
 
-	HashMap<Long, Float> summarizedIds;
+    HashMap<Long, Float> summarizedIds;
 
-	private float divider;
+    private float divider;
 
-	private String unit;
+    private String unit;
 
-	public MembersAdapter(Context context, String[] simpleValues,
-			ArrayList<Member> membersList, Route route,
-			HashMap<Long, Float> summarized, int metrics) {
+    public MembersAdapter(Context context, String[] simpleValues, ArrayList<Member> membersList,
+            Route route, HashMap<Long, Float> summarized, int metrics) {
 
-		super(context, R.layout.member_element, R.id.tvName, simpleValues);
-		this.membersList = membersList;
-		this.routeInstance = route;
-		this.summarizedIds = summarized;
+        super(context, R.layout.member_element, R.id.tvName, simpleValues);
+        this.membersList = membersList;
+        this.routeInstance = route;
+        this.summarizedIds = summarized;
 
-		switch (metrics) {
-		case Route.MILES:
-			divider = Route.MILES_DIVIDER;
-			unit = "m";
-			break;
-		case Route.KILOMETERS:
-		default:
-			divider = Route.KILOMETERS_DIVIDER;
-			unit = "km";
-			break;
-		}
-	}
+        switch (metrics) {
+            case Route.MILES:
+                divider = Route.MILES_DIVIDER;
+                unit = "m";
+                break;
+            case Route.KILOMETERS:
+            default:
+                divider = Route.KILOMETERS_DIVIDER;
+                unit = "km";
+                break;
+        }
+    }
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
 
-		View returnView = super.getView(position, convertView, parent);
+        View returnView = super.getView(position, convertView, parent);
 
-		ImageView ivAvatar = (ImageView) returnView.findViewById(R.id.ivAvatar);
-		// TextView tvName = (TextView) returnView.findViewById(R.id.tvName);
-		TextView tvCounter = (TextView) returnView.findViewById(R.id.tvCounter);
+        ImageView ivAvatar = (ImageView) returnView.findViewById(R.id.ivAvatar);
+        // TextView tvName = (TextView) returnView.findViewById(R.id.tvName);
+        TextView tvCounter = (TextView) returnView.findViewById(R.id.tvCounter);
 
-		if (membersList.get(position).getAvatarUri() != null) {
-			ivAvatar.setImageURI(Uri.parse(membersList.get(position)
-					.getAvatarUri()));
-		} else {
-			// TODO set default hopek
-		}
+        if (membersList.get(position).getAvatarUri() != null) {
+            ivAvatar.setImageURI(Uri.parse(membersList.get(position).getAvatarUri()));
+        } else {
+            // TODO set default hopek
+        }
 
-		if (!summarizedIds.containsKey(membersList.get(position).getId())) {
-			tvCounter
-					.setText((int) Math.floor((routeInstance.getDistance() - membersList
-							.get(position).getDistance()) / divider)
-							+ " " + unit);
-		} else {
-			String currency = Currency.getInstance(Locale.getDefault())
-					.getSymbol();
-			DecimalFormat dfTwoDigits = new DecimalFormat("#.##");
-			String value = dfTwoDigits.format(summarizedIds
-					.get(getItemId(position)));
-			tvCounter.setText(value + " " + currency);
-		}
+        if (!summarizedIds.containsKey(membersList.get(position).getId())) {
+            tvCounter.setText((int) Math.floor((routeInstance.getDistance() - membersList.get(
+                    position).getDistance())
+                    / divider)
+                    + " " + unit);
+        } else {
+            String currency = Currency.getInstance(Locale.getDefault()).getSymbol();
+            DecimalFormat dfTwoDigits = new DecimalFormat("#.##");
+            String value = dfTwoDigits.format(summarizedIds.get(getItemId(position)));
+            tvCounter.setText(value + " " + currency);
+        }
 
-		return returnView;
-	}
+        return returnView;
+    }
 
-	@Override
-	public boolean hasStableIds() {
-		return true;
-	}
+    @Override
+    public boolean hasStableIds() {
 
-	@Override
-	public long getItemId(int position) {
+        return true;
+    }
 
-		return this.membersList.get(position).getId();
-	}
+    @Override
+    public long getItemId(int position) {
+
+        return this.membersList.get(position).getId();
+    }
 }
