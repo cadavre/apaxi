@@ -6,7 +6,7 @@ public class Member implements RoadEvent {
     /**
      * Members in da car - this member included
      */
-    static int membersIn = 0;
+    static int membersIn = -1;
 
     int distance;
 

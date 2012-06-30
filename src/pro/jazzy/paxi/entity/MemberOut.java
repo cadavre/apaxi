@@ -15,7 +15,7 @@ public class MemberOut implements RoadEvent {
     public MemberOut(Member member) {
 
         this.member = member;
-        membersOut += 2; // one for -1 and one for new Member created when MemberOut
+        membersOut++;
     }
 
     @Override

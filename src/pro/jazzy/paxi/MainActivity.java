@@ -22,6 +22,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -269,6 +270,14 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
             refreshMembersList();
             Log.i(TAG, "loaded distance from memory " + paxiService.getDistance());
         }
+        
+        if (preferences.getBoolean("firstRun", true)) {
+            showDialog(DIALOG_SETTINGS);
+            SharedPreferences.Editor preferencesEditor = MainActivity.this.preferences
+                    .edit();
+            preferencesEditor.putBoolean("firstRun", false);
+            preferencesEditor.commit();
+        }
     }
 
     @Override
@@ -335,6 +344,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                 final SharedPreferences.Editor preferencesEditor = MainActivity.this.preferences
                         .edit();
 
+                final int currentMode = preferences.getInt("mode", Route.MIXED_MODE);
+
                 Button btnDoneRoute = (Button) dialog.findViewById(R.id.btnDoneRoute);
                 btnDoneRoute.setOnClickListener(new OnClickListener() {
 
@@ -386,6 +397,24 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         dialog.dismiss();
                     }
                 });
+
+                switch (currentMode) {
+                    case Route.MIXED_MODE:
+                        btnMixed.setBackgroundColor(Color.GREEN);
+                        btnCity.setBackgroundColor(Color.LTGRAY);
+                        btnHighway.setBackgroundColor(Color.LTGRAY);
+                        break;
+                    case Route.CITY_MODE:
+                        btnCity.setBackgroundColor(Color.GREEN);
+                        btnMixed.setBackgroundColor(Color.LTGRAY);
+                        btnHighway.setBackgroundColor(Color.LTGRAY);
+                        break;
+                    case Route.HIGHWAY_MODE:
+                        btnHighway.setBackgroundColor(Color.GREEN);
+                        btnMixed.setBackgroundColor(Color.LTGRAY);
+                        btnCity.setBackgroundColor(Color.LTGRAY);
+                        break;
+                }
 
                 break;
             case DIALOG_SETTINGS:
@@ -511,7 +540,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                                 myRoute.removePayment(Payment.getInstance(id));
                                 refreshPaymentsList();
 
-                                Toast.makeText(getApplicationContext(), "Removed!",
+                                Toast.makeText(getApplicationContext(), "Payment removed!",
                                         Toast.LENGTH_SHORT).show();
                                 dialog.dismiss();
                             }
@@ -548,7 +577,10 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                             Payment payment = new Payment(floatValue);
                             myRoute.addPayment(payment);
                             refreshPaymentsList();
+                            Toast.makeText(getApplicationContext(), "Payment added!",
+                                    Toast.LENGTH_SHORT).show();
                         }
+
                         dialog.dismiss();
                     }
                 });
@@ -685,6 +717,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                 @Override
                 public void onAccept(Dialog dialog) {
 
+                    Log.d(TAG, "" + myRoute.getMembersCountOnboard());
+
                     MemberOut memberOut = new MemberOut(Member.getInstance(id));
                     float toPay = myRoute.memberOut(memberOut);
 
@@ -692,6 +726,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                     refreshMembersList();
 
                     dialog.dismiss();
+
+                    Log.d(TAG, "" + myRoute.getMembersCountOnboard());
 
                     if (myRoute.getMembersCountOnboard() == 0) {
                         if (paxiService.isTracking()) {

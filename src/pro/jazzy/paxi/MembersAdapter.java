@@ -10,6 +10,7 @@ import java.util.Locale;
 import pro.jazzy.paxi.entity.Member;
 import pro.jazzy.paxi.entity.Route;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,6 +74,7 @@ public class MembersAdapter extends ArrayAdapter<String> {
                     / divider)
                     + " " + unit);
         } else {
+            returnView.setBackgroundColor(Color.LTGRAY);
             String currency = Currency.getInstance(Locale.getDefault()).getSymbol();
             DecimalFormat dfTwoDigits = new DecimalFormat("#.##");
             String value = dfTwoDigits.format(summarizedIds.get(getItemId(position)));
