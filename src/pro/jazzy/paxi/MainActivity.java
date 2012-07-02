@@ -91,9 +91,6 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
     long myId;
 
-    // am I on list
-    boolean iAmOnList = true;
-
     // members already off
     HashMap<Long, Float> summarizedMembers;
 
@@ -298,10 +295,6 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                 addMember.setAvatarUri(data.getExtras().getString("photo"));
                 myRoute.memberIn(addMember);
                 refreshMembersList();
-
-                if (Long.parseLong(data.getExtras().getString("id")) == myId) {
-                    iAmOnList = true;
-                }
             }
         }
     }
@@ -698,7 +691,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
             // "Add" clicked
             Intent intent = new Intent(MainActivity.this, ContactsActivity.class);
             intent.putExtra("membersCount", parent.getChildCount() - 1);
-            intent.putExtra("iAmOnList", iAmOnList);
+            intent.putExtra("alreadyOnList", myRoute.getMemberIds());
             startActivityForResult(intent, PICK_CONTACT_REQUEST);
             return;
         }
@@ -762,10 +755,6 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
             @Override
             public void onAccept(Dialog dialog) {
-
-                if (id == myId) {
-                    iAmOnList = false;
-                }
 
                 myRoute.removeMember(Member.getInstance(id));
                 refreshMembersList();

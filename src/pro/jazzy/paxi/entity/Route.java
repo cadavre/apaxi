@@ -225,6 +225,16 @@ public class Route {
         memberNamesList.toArray(memberNamesArray);
         return memberNamesArray;
     }
+    
+    public ArrayList<Long> getMemberIds() {
+
+        ArrayList<Long> memberIdsList = new ArrayList<Long>();
+        memberIdsList.ensureCapacity(getMembers().size());
+        for (Member member : getMembers()) {
+            memberIdsList.add(member.getId());
+        }
+        return memberIdsList;
+	}
 
     public boolean removeMember(Member member) {
 

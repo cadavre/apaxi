@@ -86,11 +86,13 @@ public class PaxiService extends Service {
             @Override
             public void onProviderDisabled(String provider) {
 
+            	Log.d(TAG, "onProviderDisabled, of " + provider);
             }
 
             @Override
             public void onProviderEnabled(String provider) {
 
+            	Log.d(TAG, "onProviderEnabled, of " + provider);
             }
         };
 

@@ -60,9 +60,10 @@ public class PaymentsAdapter extends ArrayAdapter<Payment> {
         String value = dfTwoDigits.format(paymentsList.get(position).getAmount());
         tvAmount.setText(value + " " + currency);
 
-        tvDistance.setText("at "
-                + (int) Math.floor((routeInstance.getDistance() - paymentsList.get(position)
-                        .getDistance()) / divider) + " " + unit);
+		tvDistance
+				.setText((int) Math.floor((routeInstance.getDistance() - paymentsList
+						.get(position).getDistance()) / divider)
+						+ " " + unit + " ago");
 
         return returnView;
     }

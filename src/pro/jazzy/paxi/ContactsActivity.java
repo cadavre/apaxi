@@ -1,6 +1,8 @@
 
 package pro.jazzy.paxi;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -21,6 +23,8 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
     private static final boolean SHOW_HIDDEN = false;
 
     ListView lvContactsList;
+    
+    Cursor contactsCursor;
 
     int membersCount = 0;
 
@@ -32,15 +36,14 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
 
         // set options
         this.membersCount = getIntent().getExtras().getInt("membersCount", 0);
-        boolean iAmOnList = getIntent().getExtras().getBoolean("iAmOnList", false);
 
         lvContactsList = (ListView) findViewById(R.id.lvContactsList);
+        getContacts((ArrayList<Long>) getIntent().getExtras().get("alreadyOnList"));
 
-        Cursor cursor = getContacts(iAmOnList);
         String[] fields = new String[] { ContactsContract.Data.DISPLAY_NAME,
                 ContactsContract.Data.PHOTO_THUMBNAIL_URI };
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.contact_element,
-                cursor, fields, new int[] { R.id.tvName, R.id.ivAvatar });
+        		contactsCursor, fields, new int[] { R.id.tvName, R.id.ivAvatar });
         lvContactsList.setAdapter(adapter);
         lvContactsList.setOnItemClickListener(this);
     }
@@ -48,10 +51,9 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
     /**
      * Get contacts cursor
      * 
-     * @param iAmOnList If I shouldn't be included
-     * @return Cursor
+     * @param alreadyOnList ID's of already on list members - so don't show
      */
-    private Cursor getContacts(boolean iAmOnList) {
+    private void getContacts(ArrayList<Long> alreadyOnList) {
 
         // prepare general cursor for (non-hidden) users contacts
         Uri uri = ContactsContract.Contacts.CONTENT_URI;
@@ -72,19 +74,19 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
         String[] row = new String[3];
 
         // load driver data place it at first place in cursor
-        if (!iAmOnList) {
-            uri = ContactsContract.Profile.CONTENT_URI;
-            projection = new String[] { ContactsContract.Profile._ID,
-                    ContactsContract.Profile.DISPLAY_NAME,
-                    ContactsContract.Profile.PHOTO_THUMBNAIL_URI };
-            selection = ContactsContract.Profile.IS_USER_PROFILE;
-            Cursor profileCursor = managedQuery(uri, projection, selection, selectionArgs, null);
+        uri = ContactsContract.Profile.CONTENT_URI;
+        projection = new String[] { ContactsContract.Profile._ID,
+                ContactsContract.Profile.DISPLAY_NAME,
+                ContactsContract.Profile.PHOTO_THUMBNAIL_URI };
+        selection = ContactsContract.Profile.IS_USER_PROFILE;
+        Cursor profileCursor = managedQuery(uri, projection, selection, selectionArgs, null);
 
-            profileCursor.moveToFirst();
-            row[0] = profileCursor.getString(0);
-            row[1] = profileCursor.getString(1);
-            row[2] = profileCursor.getString(2);
-            retCursor.addRow(row);
+        profileCursor.moveToFirst();
+        row[0] = profileCursor.getString(0);
+        row[1] = profileCursor.getString(1);
+        row[2] = profileCursor.getString(2);
+        if (!alreadyOnList.contains(Long.valueOf(row[0]))) {
+        	retCursor.addRow(row);
         }
 
         // create "Passenger #%d" at second place
@@ -100,18 +102,19 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
             row[0] = contactsCursor.getString(0);
             row[1] = contactsCursor.getString(1);
             row[2] = contactsCursor.getString(2);
-            retCursor.addRow(row);
+            if (!alreadyOnList.contains(Long.valueOf(row[0]))) {
+            	retCursor.addRow(row);
+            }
             contactsCursor.moveToNext();
         }
 
-        return (Cursor) retCursor;
+        this.contactsCursor = (Cursor) retCursor;
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         Intent intent = new Intent();
-        Cursor contactsCursor = getContacts(false);
         contactsCursor.moveToFirst();
         while (contactsCursor.isAfterLast() == false) {
             if (Long.parseLong(contactsCursor.getString(0)) == id) {
