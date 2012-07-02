@@ -11,7 +11,7 @@ import android.util.Log;
  */
 public class Route {
 
-    static final String TAG = "PaxiCalc";
+    static final String TAG = "Paxi";
 
     /**
      * Mixed fuel consumption mode

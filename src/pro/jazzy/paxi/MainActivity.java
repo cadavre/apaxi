@@ -601,14 +601,18 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
         String msg;
         switch (this.currentActionBtnState) {
             case ACTION_BUTTON_START:
-                if (!paxiService.isTracking()) {
-                    paxiService.start();
-                    msg = "Tracking on...";
-                } else {
-                    msg = "Already tracking!";
-                }
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                bindStopAction();
+            	if (myRoute.getMembers().size() != 0) {
+	                if (!paxiService.isTracking()) {
+	                    paxiService.start();
+	                    msg = "Tracking on...";
+	                } else {
+	                    msg = "Error! Already tracking!";
+	                }
+	                bindStopAction();
+            	} else {
+            		msg = "Nobody onboard! Is this UAV?";
+            	}
+            	Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                 break;
             case ACTION_BUTTON_STOP:
                 msg = "Tracking off...";

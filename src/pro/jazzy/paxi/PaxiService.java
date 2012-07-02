@@ -18,7 +18,7 @@ import android.util.Log;
 
 public class PaxiService extends Service {
 
-    private static final String TAG = "Paxi GPS";
+    private static final String TAG = "Paxi";
 
     private static final String REFRESH_DATA_INTENT = "jazzy_gps_refresh";
 

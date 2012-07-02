@@ -4,25 +4,46 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
+    <RelativeLayout
+        android:id="@+id/rlTopBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        android:gravity="center_vertical" >
+
+        <EditText
+            android:id="@+id/etFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="( filter )" >
+        </EditText>
+
+        <Button
+            android:id="@+id/btnVoiceSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="Voice" />
+    </RelativeLayout>
+
     <ListView
         android:id="@+id/lvContactsList"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_above="@+id/rlBottomMenu" >
+        android:layout_above="@+id/btnDoneContacts"
+        android:layout_below="@id/rlTopBar" >
     </ListView>
 
-    <RelativeLayout
-        android:id="@id/rlBottomMenu"
+    <Button
+        android:id="@id/btnDoneContacts"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" >
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
-    </RelativeLayout>
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="Done" />
 
 </RelativeLayout>
