@@ -1,15 +1,32 @@
-
 package pro.jazzy.paxi.entity;
+
+import android.location.Location;
 
 /**
  * Interface for road event
  * 
  * @author Seweryn Zeman <seweryn.zeman@jazzy.pro>
  */
-public interface RoadEvent {
+public class RoadEvent {
 
-    public int getDistance();
+	int distance;
 
-    public void setDistance(int distance);
+	Location location;
+
+	public int getDistance() {
+		return distance;
+	}
+
+	public void setDistance(int distance) {
+		this.distance = distance;
+	}
+
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
+	}
 
 }

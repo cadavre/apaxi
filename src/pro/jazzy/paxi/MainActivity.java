@@ -818,6 +818,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
     private void handleGpsStatusChange() {
 
         myRoute.addDistance(paxiService.getDistanceDelta());
+        myRoute.setLocation(paxiService.getLastLocation());
         refreshMembersList();
     }
 

@@ -4,6 +4,7 @@ package pro.jazzy.paxi.entity;
 import java.util.ArrayList;
 
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.util.Log;
 
 /**
@@ -52,6 +53,11 @@ public class Route {
      * Current route distance
      */
     private int currentDistance = 0;
+    
+    /**
+     * Current location
+     */
+    private Location currentLocation;
 
     private ArrayList<RoadEvent> roadEvents = new ArrayList<RoadEvent>();
 
@@ -95,22 +101,35 @@ public class Route {
 
         return currentDistance;
     }
+    
+    public void setLocation(Location location) {
+
+    	this.currentLocation = location;
+    }
+    
+    public Location getLocation() {
+
+    	return this.currentLocation;
+    }
 
     public void memberIn(Member memberIn) {
 
         memberIn.setDistance(currentDistance);
+        memberIn.setLocation(currentLocation);
         roadEvents.add(memberIn);
     }
 
     public void addPayment(Payment payment) {
 
         payment.setDistance(currentDistance);
+        payment.setLocation(currentLocation);
         roadEvents.add(payment);
     }
 
     public void changeMode(ModeChange modeChange) {
 
         modeChange.setDistance(currentDistance);
+        modeChange.setLocation(currentLocation);
         roadEvents.add(modeChange);
     }
 
@@ -128,6 +147,7 @@ public class Route {
         Member memberIn = null;
 
         memberOut.setDistance(this.currentDistance);
+        memberOut.setLocation(currentLocation);
         roadEvents.add(memberOut);
 
         for (RoadEvent event : roadEvents) {

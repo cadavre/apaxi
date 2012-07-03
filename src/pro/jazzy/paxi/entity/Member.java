@@ -1,14 +1,12 @@
 
 package pro.jazzy.paxi.entity;
 
-public class Member implements RoadEvent {
+public class Member extends RoadEvent {
 
     /**
      * Members in da car - this member included
      */
     static int membersIn = -1;
-
-    int distance;
 
     long id;
 
@@ -35,18 +33,6 @@ public class Member implements RoadEvent {
     private void setId(long id) {
 
         this.id = id;
-    }
-
-    @Override
-    public int getDistance() {
-
-        return distance;
-    }
-
-    @Override
-    public void setDistance(int distance) {
-
-        this.distance = distance;
     }
 
     public String getAvatarUri() {

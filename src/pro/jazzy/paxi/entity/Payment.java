@@ -1,13 +1,11 @@
 
 package pro.jazzy.paxi.entity;
 
-public class Payment implements RoadEvent {
+public class Payment extends RoadEvent {
 
     static long idCounter = 0;
 
     long id;
-
-    int distance;
 
     float amount;
 
@@ -28,18 +26,6 @@ public class Payment implements RoadEvent {
     private void setId(long id) {
 
         this.id = id;
-    }
-
-    @Override
-    public int getDistance() {
-
-        return distance;
-    }
-
-    @Override
-    public void setDistance(int distance) {
-
-        this.distance = distance;
     }
 
     public float getAmount() {
