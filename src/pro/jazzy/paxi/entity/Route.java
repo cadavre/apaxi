@@ -163,7 +163,7 @@ public class Route {
         int gotOut = memberOut.getDistance();
         currentDistance = gotIn;
 
-        Log.e("test", "userOut: " + memberIn.getMemberName() + " he traveled from " + gotIn + " to "
+        Log.e(TAG, "userOut: " + memberIn.getMemberName() + " he traveled from " + gotIn + " to "
                 + gotOut);
 
         for (RoadEvent event : roadEvents) {
@@ -215,8 +215,13 @@ public class Route {
         Log.w(TAG, "calculations data: distance " + distance + " consumption "
                 + fuelConsumption[routeMode] + " per " + persons);
         float payPart = 0;
-        payPart = fuelPrice * (distance / currentDivider) * (fuelConsumption[routeMode] / 100)
-                / persons;
+        payPart = fuelPrice * (distance / currentDivider);
+        if (currentDivider == KILOMETERS_DIVIDER) {
+            payPart *= (fuelConsumption[routeMode] / 100);
+        } else {
+            payPart *= (1 / fuelConsumption[routeMode]);
+        }
+        payPart /= persons;
         return Float.isNaN(payPart) ? 0 : payPart;
     }
 
