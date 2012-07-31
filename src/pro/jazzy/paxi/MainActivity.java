@@ -899,8 +899,13 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
     public boolean onItemLongClick(AdapterView<?> parent, final View view, int position,
             final long id) {
 
-        if (position == parent.getAdapter().getCount() - 1) {
-            Log.i(TAG, "Nothing to do with 'Add'...");
+        if (view.findViewById(R.id.ivAdd) != null) {
+            Log.i(TAG, "Nothing to do...");
+            return false;
+        }
+        
+        if (summarizedMembers.containsKey(id)) {
+            Log.i(TAG, "Already summarized!");
             return false;
         }
 
