@@ -742,26 +742,47 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                 break;
             case ACTION_BUTTON_STOP:
-                msg = "Tracking off...";
-                if (paxiService.isTracking()) {
-                    paxiService.stop();
-                }
+                AlertDialog.Builder warnDialogBuilder = new Builder(this);
+                warnDialogBuilder.setMessage("Do you really want to stop?");
+                warnDialogBuilder.setNegativeButton("No", new Dialog.OnClickListener() {
 
-                for (int i = 0; i < lvMembersList.getChildCount() - 1; i++) {
-                    String name = (String) lvMembersList.getItemAtPosition(i);
-                    long id = lvMembersList.getItemIdAtPosition(i);
-                    if (!summarizedMembers.containsKey(id)) {
-                        Member member = new Member(name, id);
-                        MemberOut memberOut = new MemberOut(member);
-                        float toPay = myRoute.memberOut(memberOut);
-                        summarizedMembers.put(id, toPay);
+                    @Override
+                    public void onClick(DialogInterface dialog, int jakisInt) {
+
+                        dialog.dismiss();
                     }
-                }
-                refreshMembersList();
-                lvMembersList.removeFooterView(vAddMember);
+                });
+                warnDialogBuilder.setPositiveButton("Yes", new Dialog.OnClickListener() {
 
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                bindClearAction();
+                    @Override
+                    public void onClick(DialogInterface dialog, int jakisInt) {
+
+                        String msg = "Tracking off...";
+                        if (paxiService.isTracking()) {
+                            paxiService.stop();
+                        }
+
+                        for (int i = 0; i < lvMembersList.getChildCount() - 1; i++) {
+                            String name = (String) lvMembersList.getItemAtPosition(i);
+                            long id = lvMembersList.getItemIdAtPosition(i);
+                            if (!summarizedMembers.containsKey(id)) {
+                                Member member = new Member(name, id);
+                                MemberOut memberOut = new MemberOut(member);
+                                float toPay = myRoute.memberOut(memberOut);
+                                summarizedMembers.put(id, toPay);
+                            }
+                        }
+                        refreshMembersList();
+                        lvMembersList.removeFooterView(vAddMember);
+
+                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                        bindClearAction();
+
+                        dialog.dismiss();
+                    }
+                });
+                warnDialogBuilder.create().show();
+
                 break;
             case ACTION_BUTTON_CLEAR:
                 clearRoute();
