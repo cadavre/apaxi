@@ -12,6 +12,7 @@ import pro.jazzy.paxi.entity.Route;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -57,6 +58,12 @@ public class MembersAdapter extends ArrayAdapter<String> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         View returnView = super.getView(position, convertView, parent);
+
+        if (this.getCount() % 2 == 0) {
+            returnView.setBackgroundResource((position % 2 == 0) ? R.drawable.list_zebra_light : R.drawable.list_zebra_dark);
+        } else {
+            returnView.setBackgroundResource((position % 2 == 0) ? R.drawable.list_zebra_dark : R.drawable.list_zebra_light);
+        }
 
         ImageView ivAvatar = (ImageView) returnView.findViewById(R.id.ivAvatar);
         // TextView tvName = (TextView) returnView.findViewById(R.id.tvName);

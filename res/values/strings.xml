@@ -7,8 +7,8 @@
     <string name="city">City</string>
     <string name="mixed">Mixed</string>
     <string name="highway">Highway</string>
-    <string name="optional">( optional )</string>
-    <string name="required">( required )</string>
-    <string name="lkm">l/100km</string>
-    <string name="gm">g/100m</string>
+    <string name="optional">optional</string>
+    <string name="required">required</string>
+    <string name="lkm">L / 100 km</string>
+    <string name="gm">MPG</string>
 </resources>

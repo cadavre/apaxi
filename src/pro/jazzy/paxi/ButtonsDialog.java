@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
@@ -18,6 +18,8 @@ public class ButtonsDialog extends Dialog {
     private int layout;
 
     private int top;
+    
+    private int imgResource;
 
     OnAcceptListener onAcceptListener = null;
 
@@ -26,11 +28,12 @@ public class ButtonsDialog extends Dialog {
         public abstract void onAccept(Dialog dialog);
     }
 
-    public ButtonsDialog(Context context, int top) {
+    public ButtonsDialog(Context context, int top, int imgResource) {
 
         super(context, R.style.DialogButtons);
-        this.layout = R.layout.double_buttons;
+        this.layout = R.layout.popup_button;
         this.top = top;
+        this.imgResource = imgResource;
     }
 
     @Override
@@ -52,10 +55,18 @@ public class ButtonsDialog extends Dialog {
         dimAttrs.dimAmount = 0.5f;
         getWindow().setAttributes(dimAttrs);
 
+        // set dialog width fill_parent
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(this.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.FILL_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        getWindow().setAttributes(lp);
+
         llButtonsContainer.setLayoutParams(llNewParams);
 
-        Button btnRight = (Button) findViewById(R.id.btnRight);
-        btnRight.setOnClickListener(new View.OnClickListener() {
+        ImageView btnPopup = (ImageView) findViewById(R.id.btnPopup);
+        btnPopup.setImageResource(imgResource);
+        btnPopup.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {

@@ -51,6 +51,9 @@ public class PaymentsAdapter extends ArrayAdapter<Payment> {
 
         View returnView = super.getView(position, convertView, parent);
 
+        returnView.setBackgroundResource((position % 2 == 0) ? R.drawable.list_zebra_dark
+                : R.drawable.list_zebra_light);
+
         TextView tvAmount = (TextView) returnView.findViewById(R.id.tvAmount);
         TextView tvDistance = (TextView) returnView.findViewById(R.id.tvDistance);
 
@@ -59,10 +62,10 @@ public class PaymentsAdapter extends ArrayAdapter<Payment> {
         String value = dfTwoDigits.format(paymentsList.get(position).getAmount());
         tvAmount.setText(value + " " + currency);
 
-		tvDistance
-				.setText((int) Math.floor((routeInstance.getDistance() - paymentsList
-						.get(position).getDistance()) / divider)
-						+ " " + unit + " ago");
+        tvDistance.setText((int) Math.floor((routeInstance.getDistance() - paymentsList.get(
+                position).getDistance())
+                / divider)
+                + " " + unit + " ago");
 
         return returnView;
     }

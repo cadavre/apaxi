@@ -10,18 +10,20 @@
 
         <ImageView
             android:id="@+id/ivAvatar"
+            android:layout_width="@dimen/avatar_size"
+            android:layout_height="@dimen/avatar_size"
             android:layout_gravity="center"
-            android:layout_width="?android:attr/listPreferredItemHeight"
-            android:layout_height="wrap_content" />
+            android:layout_margin="4dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/passenger" />
 
         <TextView
             android:id="@+id/tvName"
-            android:layout_gravity="center"
             android:layout_width="260dp"
-            android:paddingLeft="10dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingLeft="10dp"
             android:text="tekst" />
-
     </LinearLayout>
 
 </LinearLayout>

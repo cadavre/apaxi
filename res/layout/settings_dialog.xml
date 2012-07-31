@@ -49,7 +49,6 @@
                     android:id="@+id/etFuelPrice"
                     android:layout_width="@dimen/settings_input_width"
                     android:layout_height="@dimen/settings_input_height"
-                    android:layout_weight="1"
                     android:inputType="numberDecimal"
                     android:hint="@string/required" >
 
@@ -120,7 +119,6 @@
                         android:id="@+id/etFuelMixed"
                         android:layout_width="@dimen/settings_input_width"
                         android:layout_height="@dimen/settings_input_height"
-                        android:layout_weight="1"
                         android:inputType="numberDecimal"
                         android:hint="@string/required" />
 
@@ -253,8 +251,7 @@
                         <TextView
                             android:id="@+id/tvHighwayMetrics"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="l/100km" />
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

@@ -7,16 +7,15 @@
         android:id="@+id/llButtonsContainer"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:minHeight="?android:attr/listPreferredItemHeight" >
+        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:gravity="center"
+        android:background="@color/cream_transparent" >
 
-        <Button
-            android:id="@+id/btnRight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="DO IT!" />
+        <ImageView
+            android:id="@+id/btnPopup"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/avatar_size"
+            android:src="@drawable/passenger" />
     </LinearLayout>
 
 </LinearLayout>

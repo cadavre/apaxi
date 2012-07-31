@@ -10,9 +10,12 @@
 
         <ImageView
             android:id="@+id/ivAvatar"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_width="@dimen/avatar_size"
+            android:layout_height="@dimen/avatar_size"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/passenger_car" />
 
         <TextView
             android:id="@+id/tvName"

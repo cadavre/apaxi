@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="avatar_size">56dp</dimen>
     <dimen name="header_height">23dp</dimen>
     <dimen name="settings_img_margin">5dp</dimen>
     <dimen name="settings_input_width">100dp</dimen>

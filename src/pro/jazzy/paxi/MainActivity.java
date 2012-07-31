@@ -40,6 +40,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -108,6 +109,9 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
     // ListView of payments
     ListView lvPaymentsList;
 
+    // View of "Add" element
+    View vAddMember;
+
     Route myRoute;
 
     /**
@@ -153,19 +157,11 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
         lvMembersList = (ListView) findViewById(R.id.lvMembersList);
 
+        // Add "Add" row
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View addRow = inflater.inflate(R.layout.member_element, null, false);
-        TextView tvNameTemp = (TextView) addRow.findViewById(R.id.tvName);
-        tvNameTemp.setText(R.string.add);
-        TextView tvCounterTemp = (TextView) addRow.findViewById(R.id.tvCounter);
-        // clear unneeded TV
-        tvCounterTemp.setText("");
-        // set plus as avatar
-        ImageView ivAvatarTemp = (ImageView) addRow.findViewById(R.id.ivAvatar);
-        ivAvatarTemp.setImageResource(android.R.drawable.btn_plus);
-
-        lvMembersList.addFooterView(addRow);
+        vAddMember = inflater.inflate(R.layout.member_add_element, null, false);
+        lvMembersList.addFooterView(vAddMember);
 
         lvMembersList.setOnItemClickListener(this);
         lvMembersList.setOnItemLongClickListener(this);
@@ -414,6 +410,21 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                 final EditText etFuelCity = (EditText) dialog.findViewById(R.id.etFuelCity);
                 final EditText etFuelHighway = (EditText) dialog.findViewById(R.id.etFuelHighway);
 
+                final TextView tvMixedMetrics = (TextView) dialog.findViewById(R.id.tvMixedMetrics);
+                final TextView tvCityMetrics = (TextView) dialog.findViewById(R.id.tvCityMetrics);
+                final TextView tvHighwayMetrics = (TextView) dialog
+                        .findViewById(R.id.tvHighwayMetrics);
+
+                int resMetricsLabel;
+                if (this.preferences.getInt("metrics", Route.KILOMETERS) == Route.KILOMETERS) {
+                    resMetricsLabel = R.string.lkm;
+                } else {
+                    resMetricsLabel = R.string.gm;
+                }
+                tvMixedMetrics.setText(resMetricsLabel);
+                tvCityMetrics.setText(resMetricsLabel);
+                tvHighwayMetrics.setText(resMetricsLabel);
+
                 final String currentFuelPrice = String.valueOf(this.preferences.getFloat(
                         "fuelPrice", 5.0f));
                 final String currentFuelMixed = String.valueOf(this.preferences.getFloat(
@@ -522,13 +533,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         btnKm.setImageResource(R.drawable.metrics_on);
 
                         // set units to current view
-                        TextView tvMixedMetrics = (TextView) dialog
-                                .findViewById(R.id.tvMixedMetrics);
                         tvMixedMetrics.setText(R.string.lkm);
-                        TextView tvCityMetrics = (TextView) dialog.findViewById(R.id.tvCityMetrics);
                         tvCityMetrics.setText(R.string.lkm);
-                        TextView tvHighwayMetrics = (TextView) dialog
-                                .findViewById(R.id.tvHighwayMetrics);
                         tvHighwayMetrics.setText(R.string.lkm);
 
                         // refresh members list
@@ -552,13 +558,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         btnMiles.setImageResource(R.drawable.imperial_on);
 
                         // set units to current view
-                        TextView tvMixedMetrics = (TextView) dialog
-                                .findViewById(R.id.tvMixedMetrics);
                         tvMixedMetrics.setText(R.string.gm);
-                        TextView tvCityMetrics = (TextView) dialog.findViewById(R.id.tvCityMetrics);
                         tvCityMetrics.setText(R.string.gm);
-                        TextView tvHighwayMetrics = (TextView) dialog
-                                .findViewById(R.id.tvHighwayMetrics);
                         tvHighwayMetrics.setText(R.string.gm);
 
                         // refresh members list
@@ -649,7 +650,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         view.getLocationInWindow(loc);
                         int viewLocation = loc[1];
                         ButtonsDialog buttonsDialog = new ButtonsDialog(MainActivity.this,
-                                viewLocation);
+                                viewLocation, R.drawable.passenger); // TODO
                         buttonsDialog.show();
                         buttonsDialog.setOnAcceptListener(new OnAcceptListener() {
 
@@ -757,12 +758,15 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                     }
                 }
                 refreshMembersList();
+                lvMembersList.removeFooterView(vAddMember);
 
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                 bindClearAction();
                 break;
             case ACTION_BUTTON_CLEAR:
                 clearRoute();
+                lvMembersList.addFooterView(vAddMember);
+                refreshMembersList();
                 bindStartAction();
                 break;
         }
@@ -833,7 +837,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
         if (paxiService.isTracking()) {
             int viewLocation = view.getTop();
-            ButtonsDialog buttonsDialog = new ButtonsDialog(this, viewLocation);
+            ButtonsDialog buttonsDialog = new ButtonsDialog(this, viewLocation, R.drawable.leavecar);
             buttonsDialog.show();
             buttonsDialog.setOnAcceptListener(new OnAcceptListener() {
 
@@ -879,7 +883,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
         }
 
         int viewLocation = view.getTop();
-        ButtonsDialog buttonsDialog = new ButtonsDialog(this, viewLocation);
+        ButtonsDialog buttonsDialog = new ButtonsDialog(this, viewLocation, R.drawable.passenger); // TODO
         buttonsDialog.show();
         buttonsDialog.setOnAcceptListener(new OnAcceptListener() {
 

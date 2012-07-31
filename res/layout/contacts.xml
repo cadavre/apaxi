@@ -4,6 +4,16 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
+    <TextView
+        android:id="@+id/tvHeader6654"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/header_height"
+        android:background="@color/gray"
+        android:gravity="center"
+        android:text="choose passenger"
+        android:textColor="@color/white" />
+
+    <!--
     <RelativeLayout
         android:id="@+id/rlTopBar"
         android:layout_width="fill_parent"
@@ -28,33 +38,36 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:text="Voice" />
-    </RelativeLayout>
+    </RelativeLayout>
+    -->
 
     <ListView
         android:id="@+id/lvContactsList"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btnDoneContacts"
-        android:layout_below="@id/rlTopBar" >
+        android:layout_below="@+id/tvHeader6654" >
     </ListView>
 
     <TextView
         android:id="@+id/tvLetterHint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentRight="true"
-        android:layout_centerHorizontal="false"
         android:layout_centerVertical="true"
-        android:layout_marginRight="60dp"
-        android:text="Large Text"
+        android:layout_marginRight="40dp"
+        android:background="@drawable/letter_hint_background"
+        android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
         android:visibility="invisible" />
-    <Button
-        android:id="@id/btnDoneContacts"
+
+    <ImageView
+        android:id="@+id/btnDoneContacts"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="Done" />
+        android:src="@drawable/btn_cancel" />
 
 </RelativeLayout>
