@@ -13,7 +13,7 @@
     </ListView>
 
     <RelativeLayout
-        android:id="@id/rlBottomMenu"
+        android:id="@+id/rlBottomMenu"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" >
@@ -44,35 +44,32 @@
             android:text="Stop" />
         -->
 
-        <Button
-            android:id="@+id/btnRouteMode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Mode" />
-
-        <Button
+        <ImageView
             android:id="@+id/btnSettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@id/btnRouteMode"
-            android:text="Settings" />
+            android:src="@drawable/btn_menu_settings" />
 
-        <Button
+        <ImageView
+            android:id="@+id/btnRouteMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/btnSettings"
+            android:src="@drawable/btn_menu_mode_mixed" />
+
+        <ImageView
             android:id="@+id/btnPayment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@id/btnSettings"
-            android:text="Payment" />
+            android:layout_toRightOf="@id/btnRouteMode"
+            android:src="@drawable/btn_menu_fee" />
 
-        <Button
+        <ImageView
             android:id="@+id/btnAction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@id/btnPayment"
-            android:text="Start" />
+            android:layout_toRightOf="@+id/btnPayment"
+            android:src="@drawable/btn_menu_action_start" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -81,7 +81,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
     TrackingUpdateReceiver updateReceiver;
 
-    Button btnAction;
+    ImageView btnAction;
 
     // current state of toggle button
     int currentActionBtnState = ACTION_BUTTON_START;
@@ -229,10 +229,10 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
         // by default add phone onwer to members LV
         getMe();
 
-        Button btnRouteMode = (Button) findViewById(R.id.btnRouteMode);
-        Button btnSettings = (Button) findViewById(R.id.btnSettings);
-        Button btnPayment = (Button) findViewById(R.id.btnPayment);
-        btnAction = (Button) findViewById(R.id.btnAction);
+        ImageView btnRouteMode = (ImageView) findViewById(R.id.btnRouteMode);
+        ImageView btnSettings = (ImageView) findViewById(R.id.btnSettings);
+        ImageView btnPayment = (ImageView) findViewById(R.id.btnPayment);
+        btnAction = (ImageView) findViewById(R.id.btnAction);
 
         btnRouteMode.setOnClickListener(this);
         btnSettings.setOnClickListener(this);
@@ -267,11 +267,10 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
             refreshMembersList();
             Log.i(TAG, "loaded distance from memory " + paxiService.getDistance());
         }
-        
+
         if (preferences.getBoolean("firstRun", true)) {
             showDialog(DIALOG_SETTINGS);
-            SharedPreferences.Editor preferencesEditor = MainActivity.this.preferences
-                    .edit();
+            SharedPreferences.Editor preferencesEditor = MainActivity.this.preferences.edit();
             preferencesEditor.putBoolean("firstRun", false);
             preferencesEditor.commit();
         }
@@ -339,7 +338,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
                 final int currentMode = preferences.getInt("mode", Route.MIXED_MODE);
 
-                Button btnDoneRoute = (Button) dialog.findViewById(R.id.btnDoneRoute);
+                ImageView btnDoneRoute = (ImageView) dialog.findViewById(R.id.btnDoneRoute);
                 btnDoneRoute.setOnClickListener(new OnClickListener() {
 
                     @Override
@@ -349,7 +348,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                     }
                 });
 
-                Button btnCity = (Button) dialog.findViewById(R.id.btnCity);
+                ImageView btnCity = (ImageView) dialog.findViewById(R.id.btnCity);
                 btnCity.setOnClickListener(new OnClickListener() {
 
                     @Override
@@ -363,7 +362,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                     }
                 });
 
-                Button btnMixed = (Button) dialog.findViewById(R.id.btnMixed);
+                ImageView btnMixed = (ImageView) dialog.findViewById(R.id.btnMixed);
                 btnMixed.setOnClickListener(new OnClickListener() {
 
                     @Override
@@ -377,7 +376,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                     }
                 });
 
-                Button btnHighway = (Button) dialog.findViewById(R.id.btnHighway);
+                ImageView btnHighway = (ImageView) dialog.findViewById(R.id.btnHighway);
                 btnHighway.setOnClickListener(new OnClickListener() {
 
                     @Override
@@ -393,19 +392,19 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
                 switch (currentMode) {
                     case Route.MIXED_MODE:
-                        btnMixed.setBackgroundColor(Color.GREEN);
-                        btnCity.setBackgroundColor(Color.LTGRAY);
-                        btnHighway.setBackgroundColor(Color.LTGRAY);
+                        btnMixed.setImageResource(R.drawable.mixed_on);
+                        btnCity.setImageResource(R.drawable.btn_mode_city);
+                        btnHighway.setImageResource(R.drawable.btn_mode_highway);
                         break;
                     case Route.CITY_MODE:
-                        btnCity.setBackgroundColor(Color.GREEN);
-                        btnMixed.setBackgroundColor(Color.LTGRAY);
-                        btnHighway.setBackgroundColor(Color.LTGRAY);
+                        btnCity.setImageResource(R.drawable.city_on);
+                        btnMixed.setImageResource(R.drawable.btn_mode_mixed);
+                        btnHighway.setImageResource(R.drawable.btn_mode_highway);
                         break;
                     case Route.HIGHWAY_MODE:
-                        btnHighway.setBackgroundColor(Color.GREEN);
-                        btnMixed.setBackgroundColor(Color.LTGRAY);
-                        btnCity.setBackgroundColor(Color.LTGRAY);
+                        btnHighway.setImageResource(R.drawable.highway_on);
+                        btnMixed.setImageResource(R.drawable.btn_mode_mixed);
+                        btnCity.setImageResource(R.drawable.btn_mode_city);
                         break;
                 }
 
@@ -425,8 +424,14 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                 TextView tvCurrencyFuel = (TextView) dialog.findViewById(R.id.tvCurrencyFuel);
                 tvCurrencyFuel.setText(currency.getSymbol());
 
-                Button btnKm = (Button) dialog.findViewById(R.id.btnKm);
-                Button btnMiles = (Button) dialog.findViewById(R.id.btnMiles);
+                final ImageView btnKm = (ImageView) dialog.findViewById(R.id.btnKm);
+                final ImageView btnMiles = (ImageView) dialog.findViewById(R.id.btnMiles);
+
+                if (this.preferences.getInt("metrics", Route.KILOMETERS) == Route.KILOMETERS) {
+                    btnKm.setImageResource(R.drawable.metrics_on);
+                } else {
+                    btnMiles.setImageResource(R.drawable.imperial_on);
+                }
 
                 btnKm.setOnClickListener(new OnClickListener() {
 
@@ -438,6 +443,10 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                                 .edit();
                         preferencesEditor.putInt("metrics", Route.KILOMETERS);
                         preferencesEditor.commit();
+
+                        // set button selected
+                        btnMiles.setImageResource(R.drawable.btn_settings_imperial);
+                        btnKm.setImageResource(R.drawable.metrics_on);
 
                         // set units to current view
                         TextView tvMixedMetrics = (TextView) dialog
@@ -465,6 +474,10 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         preferencesEditor.putInt("metrics", Route.MILES);
                         preferencesEditor.commit();
 
+                        // set button selected
+                        btnKm.setImageResource(R.drawable.btn_settings_metrics);
+                        btnMiles.setImageResource(R.drawable.imperial_on);
+
                         // set units to current view
                         TextView tvMixedMetrics = (TextView) dialog
                                 .findViewById(R.id.tvMixedMetrics);
@@ -480,7 +493,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                     }
                 });
 
-                Button btnDoneSettings = (Button) dialog.findViewById(R.id.btnDoneSettings);
+                ImageView btnDoneSettings = (ImageView) dialog.findViewById(R.id.btnDoneSettings);
                 btnDoneSettings.setOnClickListener(new OnClickListener() {
 
                     @Override
@@ -556,7 +569,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                     }
                 });
 
-                Button btnAddPayment = (Button) dialog.findViewById(R.id.btnAddPayment);
+                ImageView btnAddPayment = (ImageView) dialog.findViewById(R.id.btnAddPayment);
                 btnAddPayment.setOnClickListener(new OnClickListener() {
 
                     @Override
@@ -578,7 +591,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                     }
                 });
 
-                Button btnDonePayment = (Button) dialog.findViewById(R.id.btnDonePayment);
+                ImageView btnDonePayment = (ImageView) dialog.findViewById(R.id.btnDonePayment);
                 btnDonePayment.setOnClickListener(new OnClickListener() {
 
                     @Override
@@ -601,18 +614,18 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
         String msg;
         switch (this.currentActionBtnState) {
             case ACTION_BUTTON_START:
-            	if (myRoute.getMembers().size() != 0) {
-	                if (!paxiService.isTracking()) {
-	                    paxiService.start();
-	                    msg = "Tracking on...";
-	                } else {
-	                    msg = "Error! Already tracking!";
-	                }
-	                bindStopAction();
-            	} else {
-            		msg = "Nobody onboard! Is this UAV?";
-            	}
-            	Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                if (myRoute.getMembers().size() != 0) {
+                    if (!paxiService.isTracking()) {
+                        paxiService.start();
+                        msg = "Tracking on...";
+                    } else {
+                        msg = "Error! Already tracking!";
+                    }
+                    bindStopAction();
+                } else {
+                    msg = "Nobody onboard! Is this UAV?";
+                }
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                 break;
             case ACTION_BUTTON_STOP:
                 msg = "Tracking off...";
@@ -647,7 +660,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
      */
     private void bindStartAction() {
 
-        btnAction.setText("Start");
+        btnAction.setImageResource(R.drawable.btn_menu_action_start);
         this.currentActionBtnState = ACTION_BUTTON_START;
     }
 
@@ -656,7 +669,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
      */
     private void bindStopAction() {
 
-        btnAction.setText("Stop");
+        btnAction.setImageResource(R.drawable.btn_menu_action_stop);
         this.currentActionBtnState = ACTION_BUTTON_STOP;
     }
 
@@ -665,7 +678,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
      */
     private void bindClearAction() {
 
-        btnAction.setText("Clear");
+        btnAction.setImageResource(R.drawable.btn_menu_action_refresh);
         this.currentActionBtnState = ACTION_BUTTON_CLEAR;
     }
 
