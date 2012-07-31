@@ -6,20 +6,35 @@
     android:layout_gravity="center_horizontal|center_vertical"
     android:orientation="vertical" >
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/tvHeader8274"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_above="@+id/btnDonePayment"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:gravity="center_horizontal" >
+        android:layout_height="@dimen/header_height"
+        android:background="@color/gray"
+        android:gravity="center"
+        android:text="add extra fee"
+        android:textColor="@color/white" />
+
+    <LinearLayout
+        android:id="@+id/llPaymentBellContainer"
+        android:layout_width="fill_parent"
+        android:layout_height="?android:attr/listPreferredItemHeight"
+        android:layout_below="@+id/tvHeader8274"
+        android:background="@color/cream"
+        android:gravity="center_vertical" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/fee_white" />
 
         <EditText
             android:id="@+id/etPayment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="8dp"
+            android:layout_weight="1"
             android:ems="6"
             android:inputType="numberDecimal"
             android:text="0" />
@@ -28,33 +43,41 @@
             android:id="@+id/tvCurrencyPayment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/etPayment"
-            android:layout_toRightOf="@id/etPayment"
+            android:layout_weight="1"
             android:text="zł" />
 
-        <Button
+        <ImageView
             android:id="@+id/btnAddPayment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="30dp"
-            android:layout_toRightOf="@id/tvCurrencyPayment"
-            android:text="Add payment" />
+            android:layout_weight="1"
+            android:src="@drawable/btn_add_fee" />
+    </LinearLayout>
 
-        <ListView
-            android:id="@+id/lvPaymentsList"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/etPayment" >
-        </ListView>
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/tvHeader2837"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/header_height"
+        android:layout_below="@+id/llPaymentBellContainer"
+        android:background="@color/gray"
+        android:gravity="center"
+        android:text="fee list"
+        android:textColor="@color/white" />
 
-    <Button
+    <ListView
+        android:id="@+id/lvPaymentsList"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnDonePayment"
+        android:layout_below="@+id/tvHeader2837" >
+    </ListView>
+
+    <ImageView
         android:id="@+id/btnDonePayment"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="Done" />
+        android:src="@drawable/btn_cancel" />
 
 </RelativeLayout>
