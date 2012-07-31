@@ -11,7 +11,7 @@
         <ImageView
             android:id="@+id/ivAvatar"
             android:layout_gravity="center"
-            android:layout_width="60dp"
+            android:layout_width="?android:attr/listPreferredItemHeight"
             android:layout_height="wrap_content" />
 
         <TextView

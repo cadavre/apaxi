@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-
     <string name="app_name">Paxi</string>
     <string name="add">Add</string>
     <string name="done">Done</string>
@@ -8,8 +7,8 @@
     <string name="city">City</string>
     <string name="mixed">Mixed</string>
     <string name="highway">Highway</string>
-    <string name="optional">(optional)</string>
+    <string name="optional">( optional )</string>
+    <string name="required">( required )</string>
     <string name="lkm">l/100km</string>
     <string name="gm">g/100m</string>
-
 </resources>

@@ -8,12 +8,16 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -21,6 +25,7 @@ import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 public class ContactsActivity extends Activity implements OnItemClickListener {
 
@@ -51,6 +56,7 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
 
 		lvContactsList = (ListView) findViewById(R.id.lvContactsList);
 		getContacts();
+		final TextView tvLetterHint = (TextView) findViewById(R.id.tvLetterHint);
 
 		String[] fields = new String[] { ContactsContract.Data.DISPLAY_NAME,
 				ContactsContract.Data.PHOTO_THUMBNAIL_URI };
@@ -59,6 +65,28 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
 						R.id.tvName, R.id.ivAvatar });
 		lvContactsList.setAdapter(adapter);
 		lvContactsList.setOnItemClickListener(this);
+		lvContactsList.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+				if (scrollState == SCROLL_STATE_IDLE) {
+					tvLetterHint.setVisibility(View.INVISIBLE);
+				} else {
+					tvLetterHint.setVisibility(View.VISIBLE);
+				}
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+
+				MatrixCursor cursor = (MatrixCursor) adapter
+						.getItem(firstVisibleItem + 2);
+				String firstLetter = cursor.getString(1).substring(0, 1);
+				tvLetterHint.setText(firstLetter.toUpperCase());
+			}
+		});
 
 		adapter.setFilterQueryProvider(new FilterQueryProvider() {
 
@@ -111,10 +139,10 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
 				((EditText) v).setText("");
 			}
 		});
-		
-		Button btnDoneContacts = (Button)findViewById(R.id.btnDoneContacts);
+
+		Button btnDoneContacts = (Button) findViewById(R.id.btnDoneContacts);
 		btnDoneContacts.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				finish();
@@ -185,11 +213,13 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
 		Cursor profileCursor = managedQuery(uri, projection, selection,
 				selectionArgs, null);
 
+		// drivers profile
 		if (profileCursor.getCount() != 0) {
 			profileCursor.moveToFirst();
 			row[0] = profileCursor.getString(0);
 			row[1] = profileCursor.getString(1);
-			row[2] = profileCursor.getString(2);
+			row[2] = (profileCursor.getString(2) == null) ? "android.resource://pro.jazzy.paxi/drawable/ic_launcher"
+					: profileCursor.getString(2); // TODO hipek uri
 			if (!alreadyOnList.contains(Long.valueOf(row[0]))) {
 				retCursor.addRow(row);
 			}
@@ -200,7 +230,9 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
 			int next = (membersCount + 1);
 			row[0] = String.format("%d", -999 - membersCount);
 			row[1] = "Passenger #" + next;
-			row[2] = null;
+			row[2] = "android.resource://pro.jazzy.paxi/drawable/ic_launcher"; // TODO
+																				// hopek
+																				// uri
 			retCursor.addRow(row);
 		}
 
@@ -209,7 +241,8 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
 		while (contactsCursor.isAfterLast() == false) {
 			row[0] = contactsCursor.getString(0);
 			row[1] = contactsCursor.getString(1);
-			row[2] = contactsCursor.getString(2);
+			row[2] = (contactsCursor.getString(2) == null) ? "android.resource://pro.jazzy.paxi/drawable/ic_launcher"
+					: contactsCursor.getString(2); // TODO hipek uri
 			if (!alreadyOnList.contains(Long.valueOf(row[0]))) {
 				retCursor.addRow(row);
 			}

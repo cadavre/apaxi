@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rlDialog"
+    android:id="@+id/rlSettingsDialog"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_gravity="center_horizontal|center_vertical"
@@ -73,7 +73,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal" >
+                    android:inputType="numberDecimal"
+                    android:hint="@string/required" >
 
                     <requestFocus />
                 </EditText>
@@ -130,7 +131,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:inputType="numberDecimal" />
+                        android:inputType="numberDecimal"
+                        android:hint="@string/required" />
 
                     <TextView
                         android:id="@+id/tvMixedMetrics"
@@ -241,6 +243,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:text="Done" />
+        android:text="Save" />
 
 </RelativeLayout>

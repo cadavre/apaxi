@@ -38,6 +38,17 @@
         android:layout_below="@id/rlTopBar" >
     </ListView>
 
+    <TextView
+        android:id="@+id/tvLetterHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="false"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="60dp"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="invisible" />
     <Button
         android:id="@id/btnDoneContacts"
         android:layout_width="fill_parent"

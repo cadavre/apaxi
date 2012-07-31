@@ -65,7 +65,7 @@ public class MembersAdapter extends ArrayAdapter<String> {
         if (membersList.get(position).getAvatarUri() != null) {
             ivAvatar.setImageURI(Uri.parse(membersList.get(position).getAvatarUri()));
         } else {
-            // TODO set default hopek
+        	ivAvatar.setImageResource(android.R.drawable.ic_media_ff);
         }
 
         if (!summarizedIds.containsKey(membersList.get(position).getId())) {
