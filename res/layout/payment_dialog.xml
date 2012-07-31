@@ -51,6 +51,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
             android:src="@drawable/btn_add_fee" />
     </LinearLayout>
 
