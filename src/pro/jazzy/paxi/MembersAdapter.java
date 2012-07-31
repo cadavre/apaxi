@@ -66,7 +66,7 @@ public class MembersAdapter extends ArrayAdapter<String> {
         }
 
         ImageView ivAvatar = (ImageView) returnView.findViewById(R.id.ivAvatar);
-        // TextView tvName = (TextView) returnView.findViewById(R.id.tvName);
+        TextView tvName = (TextView) returnView.findViewById(R.id.tvName);
         TextView tvCounter = (TextView) returnView.findViewById(R.id.tvCounter);
 
         if (membersList.get(position).getAvatarUri() != null) {
@@ -81,7 +81,7 @@ public class MembersAdapter extends ArrayAdapter<String> {
                     / divider)
                     + " " + unit);
         } else {
-            returnView.setBackgroundColor(Color.LTGRAY);
+            tvName.setTextColor(0xff323232); // TODO
             String currency = Currency.getInstance(Locale.getDefault()).getSymbol();
             DecimalFormat dfTwoDigits = new DecimalFormat("#.##");
             String value = dfTwoDigits.format(summarizedIds.get(getItemId(position)));

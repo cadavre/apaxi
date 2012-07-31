@@ -821,10 +821,11 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
     @Override
     public void onItemClick(AdapterView<?> parent, final View view, int position, final long id) {
 
-        if ((position + 1) == parent.getChildCount()) {
+        // dirty but pleasant
+        if (view.findViewById(R.id.ivAdd) != null) {
             // "Add" clicked
             Intent intent = new Intent(MainActivity.this, ContactsActivity.class);
-            intent.putExtra("membersCount", parent.getChildCount() - 1);
+            intent.putExtra("membersCount", parent.getAdapter().getCount() - 1);
             intent.putExtra("alreadyOnList", myRoute.getMemberIds());
             startActivityForResult(intent, PICK_CONTACT_REQUEST);
             return;
