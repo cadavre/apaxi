@@ -4,6 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_gravity="center_horizontal|center_vertical"
+    android:background="@color/cream"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -13,65 +14,41 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical" >
 
-        <!-- Settings header -->
+        <!-- Fuel price header -->
 
         <TextView
+            android:id="@+id/tvHeader9987"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#000"
-            android:gravity="center_horizontal"
-            android:text="Settings"
-            android:textColor="#fff" />
-
-        <!-- l/km g/m chooser -->
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
-
-            <Button
-                android:id="@+id/btnKm"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="metric" />
-
-            <Button
-                android:id="@+id/btnMiles"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="imperial" />
-        </LinearLayout>
+            android:layout_height="@dimen/header_height"
+            android:background="@color/gray"
+            android:gravity="center"
+            android:text="fuel price"
+            android:textColor="@color/white" />
 
         <!-- Fuel price -->
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/settings_img_margin" >
 
             <ImageView
                 android:id="@+id/ivFuelPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@android:drawable/alert_dark_frame" />
+                android:layout_margin="@dimen/settings_img_margin"
+                android:src="@drawable/settings_fuelprice" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/ivFuelPrice" >
-
-                <TextView
-                    android:id="@+id/tvFuelMetrics"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Fuel price" />
+                android:layout_height="?android:attr/listPreferredItemHeight"
+                android:layout_toRightOf="@id/ivFuelPrice"
+                android:gravity="center_vertical" >
 
                 <EditText
                     android:id="@+id/etFuelPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/settings_input_width"
+                    android:layout_height="@dimen/settings_input_height"
                     android:layout_weight="1"
                     android:inputType="numberDecimal"
                     android:hint="@string/required" >
@@ -79,48 +56,61 @@
                     <requestFocus />
                 </EditText>
 
-                <TextView
-                    android:id="@+id/tvCurrencyFuel"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/settings_img_margin"
                     android:layout_weight="1"
-                    android:text="zł" />
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/tvCurrencyFuel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="zł"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvFuelMetrics"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="per liter" />
+                </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
 
         <!-- Fuel consumption header -->
 
         <TextView
+            android:id="@+id/tvHeader3178"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#000"
-            android:gravity="center_horizontal"
-            android:text="Fuel consumption"
-            android:textColor="#fff" />
+            android:layout_height="@dimen/header_height"
+            android:background="@color/gray"
+            android:gravity="center"
+            android:text="fuel consumption"
+            android:textColor="@color/white" />
 
         <!-- Average fuel -->
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/settings_img_margin" >
 
             <ImageView
                 android:id="@+id/ivMixed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@android:drawable/alert_dark_frame" />
+                android:layout_margin="@dimen/settings_img_margin"
+                android:src="@drawable/settings_mixed" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_height="?android:attr/listPreferredItemHeight"
                 android:layout_toRightOf="@id/ivMixed"
+                android:gravity="center_vertical"
                 android:orientation="vertical" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="average" />
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -128,18 +118,32 @@
 
                     <EditText
                         android:id="@+id/etFuelMixed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/settings_input_width"
+                        android:layout_height="@dimen/settings_input_height"
                         android:layout_weight="1"
                         android:inputType="numberDecimal"
                         android:hint="@string/required" />
 
-                    <TextView
-                        android:id="@+id/tvMixedMetrics"
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/settings_img_margin"
                         android:layout_weight="1"
-                        android:text="l/100km" />
+                        android:gravity="center_vertical"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="average driving"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvMixedMetrics"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="l/100km" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
@@ -148,25 +152,22 @@
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/settings_img_margin" >
 
             <ImageView
                 android:id="@+id/ivCity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@android:drawable/alert_dark_frame" />
+                android:layout_margin="@dimen/settings_img_margin"
+                android:src="@drawable/settings_city" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_height="?android:attr/listPreferredItemHeight"
                 android:layout_toRightOf="@id/ivCity"
+                android:gravity="center_vertical"
                 android:orientation="vertical" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="in city" />
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -174,18 +175,31 @@
 
                     <EditText
                         android:id="@+id/etFuelCity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_width="@dimen/settings_input_width"
+                        android:layout_height="@dimen/settings_input_height"
                         android:hint="@string/optional"
                         android:inputType="numberDecimal" />
 
-                    <TextView
-                        android:id="@+id/tvCityMetrics"
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/settings_img_margin"
                         android:layout_weight="1"
-                        android:text="l/100km" />
+                        android:gravity="center_vertical"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="city driving"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvCityMetrics"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="l/100km" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
@@ -194,25 +208,22 @@
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/settings_img_margin" >
 
             <ImageView
                 android:id="@+id/ivHighway"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@android:drawable/alert_dark_frame" />
+                android:layout_margin="@dimen/settings_img_margin"
+                android:src="@drawable/settings_highway" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_height="?android:attr/listPreferredItemHeight"
                 android:layout_toRightOf="@id/ivHighway"
+                android:gravity="center_vertical"
                 android:orientation="vertical" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="on highway" />
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -220,29 +231,75 @@
 
                     <EditText
                         android:id="@+id/etFuelHighway"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_width="@dimen/settings_input_width"
+                        android:layout_height="@dimen/settings_input_height"
                         android:hint="@string/optional"
                         android:inputType="numberDecimal" />
 
-                    <TextView
-                        android:id="@+id/tvHighwayMetrics"
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/settings_img_margin"
                         android:layout_weight="1"
-                        android:text="l/100km" />
+                        android:gravity="center_vertical"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="highway driving"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvHighwayMetrics"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="l/100km" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
+
+        <!-- Units header -->
+
+        <TextView
+            android:id="@+id/tvHeader1168"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/header_height"
+            android:background="@color/gray"
+            android:gravity="center"
+            android:text="units"
+            android:textColor="@color/white" />
+
+        <!-- l/km g/m chooser -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/settings_img_margin" >
+
+            <ImageView
+                android:id="@+id/btnKm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/btn_settings_metrics" />
+
+            <ImageView
+                android:id="@+id/btnMiles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/btn_settings_imperial" />
+        </LinearLayout>
     </LinearLayout>
 
-    <Button
+    <ImageView
         android:id="@+id/btnDoneSettings"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:text="Save" />
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/btn_done" />
 
 </RelativeLayout>
