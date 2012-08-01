@@ -1,6 +1,8 @@
 
 package pro.jazzy.paxi;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Currency;
@@ -10,9 +12,14 @@ import java.util.Locale;
 import pro.jazzy.paxi.entity.Member;
 import pro.jazzy.paxi.entity.Route;
 import android.content.Context;
-import android.graphics.Color;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.net.Uri;
-import android.util.Log;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -60,9 +67,11 @@ public class MembersAdapter extends ArrayAdapter<String> {
         View returnView = super.getView(position, convertView, parent);
 
         if (this.getCount() % 2 == 0) {
-            returnView.setBackgroundResource((position % 2 == 0) ? R.drawable.list_zebra_light : R.drawable.list_zebra_dark);
+            returnView.setBackgroundResource((position % 2 == 0) ? R.drawable.list_zebra_light
+                    : R.drawable.list_zebra_dark);
         } else {
-            returnView.setBackgroundResource((position % 2 == 0) ? R.drawable.list_zebra_dark : R.drawable.list_zebra_light);
+            returnView.setBackgroundResource((position % 2 == 0) ? R.drawable.list_zebra_dark
+                    : R.drawable.list_zebra_light);
         }
 
         ImageView ivAvatar = (ImageView) returnView.findViewById(R.id.ivAvatar);
@@ -71,8 +80,6 @@ public class MembersAdapter extends ArrayAdapter<String> {
 
         if (membersList.get(position).getAvatarUri() != null) {
             ivAvatar.setImageURI(Uri.parse(membersList.get(position).getAvatarUri()));
-        } else {
-        	ivAvatar.setImageResource(android.R.drawable.ic_media_ff);
         }
 
         if (!summarizedIds.containsKey(membersList.get(position).getId())) {
@@ -81,7 +88,15 @@ public class MembersAdapter extends ArrayAdapter<String> {
                     / divider)
                     + " " + unit);
         } else {
-            tvName.setTextColor(0xff323232); // TODO
+            tvName.setTextColor(getContext().getResources().getColor(R.color.gray));
+            try {
+                ivAvatar.setImageBitmap(toGrayscale(MediaStore.Images.Media.getBitmap(getContext()
+                        .getContentResolver(), Uri.parse(membersList.get(position).getAvatarUri()))));
+            } catch (FileNotFoundException e) {
+                // actually do nothing
+            } catch (IOException e) {
+                // actually do nothing
+            }
             String currency = Currency.getInstance(Locale.getDefault()).getSymbol();
             DecimalFormat dfTwoDigits = new DecimalFormat("#.##");
             String value = dfTwoDigits.format(summarizedIds.get(getItemId(position)));
@@ -102,4 +117,23 @@ public class MembersAdapter extends ArrayAdapter<String> {
 
         return this.membersList.get(position).getId();
     }
+
+    public Bitmap toGrayscale(Bitmap original) {
+
+        int width, height;
+        height = original.getHeight();
+        width = original.getWidth();
+
+        Bitmap grayscaled = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+        Canvas c = new Canvas(grayscaled);
+        Paint paint = new Paint();
+        ColorMatrix cm = new ColorMatrix();
+        cm.setSaturation(0);
+        ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
+        paint.setColorFilter(f);
+        c.drawBitmap(original, 0, 0, paint);
+
+        return grayscaled;
+    }
+
 }

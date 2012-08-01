@@ -53,7 +53,7 @@ public class Route {
      * Current route distance
      */
     private int currentDistance = 0;
-    
+
     /**
      * Current location
      */
@@ -75,7 +75,8 @@ public class Route {
         fuelPrice = preferences.getFloat("fuelPrice", 0);
         fuelConsumption[MIXED_MODE] = preferences.getFloat("fuelMixed", 8.0f);
         fuelConsumption[CITY_MODE] = preferences.getFloat("fuelCity", fuelConsumption[MIXED_MODE]);
-        fuelConsumption[HIGHWAY_MODE] = preferences.getFloat("fuelHighway", fuelConsumption[MIXED_MODE]);
+        fuelConsumption[HIGHWAY_MODE] = preferences.getFloat("fuelHighway",
+                fuelConsumption[MIXED_MODE]);
         currentDivider = preferences.getInt("metrics", KILOMETERS) == KILOMETERS ? KILOMETERS_DIVIDER
                 : MILES_DIVIDER;
         // set route fuel consumption mode
@@ -98,15 +99,15 @@ public class Route {
 
         return currentDistance;
     }
-    
+
     public void setLocation(Location location) {
 
-    	this.currentLocation = location;
+        this.currentLocation = location;
     }
-    
+
     public Location getLocation() {
 
-    	return this.currentLocation;
+        return this.currentLocation;
     }
 
     public void memberIn(Member memberIn) {
@@ -247,7 +248,7 @@ public class Route {
         memberNamesList.toArray(memberNamesArray);
         return memberNamesArray;
     }
-    
+
     public ArrayList<Long> getMemberIds() {
 
         ArrayList<Long> memberIdsList = new ArrayList<Long>();
@@ -256,7 +257,7 @@ public class Route {
             memberIdsList.add(member.getId());
         }
         return memberIdsList;
-	}
+    }
 
     public boolean removeMember(Member member) {
 

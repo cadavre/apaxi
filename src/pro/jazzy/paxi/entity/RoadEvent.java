@@ -1,3 +1,4 @@
+
 package pro.jazzy.paxi.entity;
 
 import android.location.Location;
@@ -9,24 +10,28 @@ import android.location.Location;
  */
 public class RoadEvent {
 
-	int distance;
+    int distance;
 
-	Location location;
+    Location location;
 
-	public int getDistance() {
-		return distance;
-	}
+    public int getDistance() {
 
-	public void setDistance(int distance) {
-		this.distance = distance;
-	}
+        return distance;
+    }
 
-	public Location getLocation() {
-		return location;
-	}
+    public void setDistance(int distance) {
 
-	public void setLocation(Location location) {
-		this.location = location;
-	}
+        this.distance = distance;
+    }
+
+    public Location getLocation() {
+
+        return location;
+    }
+
+    public void setLocation(Location location) {
+
+        this.location = location;
+    }
 
 }

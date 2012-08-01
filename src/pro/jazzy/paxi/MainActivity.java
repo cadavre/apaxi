@@ -866,17 +866,11 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                 @Override
                 public void onAccept(Dialog dialog) {
 
-                    Log.d(TAG, "" + myRoute.getMembersCountOnboard());
-
                     MemberOut memberOut = new MemberOut(Member.getInstance(id));
                     float toPay = myRoute.memberOut(memberOut);
 
                     summarizedMembers.put(id, toPay);
                     refreshMembersList();
-
-                    dialog.dismiss();
-
-                    Log.d(TAG, "" + myRoute.getMembersCountOnboard());
 
                     if (myRoute.getMembersCountOnboard() == 0) {
                         if (paxiService.isTracking()) {
@@ -885,9 +879,13 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         Toast.makeText(getApplicationContext(), "Tracking is off...",
                                 Toast.LENGTH_SHORT).show();
                         bindClearAction();
+                        lvMembersList.removeFooterView(vAddMember);
                     }
+
+                    dialog.dismiss();
                 }
             });
+
         } else {
             Toast.makeText(getApplicationContext(), "Cannot calculate when not tracking...",
                     Toast.LENGTH_SHORT).show();
@@ -903,7 +901,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
             Log.i(TAG, "Nothing to do...");
             return false;
         }
-        
+
         if (summarizedMembers.containsKey(id)) {
             Log.i(TAG, "Already summarized!");
             return false;

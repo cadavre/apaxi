@@ -18,7 +18,7 @@ public class ButtonsDialog extends Dialog {
     private int layout;
 
     private int top;
-    
+
     private int imgResource;
 
     OnAcceptListener onAcceptListener = null;

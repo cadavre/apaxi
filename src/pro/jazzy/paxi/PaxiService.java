@@ -1,3 +1,4 @@
+
 package pro.jazzy.paxi;
 
 import java.util.ArrayList;
@@ -18,165 +19,162 @@ import android.util.Log;
 
 public class PaxiService extends Service {
 
-	private static final String TAG = "Paxi";
+    private static final String TAG = "Paxi";
 
-	private static final String REFRESH_DATA_INTENT = "jazzy_gps_refresh";
+    private static final String REFRESH_DATA_INTENT = "jazzy_gps_refresh";
 
-	private static final int NOTIFY_ID = 1;
+    private static final int NOTIFY_ID = 1;
 
-	private static final int LAST_LOCATIONS = 5;
+    private static final int LAST_LOCATIONS = 5;
 
-	private final IBinder mBinder = new LocalBinder();
+    private final IBinder mBinder = new LocalBinder();
 
-	NotificationManager notificationManager;
+    NotificationManager notificationManager;
 
-	LocationManager locationManager;
+    LocationManager locationManager;
 
-	LocationListener locationListener;
+    LocationListener locationListener;
 
-	private ArrayList<Location> lastLocations;
+    private ArrayList<Location> lastLocations;
 
-	private int distance = 0;
+    private int distance = 0;
 
-	private int distanceDelta = 0;
+    private int distanceDelta = 0;
 
-	private boolean tracking = false;
+    private boolean tracking = false;
 
-	@Override
-	public void onCreate() {
+    @Override
+    public void onCreate() {
 
-		super.onCreate();
-		lastLocations = new ArrayList<Location>();
-		lastLocations.ensureCapacity(LAST_LOCATIONS + 1);
-		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-	}
+        super.onCreate();
+        lastLocations = new ArrayList<Location>();
+        lastLocations.ensureCapacity(LAST_LOCATIONS + 1);
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+    }
 
-	public class LocalBinder extends Binder {
+    public class LocalBinder extends Binder {
 
-		PaxiService getService() {
+        PaxiService getService() {
 
-			return PaxiService.this;
-		}
-	}
+            return PaxiService.this;
+        }
+    }
 
-	@Override
-	public IBinder onBind(Intent intent) {
+    @Override
+    public IBinder onBind(Intent intent) {
 
-		lastLocations.clear();
-		return mBinder;
-	}
+        lastLocations.clear();
+        return mBinder;
+    }
 
-	public void start() {
+    public void start() {
 
-		locationListener = new LocationListener() {
+        locationListener = new LocationListener() {
 
-			public void onLocationChanged(Location location) {
+            public void onLocationChanged(Location location) {
 
-				handleLocationChange(location);
-			}
+                handleLocationChange(location);
+            }
 
-			public void onStatusChanged(String provider, int status,
-					Bundle extras) {
+            public void onStatusChanged(String provider, int status, Bundle extras) {
 
-				Log.d(TAG, "onStatusChanged, " + status + " of " + provider);
-			}
+                Log.d(TAG, "onStatusChanged, " + status + " of " + provider);
+            }
 
-			@Override
-			public void onProviderDisabled(String provider) {
+            @Override
+            public void onProviderDisabled(String provider) {
 
-				Log.d(TAG, "onProviderDisabled, of " + provider);
-			}
+                Log.d(TAG, "onProviderDisabled, of " + provider);
+            }
 
-			@Override
-			public void onProviderEnabled(String provider) {
+            @Override
+            public void onProviderEnabled(String provider) {
 
-				Log.d(TAG, "onProviderEnabled, of " + provider);
-			}
-		};
+                Log.d(TAG, "onProviderEnabled, of " + provider);
+            }
+        };
 
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
-				0, locationListener);
+        locationManager
+                .requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
-		notifyShowTracking();
-		this.tracking = true;
-	}
+        notifyShowTracking();
+        this.tracking = true;
+    }
 
-	public void stop() {
+    public void stop() {
 
-		locationManager.removeUpdates(locationListener);
-		notifyHideTracking();
-		this.tracking = false;
-	}
+        locationManager.removeUpdates(locationListener);
+        notifyHideTracking();
+        this.tracking = false;
+    }
 
-	private void handleLocationChange(Location location) {
+    private void handleLocationChange(Location location) {
 
-		int distance = 0;
-		int accuracy = (int) location.getAccuracy();
-		if (lastLocations.size() != 0) {
-			distance = (int) location.distanceTo(lastLocations
-					.get(lastLocations.size() - 1));
-		}
+        int distance = 0;
+        int accuracy = (int) location.getAccuracy();
+        if (lastLocations.size() != 0) {
+            distance = (int) location.distanceTo(lastLocations.get(lastLocations.size() - 1));
+        }
 
-		lastLocations.add(location);
-		if ((lastLocations.size() > LAST_LOCATIONS) && (distance > accuracy)) {
-			lastLocations = new ArrayList<Location>(lastLocations.subList(1, 6));
-			this.distanceDelta = distance;
-			this.distance += distance;
-			sendBroadcast(new Intent(REFRESH_DATA_INTENT));
-		}
-	}
+        lastLocations.add(location);
+        if ((lastLocations.size() > LAST_LOCATIONS) && (distance > accuracy)) {
+            lastLocations = new ArrayList<Location>(lastLocations.subList(1, 6));
+            this.distanceDelta = distance;
+            this.distance += distance;
+            sendBroadcast(new Intent(REFRESH_DATA_INTENT));
+        }
+    }
 
-	public int getDistance() {
+    public int getDistance() {
 
-		return this.distance;
-	}
+        return this.distance;
+    }
 
-	public int getDistanceDelta() {
+    public int getDistanceDelta() {
 
-		return this.distanceDelta;
-	}
+        return this.distanceDelta;
+    }
 
-	public Location getLastLocation() {
+    public Location getLastLocation() {
 
-		return lastLocations.get(lastLocations.size() - 1);
-	}
+        return lastLocations.get(lastLocations.size() - 1);
+    }
 
-	public boolean isTracking() {
+    public boolean isTracking() {
 
-		return this.tracking;
-	}
+        return this.tracking;
+    }
 
-	public void clear() {
+    public void clear() {
 
-		stop();
-		this.lastLocations.clear();
-		this.distance = 0;
-		this.distanceDelta = 0;
-	}
+        stop();
+        this.lastLocations.clear();
+        this.distance = 0;
+        this.distanceDelta = 0;
+    }
 
-	private void notifyShowTracking() {
+    private void notifyShowTracking() {
 
-		int icon = android.R.drawable.ic_menu_compass; // statusbar icon
-		CharSequence tickerText = "Paxi GPS recording ON!"; // on tracking
-															// started
-															// information on
-															// statusbar
-		long when = System.currentTimeMillis();
-		Notification notification = new Notification(icon, tickerText, when);
-		CharSequence contentTitle = "Paxi"; // title of notification
-		CharSequence contentText = "GPS tracking"; // text of notification
-		Intent notificationIntent = new Intent(this, MainActivity.class);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-				notificationIntent, 0);
-		notification.setLatestEventInfo(getApplicationContext(), contentTitle,
-				contentText, contentIntent);
-		notification.flags = Notification.FLAG_NO_CLEAR; // cannot be cleared
-		notificationManager.notify(NOTIFY_ID, notification);
-	}
+        int icon = android.R.drawable.ic_menu_compass; // statusbar icon
+        CharSequence tickerText = "Paxi GPS recording ON!"; // on tracking
+                                                            // started
+                                                            // information on
+                                                            // statusbar
+        long when = System.currentTimeMillis();
+        Notification notification = new Notification(icon, tickerText, when);
+        CharSequence contentTitle = "Paxi"; // title of notification
+        CharSequence contentText = "GPS tracking"; // text of notification
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        notification.setLatestEventInfo(getApplicationContext(), contentTitle, contentText,
+                contentIntent);
+        notification.flags = Notification.FLAG_NO_CLEAR; // cannot be cleared
+        notificationManager.notify(NOTIFY_ID, notification);
+    }
 
-	private void notifyHideTracking() {
+    private void notifyHideTracking() {
 
-		notificationManager.cancel(NOTIFY_ID);
-	}
+        notificationManager.cancel(NOTIFY_ID);
+    }
 }

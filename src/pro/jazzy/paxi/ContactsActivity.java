@@ -100,48 +100,48 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
             }
         });
 
-//        Button btnVoiceSearch = (Button) findViewById(R.id.btnVoiceSearch);
-//        btnVoiceSearch.setOnClickListener(new OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//
-//                Intent rcgnzer = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-//                rcgnzer.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-//                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-//                rcgnzer.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
-//                startActivityForResult(rcgnzer, 777);
-//            }
-//        });
+        // Button btnVoiceSearch = (Button) findViewById(R.id.btnVoiceSearch);
+        // btnVoiceSearch.setOnClickListener(new OnClickListener() {
+        //
+        // @Override
+        // public void onClick(View v) {
+        //
+        // Intent rcgnzer = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        // rcgnzer.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+        // RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        // rcgnzer.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
+        // startActivityForResult(rcgnzer, 777);
+        // }
+        // });
 
-//        EditText etFiler = (EditText) findViewById(R.id.etFilter);
-//        etFiler.addTextChangedListener(new TextWatcher() {
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//                adapter.getFilter().filter(s);
-//            }
-//
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
-//
-//        etFiler.setOnClickListener(new OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//
-//                ((EditText) v).setText("");
-//            }
-//        });
+        // EditText etFiler = (EditText) findViewById(R.id.etFilter);
+        // etFiler.addTextChangedListener(new TextWatcher() {
+        //
+        // @Override
+        // public void onTextChanged(CharSequence s, int start, int before, int count) {
+        //
+        // adapter.getFilter().filter(s);
+        // }
+        //
+        // @Override
+        // public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        //
+        // }
+        //
+        // @Override
+        // public void afterTextChanged(Editable s) {
+        //
+        // }
+        // });
+        //
+        // etFiler.setOnClickListener(new OnClickListener() {
+        //
+        // @Override
+        // public void onClick(View v) {
+        //
+        // ((EditText) v).setText("");
+        // }
+        // });
 
         ImageView btnDoneContacts = (ImageView) findViewById(R.id.btnDoneContacts);
         btnDoneContacts.setOnClickListener(new OnClickListener() {
@@ -154,14 +154,14 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
         });
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//
-//        ArrayList<String> results = (ArrayList<String>) data.getExtras().get(
-//                RecognizerIntent.EXTRA_RESULTS);
-//        EditText etFilter = (EditText) findViewById(R.id.etFilter);
-//        etFilter.setText(results.get(0));
-//    }
+    // @Override
+    // protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    //
+    // ArrayList<String> results = (ArrayList<String>) data.getExtras().get(
+    // RecognizerIntent.EXTRA_RESULTS);
+    // EditText etFilter = (EditText) findViewById(R.id.etFilter);
+    // etFilter.setText(results.get(0));
+    // }
 
     protected void getContacts() {
 
