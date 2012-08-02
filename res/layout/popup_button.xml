@@ -7,9 +7,9 @@
         android:id="@+id/llButtonsContainer"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:background="@color/cream_transparent"
         android:gravity="center"
-        android:background="@color/cream_transparent" >
+        android:minHeight="@dimen/list_element_height" >
 
         <ImageView
             android:id="@+id/btnPopup"

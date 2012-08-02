@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/list_zebra_light"
     android:gravity="center"
-    android:minHeight="?android:attr/listPreferredItemHeight" >
+    android:minHeight="@dimen/list_element_height" >
 
     <ImageView
         android:id="@+id/ivAdd"

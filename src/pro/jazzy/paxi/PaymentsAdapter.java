@@ -9,6 +9,8 @@ import java.util.Locale;
 import pro.jazzy.paxi.entity.Payment;
 import pro.jazzy.paxi.entity.Route;
 import android.content.Context;
+import android.graphics.Typeface;
+import android.util.FloatMath;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -20,6 +22,8 @@ public class PaymentsAdapter extends ArrayAdapter<Payment> {
 
     private ArrayList<Payment> paymentsList;
 
+    Typeface fontface;
+
     Route routeInstance;
 
     private float divider;
@@ -30,6 +34,8 @@ public class PaymentsAdapter extends ArrayAdapter<Payment> {
             int metrics) {
 
         super(context, R.layout.payment_element, R.id.tvDistance, paymentsList);
+
+        this.fontface = Typeface.createFromAsset(context.getAssets(), "fonts/UbuntuM.ttf");
         this.paymentsList = paymentsList;
         this.routeInstance = route;
 
@@ -62,10 +68,12 @@ public class PaymentsAdapter extends ArrayAdapter<Payment> {
         String value = dfTwoDigits.format(paymentsList.get(position).getAmount());
         tvAmount.setText(value + " " + currency);
 
-        tvDistance.setText((int) Math.floor((routeInstance.getDistance() - paymentsList.get(
+        tvDistance.setText((int) FloatMath.floor((routeInstance.getDistance() - paymentsList.get(
                 position).getDistance())
                 / divider)
                 + " " + unit + " ago");
+
+        MainActivity.applyGlobalTypeface((ViewGroup) returnView, this.fontface);
 
         return returnView;
     }

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="list_element_height">64dp</dimen>
+    <dimen name="toast_offset">76dp</dimen>
+    <dimen name="person_text_size">16sp</dimen>
     <dimen name="avatar_size">56dp</dimen>
     <dimen name="header_height">23dp</dimen>
     <dimen name="settings_img_margin">5dp</dimen>

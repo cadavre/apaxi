@@ -25,15 +25,19 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -58,6 +62,10 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
     // intent identifier for service communication
     private static final String REFRESH_DATA_INTENT = "jazzy_gps_refresh";
 
+    public static final String DEFAULT_AVATAR_URI = "android.resource://pro.jazzy.paxi/drawable/passenger";
+
+    public static final String DEFAULT_MEMBER_AVATAR_URI = "android.resource://pro.jazzy.paxi/drawable/passenger_car";
+
     // contacts activity for results
     static final int PICK_CONTACT_REQUEST = 0;
 
@@ -79,6 +87,9 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
     static final String APP_PREFERENCES = "paxi.data";
 
     SharedPreferences preferences = null;
+
+    // Font Typeface
+    Typeface fontFace;
 
     PaxiService paxiService;
 
@@ -215,6 +226,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
         setContentView(R.layout.main);
 
         this.preferences = getSharedPreferences(APP_PREFERENCES, Activity.MODE_PRIVATE);
+        this.fontFace = Typeface.createFromAsset(getAssets(), "fonts/UbuntuM.ttf");
 
         summarizedMembers = new HashMap<Long, Float>();
         myRoute = new Route(this.preferences);
@@ -401,6 +413,9 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         btnCity.setImageResource(R.drawable.btn_mode_city);
                         break;
                 }
+
+                applyGlobalTypeface((RelativeLayout) dialog.findViewById(R.id.rlRouteModeDialog),
+                        fontFace);
 
                 break;
             case DIALOG_SETTINGS:
@@ -635,6 +650,9 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                     }
                 });
 
+                applyGlobalTypeface((RelativeLayout) dialog.findViewById(R.id.rlSettingsDialog),
+                        fontFace);
+
                 break;
             case DIALOG_PAYMENT:
 
@@ -660,8 +678,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                                 myRoute.removePayment(Payment.getInstance(id));
                                 refreshPaymentsList();
 
-                                Toast.makeText(getApplicationContext(), "Payment removed!",
-                                        Toast.LENGTH_SHORT).show();
+                                showToast("Payment removed");
                                 dialog.dismiss();
                             }
                         });
@@ -689,19 +706,24 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                     @Override
                     public void onClick(View v) {
 
-                        String inputValue = etPayment.getText().toString().trim();
-                        float floatValue = inputValue.isEmpty() ? 0 : Float.valueOf(inputValue)
-                                .floatValue();
+                        if (paxiService.isTracking()) {
+                            String inputValue = etPayment.getText().toString().trim();
+                            float floatValue = inputValue.isEmpty() ? 0 : Float.valueOf(inputValue)
+                                    .floatValue();
 
-                        if (!inputValue.isEmpty() && floatValue != 0) {
-                            Payment payment = new Payment(floatValue);
-                            myRoute.addPayment(payment);
-                            refreshPaymentsList();
-                            Toast.makeText(getApplicationContext(), "Payment added!",
-                                    Toast.LENGTH_SHORT).show();
+                            if (!inputValue.isEmpty() && floatValue != 0) {
+                                Payment payment = new Payment(floatValue);
+                                myRoute.addPayment(payment);
+                                refreshPaymentsList();
+                                showToast("Payment added");
+                            }
+
+                            dialog.dismiss();
+                        } else {
+                            showToast("Start tracking to add payment");
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(etPayment.getWindowToken(), 0);
                         }
-
-                        dialog.dismiss();
                     }
                 });
 
@@ -714,6 +736,10 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         dialog.dismiss();
                     }
                 });
+
+                applyGlobalTypeface((RelativeLayout) dialog.findViewById(R.id.rlPaymentDialog),
+                        fontFace);
+
                 break;
         }
 
@@ -739,7 +765,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                 } else {
                     msg = "Nobody onboard! Is this UAV?";
                 }
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                showToast(msg);
                 break;
             case ACTION_BUTTON_STOP:
                 AlertDialog.Builder warnDialogBuilder = new Builder(this);
@@ -775,7 +801,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         refreshMembersList();
                         lvMembersList.removeFooterView(vAddMember);
 
-                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                        showToast(msg);
                         bindClearAction();
 
                         dialog.dismiss();
@@ -876,8 +902,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         if (paxiService.isTracking()) {
                             paxiService.stop();
                         }
-                        Toast.makeText(getApplicationContext(), "Tracking is off...",
-                                Toast.LENGTH_SHORT).show();
+                        showToast("Tracking turned off...");
                         bindClearAction();
                         lvMembersList.removeFooterView(vAddMember);
                     }
@@ -887,8 +912,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
             });
 
         } else {
-            Toast.makeText(getApplicationContext(), "Cannot calculate when not tracking...",
-                    Toast.LENGTH_SHORT).show();
+            // showToast("Cannot calculate when not tracking");
         }
 
     }
@@ -899,12 +923,17 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
         if (view.findViewById(R.id.ivAdd) != null) {
             Log.i(TAG, "Nothing to do...");
-            return false;
+            return true;
         }
 
         if (summarizedMembers.containsKey(id)) {
-            Log.i(TAG, "Already summarized!");
+            Log.i(TAG, "You cannot do that! Not now!");
             return false;
+        }
+
+        if (paxiService.isTracking()) {
+            showToast("Cannot remove member when on road");
+            return true;
         }
 
         int viewLocation = view.getTop();
@@ -918,7 +947,6 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                 myRoute.removeMember(Member.getInstance(id));
                 refreshMembersList();
 
-                Toast.makeText(getApplicationContext(), "Removed!", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });
@@ -977,4 +1005,23 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
         refreshMembersList();
     }
 
+    public void showToast(String msg) {
+
+        Toast toast = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, getResources()
+                .getDimensionPixelSize(R.dimen.toast_offset));
+        toast.show();
+    }
+
+    public static void applyGlobalTypeface(ViewGroup list, Typeface typeface) {
+
+        for (int i = 0; i < list.getChildCount(); i++) {
+            View view = list.getChildAt(i);
+            if (view instanceof ViewGroup) {
+                applyGlobalTypeface((ViewGroup) view, typeface);
+            } else if (view instanceof TextView) {
+                ((TextView) view).setTypeface(typeface);
+            }
+        }
+    }
 }

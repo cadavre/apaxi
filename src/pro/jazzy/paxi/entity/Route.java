@@ -268,6 +268,8 @@ public class Route {
                 }
             }
         }
+        Member.membersIn--;
+        // MemberOut.membersOut--; Really? Cannot remove member after he got out of the car...
         return roadEvents.remove(member);
     }
 

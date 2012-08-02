@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -20,6 +21,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FilterQueryProvider;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
@@ -28,6 +30,8 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
     private static final String TAG = "Paxi";
 
     private static final boolean SHOW_HIDDEN = false;
+
+    Typeface fontface;
 
     ListView lvContactsList;
 
@@ -42,6 +46,10 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contacts);
+
+        this.fontface = Typeface.createFromAsset(getAssets(), "fonts/UbuntuM.ttf");
+        MainActivity.applyGlobalTypeface((RelativeLayout) findViewById(R.id.rlContactsContainer),
+                fontface);
 
         alreadyOnList = new ArrayList<Long>();
 
@@ -64,6 +72,9 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
                 View returnView = super.getView(position, convertView, parent);
                 returnView.setBackgroundResource((position % 2 == 0) ? R.drawable.list_zebra_dark
                         : R.drawable.list_zebra_light);
+
+                MainActivity.applyGlobalTypeface((ViewGroup) returnView, fontface);
+
                 return returnView;
             }
         };
@@ -218,7 +229,7 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
             profileCursor.moveToFirst();
             row[0] = profileCursor.getString(0);
             row[1] = profileCursor.getString(1);
-            row[2] = (profileCursor.getString(2) == null) ? "android.resource://pro.jazzy.paxi/drawable/passenger"
+            row[2] = (profileCursor.getString(2) == null) ? MainActivity.DEFAULT_AVATAR_URI
                     : profileCursor.getString(2);
             if (!alreadyOnList.contains(Long.valueOf(row[0]))) {
                 retCursor.addRow(row);
@@ -230,7 +241,7 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
             int next = (membersCount + 1);
             row[0] = String.format("%d", -999 - membersCount);
             row[1] = "Passenger #" + next;
-            row[2] = "android.resource://pro.jazzy.paxi/drawable/passenger";
+            row[2] = MainActivity.DEFAULT_AVATAR_URI;
             retCursor.addRow(row);
         }
 
@@ -239,7 +250,7 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
         while (contactsCursor.isAfterLast() == false) {
             row[0] = contactsCursor.getString(0);
             row[1] = contactsCursor.getString(1);
-            row[2] = (contactsCursor.getString(2) == null) ? "android.resource://pro.jazzy.paxi/drawable/passenger"
+            row[2] = (contactsCursor.getString(2) == null) ? MainActivity.DEFAULT_AVATAR_URI
                     : contactsCursor.getString(2);
             if (!alreadyOnList.contains(Long.valueOf(row[0]))) {
                 retCursor.addRow(row);
@@ -259,7 +270,7 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
             if (Long.parseLong(contactsCursor.getString(0)) == id) {
                 intent.putExtra("id", contactsCursor.getString(0));
                 intent.putExtra("name", contactsCursor.getString(1));
-                String avatar = (contactsCursor.getString(2) == "android.resource://pro.jazzy.paxi/drawable/passenger") ? "android.resource://pro.jazzy.paxi/drawable/passenger_car"
+                String avatar = (contactsCursor.getString(2) == MainActivity.DEFAULT_AVATAR_URI) ? MainActivity.DEFAULT_MEMBER_AVATAR_URI
                         : contactsCursor.getString(2);
                 intent.putExtra("photo", avatar);
                 break;

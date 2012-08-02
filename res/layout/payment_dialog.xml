@@ -18,7 +18,7 @@
     <LinearLayout
         android:id="@+id/llPaymentBellContainer"
         android:layout_width="fill_parent"
-        android:layout_height="?android:attr/listPreferredItemHeight"
+        android:layout_height="@dimen/list_element_height"
         android:layout_below="@+id/tvHeader8274"
         android:background="@color/cream"
         android:gravity="center_vertical" >
@@ -43,8 +43,7 @@
             android:id="@+id/tvCurrencyPayment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="zł" />
+            android:layout_weight="1" />
 
         <ImageView
             android:id="@+id/btnAddPayment"
