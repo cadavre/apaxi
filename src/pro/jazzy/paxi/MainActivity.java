@@ -65,6 +65,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
     public static final String DEFAULT_AVATAR_URI = "android.resource://pro.jazzy.paxi/drawable/passenger";
 
     public static final String DEFAULT_MEMBER_AVATAR_URI = "android.resource://pro.jazzy.paxi/drawable/passenger_car";
+    
+    public static final String FONT_NAME = "UbuntuM.ttf";
 
     // contacts activity for results
     static final int PICK_CONTACT_REQUEST = 0;
@@ -226,7 +228,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
         setContentView(R.layout.main);
 
         this.preferences = getSharedPreferences(APP_PREFERENCES, Activity.MODE_PRIVATE);
-        this.fontFace = Typeface.createFromAsset(getAssets(), "fonts/UbuntuM.ttf");
+        this.fontFace = Typeface.createFromAsset(getAssets(), "fonts/" + FONT_NAME);
 
         summarizedMembers = new HashMap<Long, Float>();
         myRoute = new Route(this.preferences);
@@ -425,6 +427,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                 final EditText etFuelCity = (EditText) dialog.findViewById(R.id.etFuelCity);
                 final EditText etFuelHighway = (EditText) dialog.findViewById(R.id.etFuelHighway);
 
+                final TextView tvFuelMetrics = (TextView) dialog.findViewById(R.id.tvFuelMetrics);
                 final TextView tvMixedMetrics = (TextView) dialog.findViewById(R.id.tvMixedMetrics);
                 final TextView tvCityMetrics = (TextView) dialog.findViewById(R.id.tvCityMetrics);
                 final TextView tvHighwayMetrics = (TextView) dialog
@@ -432,9 +435,11 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
                 int resMetricsLabel;
                 if (this.preferences.getInt("metrics", Route.KILOMETERS) == Route.KILOMETERS) {
+                    tvFuelMetrics.setText(R.string.per_l);
                     resMetricsLabel = R.string.lkm;
                 } else {
-                    resMetricsLabel = R.string.gm;
+                    tvFuelMetrics.setText(R.string.per_g);
+                    resMetricsLabel = R.string.mpg;
                 }
                 tvMixedMetrics.setText(resMetricsLabel);
                 tvCityMetrics.setText(resMetricsLabel);
@@ -551,6 +556,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         tvMixedMetrics.setText(R.string.lkm);
                         tvCityMetrics.setText(R.string.lkm);
                         tvHighwayMetrics.setText(R.string.lkm);
+                        tvFuelMetrics.setText(R.string.per_l);
 
                         // refresh members list
                         refreshMembersList();
@@ -573,9 +579,10 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         btnMiles.setImageResource(R.drawable.imperial_on);
 
                         // set units to current view
-                        tvMixedMetrics.setText(R.string.gm);
-                        tvCityMetrics.setText(R.string.gm);
-                        tvHighwayMetrics.setText(R.string.gm);
+                        tvMixedMetrics.setText(R.string.mpg);
+                        tvCityMetrics.setText(R.string.mpg);
+                        tvHighwayMetrics.setText(R.string.mpg);
+                        tvFuelMetrics.setText(R.string.per_g);
 
                         // refresh members list
                         refreshMembersList();
@@ -768,9 +775,9 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                 showToast(msg);
                 break;
             case ACTION_BUTTON_STOP:
-                AlertDialog.Builder warnDialogBuilder = new Builder(this);
-                warnDialogBuilder.setMessage("Do you really want to stop?");
-                warnDialogBuilder.setNegativeButton("No", new Dialog.OnClickListener() {
+                AlertDialog.Builder promptStopDialogBuilder = new Builder(this);
+                promptStopDialogBuilder.setMessage("Do you really want to stop?");
+                promptStopDialogBuilder.setNegativeButton("No", new Dialog.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int jakisInt) {
@@ -778,7 +785,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         dialog.dismiss();
                     }
                 });
-                warnDialogBuilder.setPositiveButton("Yes", new Dialog.OnClickListener() {
+                promptStopDialogBuilder.setPositiveButton("Yes", new Dialog.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int jakisInt) {
@@ -807,14 +814,35 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         dialog.dismiss();
                     }
                 });
-                warnDialogBuilder.create().show();
+                promptStopDialogBuilder.create().show();
 
                 break;
             case ACTION_BUTTON_CLEAR:
-                clearRoute();
-                lvMembersList.addFooterView(vAddMember);
-                refreshMembersList();
-                bindStartAction();
+                AlertDialog.Builder promptClearDialogBuilder = new Builder(this);
+                promptClearDialogBuilder.setMessage("All calculations will be lost!");
+                promptClearDialogBuilder.setNegativeButton("No", new Dialog.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int jakisInt) {
+
+                        dialog.dismiss();
+                    }
+                });
+                promptClearDialogBuilder.setPositiveButton("Yes", new Dialog.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int jakisInt) {
+
+                        clearRoute();
+                        lvMembersList.addFooterView(vAddMember);
+                        refreshMembersList();
+                        bindStartAction();
+
+                        dialog.dismiss();
+                    }
+                });
+                promptClearDialogBuilder.create().show();
+
                 break;
         }
     }

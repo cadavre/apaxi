@@ -49,7 +49,8 @@ public class MembersAdapter extends ArrayAdapter<String> {
 
         super(context, R.layout.member_element, R.id.tvName, simpleValues);
 
-        this.fontface = Typeface.createFromAsset(context.getAssets(), "fonts/UbuntuM.ttf");
+        this.fontface = Typeface.createFromAsset(context.getAssets(), "fonts/"
+                + MainActivity.FONT_NAME);
         this.membersList = membersList;
         this.routeInstance = route;
         this.summarizedIds = summarized;
@@ -57,7 +58,7 @@ public class MembersAdapter extends ArrayAdapter<String> {
         switch (metrics) {
             case Route.MILES:
                 divider = Route.MILES_DIVIDER;
-                unit = "m";
+                unit = "mi";
                 break;
             case Route.KILOMETERS:
             default:

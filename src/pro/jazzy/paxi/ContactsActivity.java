@@ -47,7 +47,7 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contacts);
 
-        this.fontface = Typeface.createFromAsset(getAssets(), "fonts/UbuntuM.ttf");
+        this.fontface = Typeface.createFromAsset(getAssets(), "fonts/" + MainActivity.FONT_NAME);
         MainActivity.applyGlobalTypeface((RelativeLayout) findViewById(R.id.rlContactsContainer),
                 fontface);
 

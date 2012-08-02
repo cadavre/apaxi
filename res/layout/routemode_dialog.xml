@@ -12,7 +12,7 @@
         android:layout_height="@dimen/header_height"
         android:background="@color/gray"
         android:gravity="center"
-        android:text="mode"
+        android:text="@string/mode"
         android:textColor="@color/white" />
 
     <LinearLayout

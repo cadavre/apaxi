@@ -12,7 +12,7 @@
         android:layout_height="@dimen/header_height"
         android:background="@color/gray"
         android:gravity="center"
-        android:text="add extra fee"
+        android:text="@string/add_extra_fee"
         android:textColor="@color/white" />
 
     <LinearLayout
@@ -36,8 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="6"
-            android:inputType="numberDecimal"
-            android:text="0" />
+            android:inputType="numberDecimal" />
 
         <TextView
             android:id="@+id/tvCurrencyPayment"
@@ -62,7 +61,7 @@
         android:layout_below="@+id/llPaymentBellContainer"
         android:background="@color/gray"
         android:gravity="center"
-        android:text="fee list"
+        android:text="@string/fee_list"
         android:textColor="@color/white" />
 
     <ListView

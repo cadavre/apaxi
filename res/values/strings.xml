@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
+
     <string name="app_name">Paxi</string>
     <string name="passenger">Passenger</string>
     <string name="city">City</string>
@@ -7,6 +8,18 @@
     <string name="highway">Highway</string>
     <string name="optional">optional</string>
     <string name="required">required</string>
+    <string name="units">units</string>
+    <string name="mode">mode</string>
+    <string name="fee_list">fee list</string>
+    <string name="add_extra_fee">add extra fee</string>
     <string name="lkm">L / 100 km</string>
-    <string name="gm">MPG</string>
+    <string name="mpg">MPG</string>
+    <string name="per_l">per liter</string>
+    <string name="per_g">per galon</string>
+    <string name="average_driving">average driving</string>
+    <string name="city_driving">city driving</string>
+    <string name="highway_driving">highway driving</string>
+    <string name="fuel_consumption">fuel consumption</string>
+    <string name="fuel_price">fuel price</string>
+
 </resources>

@@ -35,14 +35,15 @@ public class PaymentsAdapter extends ArrayAdapter<Payment> {
 
         super(context, R.layout.payment_element, R.id.tvDistance, paymentsList);
 
-        this.fontface = Typeface.createFromAsset(context.getAssets(), "fonts/UbuntuM.ttf");
+        this.fontface = Typeface.createFromAsset(context.getAssets(), "fonts/"
+                + MainActivity.FONT_NAME);
         this.paymentsList = paymentsList;
         this.routeInstance = route;
 
         switch (metrics) {
             case Route.MILES:
                 divider = Route.MILES_DIVIDER;
-                unit = "m";
+                unit = "mi";
                 break;
             case Route.KILOMETERS:
             default:
