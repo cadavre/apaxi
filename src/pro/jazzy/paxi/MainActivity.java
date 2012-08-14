@@ -202,7 +202,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
     private void putMeOnTheList() {
 
         Member addMember = new Member("Driver", Long.parseLong("-909090"));
-        addMember.setAvatarUri(MainActivity.DEFAULT_AVATAR_URI);
+        addMember.setAvatarUri(MainActivity.DEFAULT_MEMBER_AVATAR_URI);
         myRoute.memberIn(addMember);
 
         refreshMembersList();
