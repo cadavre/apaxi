@@ -51,7 +51,8 @@
                     android:layout_height="@dimen/settings_input_height"
                     android:hint="@string/required"
                     android:imeOptions="actionDone"
-                    android:inputType="numberDecimal" >
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true" >
 
                     <requestFocus />
                 </EditText>
@@ -114,7 +115,8 @@
                     android:layout_height="@dimen/settings_input_height"
                     android:hint="@string/required"
                     android:imeOptions="actionDone"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -163,7 +165,8 @@
                     android:layout_height="@dimen/settings_input_height"
                     android:hint="@string/optional"
                     android:imeOptions="actionDone"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -212,7 +215,8 @@
                     android:layout_height="@dimen/settings_input_height"
                     android:hint="@string/optional"
                     android:imeOptions="actionDone"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
