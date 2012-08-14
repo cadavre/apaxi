@@ -3,8 +3,10 @@ package pro.jazzy.paxi;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -34,6 +36,19 @@ public class ButtonsDialog extends Dialog {
         this.layout = R.layout.popup_button;
         this.top = top;
         this.imgResource = imgResource;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+
+        Rect dialogBounds = new Rect();
+        getWindow().getDecorView().getHitRect(dialogBounds);
+
+        if (!dialogBounds.contains((int) ev.getX(), (int) ev.getY())) {
+            // Tapped outside so we finish the activity
+            this.dismiss();
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override
