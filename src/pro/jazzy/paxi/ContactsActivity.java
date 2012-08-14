@@ -97,6 +97,7 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
                     int totalItemCount) {
 
                 MatrixCursor cursor = (MatrixCursor) adapter.getItem(firstVisibleItem + 2);
+                cursor.moveToFirst();
                 String firstLetter = cursor.getString(1).substring(0, 1);
                 tvLetterHint.setText(firstLetter.toUpperCase());
             }
