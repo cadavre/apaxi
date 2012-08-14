@@ -96,9 +96,13 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
                     int totalItemCount) {
 
-                MatrixCursor cursor = (MatrixCursor) adapter.getItem(firstVisibleItem + 2);
-                cursor.moveToFirst();
-                String firstLetter = cursor.getString(1).substring(0, 1);
+                String firstLetter;
+                try {
+                    MatrixCursor cursor = (MatrixCursor) adapter.getItem(firstVisibleItem + 1);
+                    firstLetter = cursor.getString(1).substring(0, 1);
+                } catch (Exception e) {
+                    firstLetter = "P";
+                }
                 tvLetterHint.setText(firstLetter.toUpperCase());
             }
         });
@@ -195,8 +199,7 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
         // prepare general cursor for (non-hidden) users contacts
         Uri uri = ContactsContract.Contacts.CONTENT_URI;
         String[] projection = new String[] { ContactsContract.Contacts._ID,
-                ContactsContract.Contacts.DISPLAY_NAME,
-                ContactsContract.Contacts.PHOTO_ID };
+                ContactsContract.Contacts.DISPLAY_NAME, ContactsContract.Contacts.PHOTO_ID };
         String selection = ContactsContract.Contacts.IN_VISIBLE_GROUP + " = '"
                 + (SHOW_HIDDEN ? "0" : "1") + "'";
         if (filterText != null && !filterText.isEmpty()) {
@@ -208,8 +211,7 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
         Cursor contactsCursor = managedQuery(uri, projection, selection, selectionArgs, sortOrder);
 
         String[] columnNames = { ContactsContract.Contacts._ID,
-                ContactsContract.Contacts.DISPLAY_NAME,
-                ContactsContract.Contacts.PHOTO_ID };
+                ContactsContract.Contacts.DISPLAY_NAME, ContactsContract.Contacts.PHOTO_ID };
 
         MatrixCursor retCursor = new MatrixCursor(columnNames);
         String[] row = new String[3];
@@ -234,10 +236,13 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
         // load contacts
         contactsCursor.moveToFirst();
         while (contactsCursor.isAfterLast() == false) {
+
             row[0] = contactsCursor.getString(0);
             row[1] = contactsCursor.getString(1);
-            row[2] = (contactsCursor.getString(2) == null) ? MainActivity.DEFAULT_AVATAR_URI
-                    : contactsCursor.getString(2);
+            /*row[2] = (contactsCursor.getString(2) == null) ? MainActivity.DEFAULT_AVATAR_URI
+                    : contactsCursor.getString(2);*/
+            row[2] = MainActivity.DEFAULT_AVATAR_URI;
+
             if (!alreadyOnList.contains(Long.valueOf(row[0]))) {
                 retCursor.addRow(row);
             }
