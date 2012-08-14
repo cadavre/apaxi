@@ -8,8 +8,8 @@
     <color name="cream_transparent">#99f1f1f1</color>
 
     <drawable name="transparent">#00ffffff</drawable>
-    <drawable name="select">#ffc2c2c2</drawable>
-    <drawable name="press">#ffa2a2a2</drawable>
+    <drawable name="select">#ffd2d2d2</drawable>
+    <drawable name="press">#ffcccccc</drawable>
     <drawable name="zebra_light">#fff6f7f2</drawable>
     <drawable name="zebra_dark">#ffe4e4e4</drawable>
 

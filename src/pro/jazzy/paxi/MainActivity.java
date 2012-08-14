@@ -65,7 +65,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
     public static final String DEFAULT_AVATAR_URI = "android.resource://pro.jazzy.paxi/drawable/passenger";
 
     public static final String DEFAULT_MEMBER_AVATAR_URI = "android.resource://pro.jazzy.paxi/drawable/passenger_car";
-    
+
     public static final String FONT_NAME = "UbuntuM.ttf";
 
     // contacts activity for results
@@ -98,6 +98,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
     TrackingUpdateReceiver updateReceiver;
 
     ImageView btnAction;
+
+    ImageView btnRouteMode;
 
     // current state of toggle button
     int currentActionBtnState = ACTION_BUTTON_START;
@@ -199,7 +201,6 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
      */
     private void putMeOnTheList() {
 
-        String[] row = new String[3];
         Uri uri = ContactsContract.Profile.CONTENT_URI;
         String[] projection = new String[] { ContactsContract.Profile._ID,
                 ContactsContract.Profile.DISPLAY_NAME, ContactsContract.Profile.PHOTO_THUMBNAIL_URI };
@@ -207,9 +208,6 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
         Cursor profileCursor = managedQuery(uri, projection, selection, null, null);
 
         profileCursor.moveToFirst();
-        row[0] = profileCursor.getString(0); // id
-        row[1] = profileCursor.getString(1); // name
-        row[2] = profileCursor.getString(2); // photo uri
 
         myId = Long.parseLong(profileCursor.getString(0));
 
@@ -237,9 +235,9 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
         // by default add phone onwer to members LV
         putMeOnTheList();
 
-        ImageView btnRouteMode = (ImageView) findViewById(R.id.btnRouteMode);
         ImageView btnSettings = (ImageView) findViewById(R.id.btnSettings);
         ImageView btnPayment = (ImageView) findViewById(R.id.btnPayment);
+        btnRouteMode = (ImageView) findViewById(R.id.btnRouteMode);
         btnAction = (ImageView) findViewById(R.id.btnAction);
 
         btnRouteMode.setOnClickListener(this);
@@ -362,6 +360,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                     @Override
                     public void onClick(View v) {
 
+                        btnRouteMode.setImageResource(R.drawable.btn_menu_mode_city);
                         preferencesEditor.putInt("mode", Route.CITY_MODE);
                         ModeChange cityMode = new ModeChange(Route.CITY_MODE);
                         myRoute.changeMode(cityMode);
@@ -376,6 +375,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                     @Override
                     public void onClick(View v) {
 
+                        btnRouteMode.setImageResource(R.drawable.btn_menu_mode_mixed);
                         preferencesEditor.putInt("mode", Route.MIXED_MODE);
                         ModeChange mixedMode = new ModeChange(Route.MIXED_MODE);
                         myRoute.changeMode(mixedMode);
@@ -390,6 +390,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                     @Override
                     public void onClick(View v) {
 
+                        btnRouteMode.setImageResource(R.drawable.btn_menu_mode_highway);
                         preferencesEditor.putInt("mode", Route.HIGHWAY_MODE);
                         ModeChange highwayMode = new ModeChange(Route.HIGHWAY_MODE);
                         myRoute.changeMode(highwayMode);
@@ -675,7 +676,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         view.getLocationInWindow(loc);
                         int viewLocation = loc[1];
                         ButtonsDialog buttonsDialog = new ButtonsDialog(MainActivity.this,
-                                viewLocation, R.drawable.passenger); // TODO
+                                viewLocation, R.drawable.trashbin);
                         buttonsDialog.show();
                         buttonsDialog.setOnAcceptListener(new OnAcceptListener() {
 
@@ -965,7 +966,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
         }
 
         int viewLocation = view.getTop();
-        ButtonsDialog buttonsDialog = new ButtonsDialog(this, viewLocation, R.drawable.passenger); // TODO
+        ButtonsDialog buttonsDialog = new ButtonsDialog(this, viewLocation, R.drawable.trashbin);
         buttonsDialog.show();
         buttonsDialog.setOnAcceptListener(new OnAcceptListener() {
 
