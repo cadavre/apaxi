@@ -11,11 +11,10 @@
         <item name="android:windowExitAnimation">@anim/buttons_exit</item>
     </style>
 
-    <style name="DialogFullscreen" parent="android:Theme.Holo.Light.Dialog">
+    <style name="DialogFullscreen" parent="android:Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowAnimationStyle">@style/DialogAnimations</item>
-        <item name="android:windowActionModeOverlay">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:colorBackgroundCacheHint">@null</item>

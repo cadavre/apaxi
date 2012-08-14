@@ -201,19 +201,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
      */
     private void putMeOnTheList() {
 
-        Uri uri = ContactsContract.Profile.CONTENT_URI;
-        String[] projection = new String[] { ContactsContract.Profile._ID,
-                ContactsContract.Profile.DISPLAY_NAME, ContactsContract.Profile.PHOTO_THUMBNAIL_URI };
-        String selection = ContactsContract.Profile.IS_USER_PROFILE;
-        Cursor profileCursor = managedQuery(uri, projection, selection, null, null);
-
-        profileCursor.moveToFirst();
-
-        myId = Long.parseLong(profileCursor.getString(0));
-
-        Member addMember = new Member(profileCursor.getString(1), Long.parseLong(profileCursor
-                .getString(0)));
-        addMember.setAvatarUri(profileCursor.getString(2));
+        Member addMember = new Member("Driver", Long.parseLong("-909090"));
+        addMember.setAvatarUri(MainActivity.DEFAULT_AVATAR_URI);
         myRoute.memberIn(addMember);
 
         refreshMembersList();

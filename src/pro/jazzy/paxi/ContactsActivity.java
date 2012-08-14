@@ -62,7 +62,7 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
         final TextView tvLetterHint = (TextView) findViewById(R.id.tvLetterHint);
 
         String[] fields = new String[] { ContactsContract.Data.DISPLAY_NAME,
-                ContactsContract.Data.PHOTO_THUMBNAIL_URI };
+                ContactsContract.Data.PHOTO_ID };
         final SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.contact_element,
                 contactsCursor, fields, new int[] { R.id.tvName, R.id.ivAvatar }) {
 
@@ -195,7 +195,7 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
         Uri uri = ContactsContract.Contacts.CONTENT_URI;
         String[] projection = new String[] { ContactsContract.Contacts._ID,
                 ContactsContract.Contacts.DISPLAY_NAME,
-                ContactsContract.Contacts.PHOTO_THUMBNAIL_URI };
+                ContactsContract.Contacts.PHOTO_ID };
         String selection = ContactsContract.Contacts.IN_VISIBLE_GROUP + " = '"
                 + (SHOW_HIDDEN ? "0" : "1") + "'";
         if (filterText != null && !filterText.isEmpty()) {
@@ -208,32 +208,17 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
 
         String[] columnNames = { ContactsContract.Contacts._ID,
                 ContactsContract.Contacts.DISPLAY_NAME,
-                ContactsContract.Contacts.PHOTO_THUMBNAIL_URI };
+                ContactsContract.Contacts.PHOTO_ID };
 
         MatrixCursor retCursor = new MatrixCursor(columnNames);
         String[] row = new String[3];
 
-        // load driver data place it at first place in cursor
-        uri = ContactsContract.Profile.CONTENT_URI;
-        projection = new String[] { ContactsContract.Profile._ID,
-                ContactsContract.Profile.DISPLAY_NAME, ContactsContract.Profile.PHOTO_THUMBNAIL_URI };
-        selection = ContactsContract.Profile.IS_USER_PROFILE;
-        if (filterText != null && !filterText.isEmpty()) {
-            selection += " AND " + ContactsContract.Contacts.DISPLAY_NAME + " LIKE '%" + filterText
-                    + "%'";
-        }
-        Cursor profileCursor = managedQuery(uri, projection, selection, selectionArgs, null);
-
         // drivers profile
-        if (profileCursor.getCount() != 0) {
-            profileCursor.moveToFirst();
-            row[0] = profileCursor.getString(0);
-            row[1] = profileCursor.getString(1);
-            row[2] = (profileCursor.getString(2) == null) ? MainActivity.DEFAULT_AVATAR_URI
-                    : profileCursor.getString(2);
-            if (!alreadyOnList.contains(Long.valueOf(row[0]))) {
-                retCursor.addRow(row);
-            }
+        row[0] = "-909090";
+        row[1] = "Driver";
+        row[2] = MainActivity.DEFAULT_AVATAR_URI;
+        if (!alreadyOnList.contains(Long.valueOf(row[0]))) {
+            retCursor.addRow(row);
         }
 
         // create "Passenger #%d" at second place
