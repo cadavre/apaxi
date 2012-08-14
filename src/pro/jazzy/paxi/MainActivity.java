@@ -35,7 +35,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -207,14 +206,24 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
         String selection = ContactsContract.Profile.IS_USER_PROFILE;
         Cursor profileCursor = managedQuery(uri, projection, selection, null, null);
 
-        profileCursor.moveToFirst();
+        if (profileCursor != null && profileCursor.moveToFirst()) {
+            myId = Long.parseLong(profileCursor.getString(0));
 
-        myId = Long.parseLong(profileCursor.getString(0));
+            Member addMember = new Member(profileCursor.getString(1), Long.parseLong(profileCursor
+                    .getString(0)));
+            if (profileCursor.getString(2) != null) {
+                addMember.setAvatarUri(profileCursor.getString(2));
+            } else {
+                addMember.setAvatarUri(DEFAULT_MEMBER_AVATAR_URI);
+            }
 
-        Member addMember = new Member(profileCursor.getString(1), Long.parseLong(profileCursor
-                .getString(0)));
-        addMember.setAvatarUri(profileCursor.getString(2));
-        myRoute.memberIn(addMember);
+            myRoute.memberIn(addMember);
+        } else {
+            Member addMember = new Member("Driver", Long.parseLong("-909090"));
+            addMember.setAvatarUri(DEFAULT_MEMBER_AVATAR_URI);
+
+            myRoute.memberIn(addMember);
+        }
 
         refreshMembersList();
     }

@@ -203,10 +203,10 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
                 ContactsContract.Contacts.PHOTO_THUMBNAIL_URI };
         String selection = ContactsContract.Contacts.IN_VISIBLE_GROUP + " = '"
                 + (SHOW_HIDDEN ? "0" : "1") + "'";
-        if (filterText != null && !filterText.isEmpty()) {
-            selection += " AND " + ContactsContract.Contacts.DISPLAY_NAME + " LIKE '%" + filterText
-                    + "%'";
-        }
+        // if (filterText != null && !filterText.isEmpty()) {
+        // selection += " AND " + ContactsContract.Contacts.DISPLAY_NAME + " LIKE '%" + filterText
+        // + "%'";
+        // }
         String[] selectionArgs = null;
         String sortOrder = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE LOCALIZED ASC";
         Cursor contactsCursor = managedQuery(uri, projection, selection, selectionArgs, sortOrder);
@@ -223,22 +223,26 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
         projection = new String[] { ContactsContract.Profile._ID,
                 ContactsContract.Profile.DISPLAY_NAME, ContactsContract.Profile.PHOTO_THUMBNAIL_URI };
         selection = ContactsContract.Profile.IS_USER_PROFILE;
-        if (filterText != null && !filterText.isEmpty()) {
-            selection += " AND " + ContactsContract.Contacts.DISPLAY_NAME + " LIKE '%" + filterText
-                    + "%'";
-        }
+        // if (filterText != null && !filterText.isEmpty()) {
+        // selection += " AND " + ContactsContract.Contacts.DISPLAY_NAME + " LIKE '%" + filterText
+        // + "%'";
+        // }
         Cursor profileCursor = managedQuery(uri, projection, selection, selectionArgs, null);
 
         // drivers profile
-        if (profileCursor.getCount() != 0) {
+        if (profileCursor != null && profileCursor.moveToFirst()) {
             profileCursor.moveToFirst();
             row[0] = profileCursor.getString(0);
             row[1] = profileCursor.getString(1);
             row[2] = (profileCursor.getString(2) == null) ? MainActivity.DEFAULT_AVATAR_URI
                     : profileCursor.getString(2);
-            if (!alreadyOnList.contains(Long.valueOf(row[0]))) {
-                retCursor.addRow(row);
-            }
+        } else {
+            row[0] = "-909090";
+            row[1] = "Driver";
+            row[2] = MainActivity.DEFAULT_AVATAR_URI;
+        }
+        if (!alreadyOnList.contains(Long.valueOf(row[0]))) {
+            retCursor.addRow(row);
         }
 
         // create "Passenger #%d" at second place
