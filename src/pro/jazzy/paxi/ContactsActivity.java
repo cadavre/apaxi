@@ -96,9 +96,13 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
                     int totalItemCount) {
 
-                MatrixCursor cursor = (MatrixCursor) adapter.getItem(firstVisibleItem + 2);
-                cursor.moveToFirst();
-                String firstLetter = cursor.getString(1).substring(0, 1);
+                String firstLetter;
+                try {
+                    MatrixCursor cursor = (MatrixCursor) adapter.getItem(firstVisibleItem + 1);
+                    firstLetter = cursor.getString(1).substring(0, 1);
+                } catch (Exception e) {
+                    firstLetter = "P";
+                }
                 tvLetterHint.setText(firstLetter.toUpperCase());
             }
         });
