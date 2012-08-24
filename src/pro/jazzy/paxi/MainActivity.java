@@ -65,6 +65,10 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
     public static final String DEFAULT_MEMBER_AVATAR_URI = "android.resource://pro.jazzy.paxi/drawable/passenger_car";
 
+    public static final String DEFAULT_DRIVER_ID = "-909090";
+
+    public static final String DEFAULT_ADDBTN_ID = "-909091";
+
     public static final String FONT_NAME = "UbuntuM.ttf";
 
     // contacts activity for results
@@ -135,6 +139,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
         membersAdapter = new MembersAdapter(this, myRoute.getMemberNames(), myRoute.getMembers(),
                 myRoute, summarizedMembers, this.preferences.getInt("metrics", Route.KILOMETERS));
+        membersAdapter.sort();
     }
 
     /**
@@ -219,7 +224,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
             myRoute.memberIn(addMember);
         } else {
-            Member addMember = new Member("Driver", Long.parseLong("-909090"));
+            Member addMember = new Member("Driver", Long.parseLong(DEFAULT_DRIVER_ID));
             addMember.setAvatarUri(DEFAULT_MEMBER_AVATAR_URI);
 
             myRoute.memberIn(addMember);
@@ -741,8 +746,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
                         }
 
                         for (int i = 0; i < lvMembersList.getChildCount() - 1; i++) {
-                            String name = (String) lvMembersList.getItemAtPosition(i);
-                            long id = lvMembersList.getItemIdAtPosition(i);
+                            String name = ((Member) lvMembersList.getItemAtPosition(i)).getMemberName();
+                            long id = ((Member) lvMembersList.getItemAtPosition(i)).getId();
                             if (!summarizedMembers.containsKey(id)) {
                                 Member member = new Member(name, id);
                                 MemberOut memberOut = new MemberOut(member);
