@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Currency;
 import java.util.HashMap;
 import java.util.Locale;
@@ -16,6 +15,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -28,7 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class MembersAdapter extends ArrayAdapter<Member> {
+public class MembersAdapter extends ArrayAdapter<String> {
 
     private static final String TAG = "Paxi";
 
@@ -47,7 +47,7 @@ public class MembersAdapter extends ArrayAdapter<Member> {
     public MembersAdapter(Context context, String[] simpleValues, ArrayList<Member> membersList,
             Route route, HashMap<Long, Float> summarized, int metrics) {
 
-        super(context, R.layout.member_element, R.id.tvName, membersList);
+        super(context, R.layout.member_element, R.id.tvName, simpleValues);
 
         this.fontface = Typeface.createFromAsset(context.getAssets(), "fonts/"
                 + MainActivity.FONT_NAME);
@@ -154,11 +154,6 @@ public class MembersAdapter extends ArrayAdapter<Member> {
         c.drawBitmap(original, 0, 0, paint);
 
         return grayscaled;
-    }
-    
-    public void sort() {
-        
-        super.sort(new MembersSorter(summarizedIds));
     }
 
 }

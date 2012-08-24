@@ -237,7 +237,7 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
             row[2] = (profileCursor.getString(2) == null) ? MainActivity.DEFAULT_AVATAR_URI
                     : profileCursor.getString(2);
         } else {
-            row[0] = MainActivity.DEFAULT_DRIVER_ID;
+            row[0] = "-909090";
             row[1] = "Driver";
             row[2] = MainActivity.DEFAULT_AVATAR_URI;
         }
