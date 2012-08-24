@@ -202,10 +202,10 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
                 ContactsContract.Contacts.DISPLAY_NAME, ContactsContract.Contacts.PHOTO_ID };
         String selection = ContactsContract.Contacts.IN_VISIBLE_GROUP + " = '"
                 + (SHOW_HIDDEN ? "0" : "1") + "'";
-        if (filterText != null && !filterText.isEmpty()) {
-            selection += " AND " + ContactsContract.Contacts.DISPLAY_NAME + " LIKE '%" + filterText
-                    + "%'";
-        }
+        // if (filterText != null && !filterText.isEmpty()) {
+        // selection += " AND " + ContactsContract.Contacts.DISPLAY_NAME + " LIKE '%" + filterText
+        // + "%'";
+        // }
         String[] selectionArgs = null;
         String sortOrder = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE LOCALIZED ASC";
         Cursor contactsCursor = managedQuery(uri, projection, selection, selectionArgs, sortOrder);

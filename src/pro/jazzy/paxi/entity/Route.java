@@ -74,9 +74,11 @@ public class Route {
         // load parameters
         fuelPrice = preferences.getFloat("fuelPrice", 0);
         fuelConsumption[MIXED_MODE] = preferences.getFloat("fuelMixed", 8.0f);
-        fuelConsumption[CITY_MODE] = preferences.getFloat("fuelCity", fuelConsumption[MIXED_MODE]);
+        fuelConsumption[CITY_MODE] = preferences.getFloat("fuelCity", fuelConsumption[MIXED_MODE]) == 0 ? fuelConsumption[MIXED_MODE]
+                : preferences.getFloat("fuelCity", fuelConsumption[MIXED_MODE]);
         fuelConsumption[HIGHWAY_MODE] = preferences.getFloat("fuelHighway",
-                fuelConsumption[MIXED_MODE]);
+                fuelConsumption[MIXED_MODE]) == 0 ? fuelConsumption[MIXED_MODE] : preferences
+                .getFloat("fuelHighway", fuelConsumption[MIXED_MODE]);
         currentDivider = preferences.getInt("metrics", KILOMETERS) == KILOMETERS ? KILOMETERS_DIVIDER
                 : MILES_DIVIDER;
         // set route fuel consumption mode
