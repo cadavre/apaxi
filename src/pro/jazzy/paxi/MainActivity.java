@@ -239,7 +239,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
         super.onStart();
         if (!trackingBounded) {
-            Intent intent = new Intent(MainActivity.this, PaxiService.class);
+            Intent intent = new Intent(getApplicationContext(), PaxiService.class);
             bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
             Log.i(TAG, "bindService(mConnection) BIND_AUTO_CREATE");
         }
