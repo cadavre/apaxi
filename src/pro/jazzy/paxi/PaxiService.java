@@ -53,6 +53,13 @@ public class PaxiService extends Service {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     }
 
+    @Override
+    public void onDestroy() {
+
+        notifyHideTracking();
+        super.onDestroy();
+    }
+
     public class LocalBinder extends Binder {
 
         PaxiService getService() {

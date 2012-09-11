@@ -166,7 +166,7 @@ public class Route {
         int gotOut = memberOut.getDistance();
         currentDistance = gotIn;
 
-        Log.e(TAG, "userOut: " + memberIn.getMemberName() + " he traveled from " + gotIn + " to "
+        Log.e(TAG, "userOut: " + memberIn.getMemberName() + " traveled from " + gotIn + " to "
                 + gotOut);
 
         for (RoadEvent event : roadEvents) {
