@@ -1,5 +1,5 @@
 
-package pro.jazzy.paxi;
+package pro.jazzy.paxi.afterlife;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,8 +9,8 @@ import java.util.Currency;
 import java.util.HashMap;
 import java.util.Locale;
 
-import pro.jazzy.paxi.entity.Member;
-import pro.jazzy.paxi.entity.Route;
+import pro.jazzy.paxi.afterlife.entity.Member;
+import pro.jazzy.paxi.afterlife.entity.Route;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

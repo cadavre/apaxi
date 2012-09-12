@@ -1,13 +1,13 @@
 
-package pro.jazzy.paxi;
+package pro.jazzy.paxi.afterlife;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Locale;
 
-import pro.jazzy.paxi.entity.Payment;
-import pro.jazzy.paxi.entity.Route;
+import pro.jazzy.paxi.afterlife.entity.Payment;
+import pro.jazzy.paxi.afterlife.entity.Route;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.FloatMath;

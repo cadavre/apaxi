@@ -1,5 +1,5 @@
 
-package pro.jazzy.paxi;
+package pro.jazzy.paxi.afterlife;
 
 import java.util.ArrayList;
 
