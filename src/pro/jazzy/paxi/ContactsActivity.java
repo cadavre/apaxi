@@ -11,13 +11,17 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -130,34 +134,34 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
         // }
         // });
 
-        // EditText etFiler = (EditText) findViewById(R.id.etFilter);
-        // etFiler.addTextChangedListener(new TextWatcher() {
-        //
-        // @Override
-        // public void onTextChanged(CharSequence s, int start, int before, int count) {
-        //
-        // adapter.getFilter().filter(s);
-        // }
-        //
-        // @Override
-        // public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        //
-        // }
-        //
-        // @Override
-        // public void afterTextChanged(Editable s) {
-        //
-        // }
-        // });
-        //
-        // etFiler.setOnClickListener(new OnClickListener() {
-        //
-        // @Override
-        // public void onClick(View v) {
-        //
-        // ((EditText) v).setText("");
-        // }
-        // });
+        EditText etFiler = (EditText) findViewById(R.id.etFilter);
+        etFiler.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                adapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etFiler.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                ((EditText) v).setText("");
+            }
+        });
 
         ImageView btnDoneContacts = (ImageView) findViewById(R.id.btnDoneContacts);
         btnDoneContacts.setOnClickListener(new OnClickListener() {
@@ -168,6 +172,16 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
                 finish();
             }
         });
+    }
+
+    @Override
+    public boolean onSearchRequested() {
+
+        EditText etFilter = (EditText) findViewById(R.id.etFilter);
+        etFilter.setVisibility(View.VISIBLE);
+        etFilter.requestFocus();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        return super.onSearchRequested();
     }
 
     // @Override
@@ -203,10 +217,10 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
                 ContactsContract.Contacts.PHOTO_THUMBNAIL_URI };
         String selection = ContactsContract.Contacts.IN_VISIBLE_GROUP + " = '"
                 + (SHOW_HIDDEN ? "0" : "1") + "'";
-        // if (filterText != null && !filterText.isEmpty()) {
-        // selection += " AND " + ContactsContract.Contacts.DISPLAY_NAME + " LIKE '%" + filterText
-        // + "%'";
-        // }
+        if (filterText != null && !filterText.isEmpty()) {
+            selection += " AND " + ContactsContract.Contacts.DISPLAY_NAME + " LIKE '%" + filterText
+                    + "%'";
+        }
         String[] selectionArgs = null;
         String sortOrder = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE LOCALIZED ASC";
         Cursor contactsCursor = managedQuery(uri, projection, selection, selectionArgs, sortOrder);
@@ -223,10 +237,10 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
         projection = new String[] { ContactsContract.Profile._ID,
                 ContactsContract.Profile.DISPLAY_NAME, ContactsContract.Profile.PHOTO_THUMBNAIL_URI };
         selection = ContactsContract.Profile.IS_USER_PROFILE;
-        // if (filterText != null && !filterText.isEmpty()) {
-        // selection += " AND " + ContactsContract.Contacts.DISPLAY_NAME + " LIKE '%" + filterText
-        // + "%'";
-        // }
+        if (filterText != null && !filterText.isEmpty()) {
+            selection += " AND " + ContactsContract.Contacts.DISPLAY_NAME + " LIKE '%" + filterText
+                    + "%'";
+        }
         Cursor profileCursor = managedQuery(uri, projection, selection, selectionArgs, null);
 
         // drivers profile
@@ -236,13 +250,16 @@ public class ContactsActivity extends Activity implements OnItemClickListener {
             row[1] = profileCursor.getString(1);
             row[2] = (profileCursor.getString(2) == null) ? MainActivity.DEFAULT_AVATAR_URI
                     : profileCursor.getString(2);
+            if (!alreadyOnList.contains(Long.valueOf(row[0]))) {
+                retCursor.addRow(row);
+            }
         } else {
             row[0] = "-909090";
             row[1] = "Driver";
             row[2] = MainActivity.DEFAULT_AVATAR_URI;
-        }
-        if (!alreadyOnList.contains(Long.valueOf(row[0]))) {
-            retCursor.addRow(row);
+            if (!alreadyOnList.contains(Long.valueOf(row[0])) && filterText.isEmpty()) {
+                retCursor.addRow(row);
+            }
         }
 
         // create "Passenger #%d" at second place

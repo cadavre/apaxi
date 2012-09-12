@@ -13,6 +13,19 @@
         android:text="choose passenger"
         android:textColor="@color/white" />
 
+    <EditText
+        android:id="@+id/etFilter"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvHeader6654"
+        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:ems="10"
+        android:singleLine="true"
+        android:visibility="gone" >
+
+        <requestFocus />
+    </EditText>
+
     <!--
     <RelativeLayout
         android:id="@+id/rlTopBar"
@@ -46,7 +59,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btnDoneContacts"
-        android:layout_below="@+id/tvHeader6654" >
+        android:layout_below="@+id/etFilter" >
     </ListView>
 
     <TextView
