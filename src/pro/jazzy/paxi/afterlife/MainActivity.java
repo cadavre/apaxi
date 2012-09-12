@@ -1,17 +1,17 @@
 
-package pro.jazzy.paxi;
+package pro.jazzy.paxi.afterlife;
 
 import java.util.Currency;
 import java.util.HashMap;
 import java.util.Locale;
 
-import pro.jazzy.paxi.ButtonsDialog.OnAcceptListener;
-import pro.jazzy.paxi.PaxiService.LocalBinder;
-import pro.jazzy.paxi.entity.Member;
-import pro.jazzy.paxi.entity.MemberOut;
-import pro.jazzy.paxi.entity.ModeChange;
-import pro.jazzy.paxi.entity.Payment;
-import pro.jazzy.paxi.entity.Route;
+import pro.jazzy.paxi.afterlife.ButtonsDialog.OnAcceptListener;
+import pro.jazzy.paxi.afterlife.PaxiService.LocalBinder;
+import pro.jazzy.paxi.afterlife.entity.Member;
+import pro.jazzy.paxi.afterlife.entity.MemberOut;
+import pro.jazzy.paxi.afterlife.entity.ModeChange;
+import pro.jazzy.paxi.afterlife.entity.Payment;
+import pro.jazzy.paxi.afterlife.entity.Route;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
