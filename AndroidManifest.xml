@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="pro.jazzy.paxi.afterlife"
-    android:versionCode="3"
+    android:versionCode="5"
     android:versionName="1.1" >
 
     <uses-sdk android:minSdkVersion="14" />
@@ -14,7 +14,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Holo.Light.NoActionBar" >
-        <service android:name=".PaxiServiceaxiService" />
+        <service android:name=".PaxiService" />
 
         <activity
             android:name=".MainActivity"
